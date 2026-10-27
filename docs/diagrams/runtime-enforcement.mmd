@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant OSCollectors
+    participant Detection
+    participant SessionController
+    participant LocalAudit
+    participant ParticipantApp
+    participant Backend
+    OSCollectors->>Detection: Process instance and available identity evidence
+    Detection->>SessionController: Supported execution finding with rule version
+    SessionController->>SessionController: Apply event policy and invalidate local verification
+    SessionController->>LocalAudit: Commit finding, decision, revision and outbox
+    LocalAudit-->>SessionController: Durable commit acknowledged
+    SessionController-->>ParticipantApp: Suspended with reason and review route
+    LocalAudit->>Backend: Send idempotent event batch
+    Backend->>Backend: Persist evidence and authoritative suspension
+    Backend-->>LocalAudit: Accepted event IDs and session revision
+    ParticipantApp->>Backend: Request organizer review
+    Backend-->>ParticipantApp: Authorized decision and explanation
+    Backend-->>SessionController: Reinstatement authorization requires fresh preflight

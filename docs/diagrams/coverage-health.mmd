@@ -1,0 +1,26 @@
+flowchart LR
+    startup["Start required collectors"] --> probe{"Required coverage available?"}
+    probe -->|"No"| noAdmission["Refuse verified admission"]
+    probe -->|"Yes"| snapshot["Scan and reconcile"]
+    snapshot --> admission{"Admission and lease valid?"}
+    admission -->|"No"| action["Explain required actions"]
+    admission -->|"Yes"| verified["Effective Verified"]
+    verified --> telemetry["Observe health and continuity"]
+    telemetry --> check{"Required coverage still valid?"}
+    check -->|"No"| invalidate["Invalidate local verification"]
+    check -->|"Yes"| renewal["Renew backend lease"]
+    renewal --> fresh{"Lease still fresh?"}
+    fresh -->|"No"| stale["Organizer marks stale"]
+    fresh -->|"Yes"| verified
+    stopped["Agent stops or laptop sleeps"] --> expiry["Backend lease expires"]
+    expiry --> stale
+    invalidate --> suspended["Suspend with health reason"]
+    stale --> recheck["Require new preflight"]
+    suspended --> review["Authorize recovery or review"]
+    review --> recheck
+    action --> recheck
+    recheck -.-> startup
+    style verified fill:#CDF4D3,stroke:#66D575
+    style invalidate fill:#FFCDC2,stroke:#FF7556
+    style stale fill:#FFECBD,stroke:#FFC943
+    style noAdmission fill:#FFECBD,stroke:#FFC943

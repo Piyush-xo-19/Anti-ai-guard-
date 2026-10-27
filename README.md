@@ -17,6 +17,7 @@ The design combines a pre-event software inventory, runtime observation of recog
 - [Competition policy](#competition-policy)
 - [How it is intended to work](#how-it-is-intended-to-work)
 - [Proposed architecture](#proposed-architecture)
+- [Detailed v1 architecture](docs/architecture-v1.md)
 - [Scope and privacy](#scope-and-privacy)
 - [Development roadmap](#development-roadmap)
 - [Working in small chunks](#working-in-small-chunks)
@@ -64,6 +65,8 @@ This is **detection followed by competition-session enforcement**. It is not gua
 ## Proposed architecture
 
 The endpoint is planned as a **Rust agent running in user mode**, with separate Windows and Linux collectors. A custom kernel driver is outside v1.
+
+Read the [detailed v1 architecture draft](docs/architecture-v1.md) for module contracts, admission and runtime flows, evidence handling, verification leases, permission boundaries, recovery behavior, and decisions awaiting review.
 
 ```mermaid
 flowchart LR

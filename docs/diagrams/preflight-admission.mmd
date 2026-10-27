@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant ParticipantApp
+    participant LocalAgent
+    participant Collectors
+    participant LocalAudit
+    participant Backend
+    ParticipantApp->>LocalAgent: Accept event scope and request preflight
+    LocalAgent->>Backend: Enroll and retrieve versioned policy
+    Backend-->>LocalAgent: Session identity and validated configuration
+    LocalAgent->>Collectors: Probe mandatory coverage and start events
+    Collectors-->>LocalAgent: Ready checkpoint or explicit capability gap
+    LocalAgent->>Collectors: Snapshot processes and scoped inventory
+    Collectors-->>LocalAgent: Findings and events observed during scan
+    LocalAgent->>LocalAgent: Reconcile identity, coverage and event order
+    LocalAgent->>LocalAudit: Commit admission report and outbox
+    LocalAgent->>Backend: Submit report and checkpoint for admission
+    Backend-->>LocalAgent: Revision-bound lease or refusal reasons
+    LocalAgent->>LocalAgent: Check intervening events and current health
+    LocalAgent-->>ParticipantApp: Show effective status and required actions

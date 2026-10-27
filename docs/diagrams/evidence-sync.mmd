@@ -1,0 +1,23 @@
+flowchart LR
+    source["Transient OS metadata"] --> minimize["Normalize and redact locally"]
+    minimize --> classify["Attach process instance and rule"]
+    classify --> decide["Evaluate event policy"]
+    decide --> transaction["Commit audit and outbox"]
+    transaction --> batch["Read bounded event batch"]
+    batch --> upload["Upload with session credential"]
+    upload --> validate{"Ownership and schema valid?"}
+    validate -->|"No"| reject["Reject and report health issue"]
+    validate -->|"Yes"| deduplicate["Deduplicate event IDs"]
+    deduplicate --> persist["Persist authoritative records"]
+    persist --> ack["Return accepted IDs and revision"]
+    ack --> mark["Mark outbox delivered"]
+    mark --> retention["Apply retention policy"]
+    outage["Connection unavailable"] --> retry["Bounded retry and backoff"]
+    retry -.-> upload
+    overflow["Audit full or corrupt"] --> stop["End verification"]
+    transaction -.->|"Write failure"| stop
+    retry -->|"Queue limit reached"| stop
+    reject --> stop
+    style minimize fill:#C2E5FF,stroke:#3DADFF
+    style stop fill:#FFCDC2,stroke:#FF7556
+    style retention fill:#CDF4D3,stroke:#66D575
