@@ -1,0 +1,18 @@
+# Maintainer-only progress and handoff notes: never force-add this file.
+/PROJECT_STATUS.local.md
+
+# Future local build output and participant evidence.
+/target/
+/reports/
+/logs/
+
+# Local environment files (a sanitized example may be shared).
+.env
+.env.*
+!.env.example
+
+# OS and editor working files.
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
