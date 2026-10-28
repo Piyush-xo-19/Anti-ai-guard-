@@ -18,6 +18,8 @@ The design combines a pre-event software inventory, runtime observation of recog
 - [How it is intended to work](#how-it-is-intended-to-work)
 - [Proposed architecture](#proposed-architecture)
 - [Detailed v1 architecture](docs/architecture-v1.md)
+- [Windows prototype coverage](docs/coverage-matrix.md)
+- [Acceptance plan](docs/acceptance-plan.md)
 - [Scope and privacy](#scope-and-privacy)
 - [Development roadmap](#development-roadmap)
 - [Working in small chunks](#working-in-small-chunks)
@@ -65,6 +67,8 @@ This is **detection followed by competition-session enforcement**. It is not gua
 ## Proposed architecture
 
 The endpoint is planned as a **Rust agent running in user mode**, with separate Windows and Linux collectors. A custom kernel driver is outside v1.
+
+The first prototype targets **native Windows 10 and Windows 11**; Linux follows later in v1. Standard-user inspection is the proposed first baseline, with access gaps disclosed and optional elevated diagnostics investigated separately. These are implementation targets, not validated platform support. See the [coverage contract](docs/coverage-matrix.md) and [acceptance plan](docs/acceptance-plan.md).
 
 Read the [detailed v1 architecture draft](docs/architecture-v1.md) for module contracts, admission and runtime flows, evidence handling, verification leases, permission boundaries, recovery behavior, and decisions awaiting review.
 
@@ -142,14 +146,14 @@ Each milestone will be split further into reviewable changes. This roadmap descr
 | Milestone | Deliverable | Status |
 | --- | --- | --- |
 | **M0 — Public foundation** | README, MIT license, contribution workflow, and architecture draft | Complete |
-| **M1 — Coverage and design** | Supported OS/privilege matrix, evidence rules, threat boundaries, and acceptance plan | Next |
+| **M1 — Coverage and design** | Windows 10/11 target matrix, proposed privilege scope, evidence rules and acceptance plan | Documents ready for review; tests not run |
 | **M2 — Read-only preflight** | Rust structure, detection interfaces, installation/process inventory, reports, and tests | Planned |
 | **M3 — Runtime observation** | Process-event collectors, reconciliation, health checks, and failure reporting | Planned |
 | **M4 — Session and audit** | Policy transitions, bounded local persistence, notifications, and synchronization contract | Planned |
 | **M5 — Organizer workflow** | Enrollment, heartbeats, evidence review, and participant/organizer interfaces | Proposed scope |
 | **M6 — Controlled validation** | Windows/Linux acceptance results, measured performance, privacy checks, and release documentation | Planned |
 
-Before implementation, we need to settle supported OS versions and Linux distributions, participant privileges, offline verification rules, backend release scope, and whole-application versus feature-level IDE restrictions.
+Windows 10 and Windows 11 are selected for the first prototype. Before M2, review the proposed lab releases, x64 baseline, privilege scope and identity rules. Exact validated builds, later Linux configurations, offline verification rules, backend release scope and whole-application versus feature-level IDE restrictions remain open at their relevant milestones.
 
 The initial engineering targets are at least 95% recall for supported known-agent cases, below 2% false positives across representative benign sessions, and detection of observable prohibited launches within five seconds. **These are unmeasured targets, not achieved results.**
 

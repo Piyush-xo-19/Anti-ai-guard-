@@ -1,10 +1,12 @@
 # Anti-AI Guard v1: detailed system architecture
 
-Version: 0.2 | Updated: 2026-10-28 | Status: draft for review
+Version: 0.3 | Updated: 2026-10-28 | Status: draft for review
 
 This is the proposed complete v1 design, not a description of implemented software. Policy A, user-mode execution, Windows/Linux targets, and the privacy constraints are established requirements. Module contracts, deployment details, API routes, and failure policies below are proposals pending review and measurement.
 
 [Project overview](../README.md) | [Editable architecture board](https://www.figma.com/board/khHS1yqPXt0D38dX142iFe)
+
+M1 update: the maintainer selected native Windows 10 and Windows 11 for the first prototype. Linux is deferred to later v1 work. The [coverage matrix](coverage-matrix.md) and [acceptance plan](acceptance-plan.md) define the proposed standard-user baseline, candidate lab configurations and M2 gates. No platform or detector has been validated yet. Existing FigJam overview notes should be read with this newer scope decision.
 
 ## 1. Scope and architectural invariants
 
@@ -91,7 +93,7 @@ Only the session controller mutates local eligibility. The backend applies its o
 
 These are investigation boundaries, not API commitments. Windows process access depends on requested rights and security descriptors; Linux procfs visibility depends on permissions and configuration. See [Microsoft's process-access documentation](https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights) and [Linux procfs documentation](https://docs.kernel.org/filesystems/proc.html).
 
-Each tested configuration needs an OS version, privilege level, collector/version, observable scope, event-loss behavior and acceptance results. Windows-first implementation is a recommendation awaiting agreement; Linux remains a v1 target. Do not label a configuration supported based only on compilation or unit tests.
+Each tested configuration needs an OS version, privilege level, collector/version, observable scope, event-loss behavior and acceptance results. Windows 10 and Windows 11 are selected for the first prototype; Linux remains a later v1 target. Specific lab releases and x64 coverage are proposed in the coverage matrix. Do not label a configuration supported based only on compilation or unit tests.
 
 ## 5. Process identity and evidence quality
 
@@ -327,8 +329,8 @@ Each row must be split into small reviewable commits. A read-only prototype does
 
 | ID | Decision | Proposed direction / unresolved point |
 | --- | --- | --- |
-| V1-D01 | Supported platforms | Windows-first prototype recommended; choose exact Windows and Linux configurations |
-| V1-D02 | Privileges | Minimum access first; determine which mandatory event sources need elevation |
+| V1-D01 | Supported platforms | Maintainer selected native Windows 10 and 11 first; exact validated builds/architectures and later Linux configurations remain to be measured |
+| V1-D02 | Privileges | Proposed standard-user M2 baseline; report gaps and investigate elevated diagnostics and future event-source permissions separately |
 | V1-D03 | Event-mode authority | Backend leases recommended for organizer verification; standalone mode is diagnostic |
 | V1-D04 | Offline rules | Connected admission recommended; agree reconnect grace and lease deadlines |
 | V1-D05 | IDE restrictions | Decide whole-app prohibition versus feature controls; feature controls are not currently in scope |
