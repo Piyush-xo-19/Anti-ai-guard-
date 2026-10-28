@@ -53,7 +53,7 @@ Backend lease deadlines, retention policy and IDE feature controls remain open a
 
 M2.1 now implements help/version and argument validation. [Build and test it](docs/development.md). Local format, strict Clippy, build and seven binary integration tests passed using Rust 1.99.1 on a Windows GNU host. [Windows CI also passed for the feature commit](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40752729560). Windows 10 desktop and scanner tests remain unexecuted.
 
-M2.2 implements [shared contracts and diagnostic evaluation](docs/shared-contracts.md), including coverage concerns and process-instance correlation. Local format, strict Clippy, build, nineteen synthetic contract tests and the runnable example passed on the same GNU toolchain; existing CLI tests still pass. Windows CI for this chunk is checked after publication; the M2.1 result above is not its result. All identity assessments in tests are synthetic upstream inputs, not trusted production catalog matches. Eligibility is always `NotIssued`.
+M2.2 implements [shared contracts and diagnostic evaluation](docs/shared-contracts.md), including coverage concerns and process-instance correlation. Local format, strict Clippy, build, nineteen synthetic contract tests and the runnable example passed on the same GNU toolchain; existing CLI tests still pass. [The M2.2 hosted Windows checks also passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40757983515), including the example. All identity assessments in tests are synthetic upstream inputs, not trusted production catalog matches. Eligibility is always `NotIssued`.
 
 An on-demand, read-only diagnostic scanner that inventories supported assistant installations and processes alive during the scan. It will report scope, evidence and coverage limitations clearly. It will not issue verified competition status or automatically stop applications.
 
@@ -68,6 +68,7 @@ The [M2 plan](docs/m2-plan.md) splits this into project setup, shared data/polic
 | [77be000](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/77be000560c82e83836e53e16a1f6de916eb8a0f) | Expanded v1 architecture and diagram sources |
 | [a58d5c1](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/a58d5c1154a2271931b067680f0c81f50a38c319) | Windows 10/11 coverage contract and acceptance plan |
 | [72d62a4](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/72d62a4416f0b860c5c016c7d7dc8cb958a19fdc) | M2.1 CLI foundation; local checks and Windows CI passed |
+| [c3b9c1a](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/c3b9c1ad5aa1c73ec33322dd1596072a00c1be40) | M2.2 shared contracts, diagnostic evaluator and fixture example; 26 local tests and Windows CI passed |
 
 Published documentation has been checked for local links, whitespace and scope consistency. Architecture views were visually reviewed during composition. These checks are not evidence of product functionality.
 

@@ -39,7 +39,7 @@ Acceptance: a fresh contributor can follow the documented build steps; help/vers
 
 State: implemented. [Shared-contract guide](shared-contracts.md) documents platform/scope metadata, separate installation/process observations, rule/evidence assessments, process-instance correlation, coverage concerns and diagnostic suggestions. The in-memory report retains evidence and can only return `NotIssued` eligibility. No device collection, real identity matcher or trusted catalog is present.
 
-Local format, strict Clippy, build, nineteen synthetic contract tests, seven existing CLI tests and the runnable fixture example passed using Rust 1.99.1 on the Windows GNU toolchain. Check the chunk's hosted CI result after publication. Synthetic supported assessments test evaluator behavior; they do not validate actual tool detection or satisfy the 33 scanner scenarios.
+Local format, strict Clippy, build, nineteen synthetic contract tests, seven existing CLI tests and the runnable fixture example passed using Rust 1.99.1 on the Windows GNU toolchain. [Hosted Windows CI for c3b9c1a also passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40757983515). Synthetic supported assessments test evaluator behavior; they do not validate actual tool detection or satisfy the 33 scanner scenarios.
 
 Define platform/scope metadata, installation and process observations, identity evidence, coverage failures and diagnostic action suggestions. Keep these types independent of Windows collection where possible.
 

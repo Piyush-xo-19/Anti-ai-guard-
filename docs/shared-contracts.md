@@ -93,6 +93,6 @@ The demonstration uses hard-coded fixture observations, unknown platform metadat
 
 ## Verification and remaining work
 
-Nineteen synthetic contract tests and seven existing CLI integration tests passed locally with Rust 1.99.1 on the existing Windows GNU toolchain. Formatting, strict Clippy, build and the synthetic example also passed. The existing Windows CI workflow now checks the example as well; its result must be checked separately after publication.
+Nineteen synthetic contract tests and seven existing CLI integration tests passed locally with Rust 1.99.1 on the existing Windows GNU toolchain. Formatting, strict Clippy, build and the synthetic example also passed. [Hosted Windows CI for the feature commit passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40757983515), including formatting, lint, build, tests and the example. Check subsequent commits independently.
 
 None of the 33 real scanner acceptance scenarios has run. Actual Windows 10/11 inspection, consent enforcement, trusted identity artifacts, privilege coverage and performance remain unvalidated. M2.3 is next, after the relevant collection-scope reviews; M3 has not started.

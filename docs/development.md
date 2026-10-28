@@ -96,7 +96,7 @@ Run it from the repository root, then use the Cargo check commands above. These 
 
 ## Independent testing and issue reports
 
-M2.2 local verification used the same pinned GNU toolchain: formatting, strict Clippy, build, all 26 integration tests (7 CLI + 19 contracts) and the synthetic example passed. The tests use preclassified fixtures, not real approved catalog entries. The 33 scanner scenarios remain NOT RUN; no real device detection or new platform validation follows from these results.
+M2.2 local verification used the same pinned GNU toolchain: formatting, strict Clippy, build, all 26 integration tests (7 CLI + 19 contracts) and the synthetic example passed. [Hosted Windows CI for c3b9c1a passed those checks and the example](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40757983515). The tests use preclassified fixtures, not real approved catalog entries. The 33 scanner scenarios remain NOT RUN; no real device detection or new platform validation follows from these results.
 
 Build/run this chunk before testing future features. For a problem, include the commit, toolchain/target, Windows version/build, redacted invocation, expected versus actual behavior, stdout/stderr and exit code. For the observed rustup dialog, report it as a toolchain-manager issue separately from CLI failures.
 
