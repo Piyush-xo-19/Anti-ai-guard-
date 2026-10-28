@@ -14,6 +14,9 @@ The design combines a pre-event software inventory, runtime observation of recog
 
 ## Explore the project
 
+- [Current status and milestone plan](PROJECT_STATUS.md)
+- [Accepted decisions and open proposals](docs/decisions.md)
+- [M2 implementation plan](docs/m2-plan.md)
 - [Competition policy](#competition-policy)
 - [How it is intended to work](#how-it-is-intended-to-work)
 - [Proposed architecture](#proposed-architecture)
@@ -140,6 +143,8 @@ User-mode monitoring cannot guarantee integrity against hostile administrator/ro
 Browser assistance, IDE extension controls, VM/WSL/container coverage, and activity on separate devices are not covered by the initial endpoint design. Detecting an IDE process does not establish which of its features was used.
 
 ## Development roadmap
+
+See [PROJECT_STATUS.md](PROJECT_STATUS.md) for current progress, the [decision log](docs/decisions.md) for agreed choices and pending reviews, and the [M2 plan](docs/m2-plan.md) for the proposed implementation chunks. These are public contributor references; no private maintainer tracker is required.
 
 Each milestone will be split further into reviewable changes. This roadmap describes planned work, not implemented functionality.
 

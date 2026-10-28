@@ -1,6 +1,6 @@
 # Contributing to Anti-AI Guard
 
-The project is currently in documentation and architecture review. Start with the [README](README.md) and agree on a bounded outcome before implementing a subsystem.
+The project is currently in documentation and architecture review. Start with the [README](README.md), [public status](PROJECT_STATUS.md), [decision log](docs/decisions.md), and [M2 plan](docs/m2-plan.md). Agree on a bounded outcome before implementing a subsystem.
 
 ## One reviewable chunk at a time
 
@@ -46,9 +46,11 @@ When Rust implementation begins, its chunk must introduce the applicable formatt
 
 ## Maintainer's local progress tracker
 
-The maintainer uses `PROJECT_STATUS.local.md` for detailed progress and handoff notes. It is ignored by Git and must not be staged or force-added. Public progress belongs in issues, pull requests, commits, and the README roadmap.
+The maintainer uses `PROJECT_STATUS.local.md` for detailed progress and handoff notes. It is ignored by Git and must not be staged or force-added. Contributors do not need that file or any private chat context. Public progress belongs in [PROJECT_STATUS.md](PROJECT_STATUS.md), issues, pull requests and commits; decisions belong in the [decision log](docs/decisions.md).
 
 Update the local tracker after each chunk with completed work, current work, next steps, unresolved decisions, validation, and commit references. Check that it remains excluded before every commit.
+
+When completing a milestone chunk or accepting a design decision, update the relevant public status/decision/plan document in the same focused change. Include checks and known gaps. Do not mark proposed behavior as implemented or unexecuted tests as passed.
 
 ## License
 
