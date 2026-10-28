@@ -1,4 +1,4 @@
-name: Rust foundation checks
+name: Rust checks
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   cli-foundation:
-    name: Build and test CLI foundation
+    name: Build and test CLI and shared contracts
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,3 +24,5 @@ jobs:
         run: cargo build --locked --offline
       - name: Test
         run: cargo test --locked --offline
+      - name: Run synthetic diagnostic example
+        run: cargo run --locked --offline --example diagnostic

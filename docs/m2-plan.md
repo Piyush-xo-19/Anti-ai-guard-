@@ -1,6 +1,6 @@
 # M2 plan: read-only Windows preflight prototype
 
-Updated: 2026-10-29 | State: in progress; M2.1 CLI foundation implemented
+Updated: 2026-10-29 | State: in progress; M2.1/M2.2 implemented
 
 [Public status](../PROJECT_STATUS.md) | [Decisions](decisions.md) | [Coverage contract](coverage-matrix.md) | [Acceptance plan](acceptance-plan.md)
 
@@ -14,13 +14,16 @@ M2 does not grant organizer verification. It cannot establish that nothing ran b
 
 The maintainer authorized M2.1 on 2026-10-29. That approval covers project/CLI setup with no device inspection. Privilege/lab scope and tool-identity choices remain review gates before the chunks that collect or classify host observations.
 
+The maintainer subsequently authorized M2.2 on the same date: shared contracts and synthetic Policy A evaluation. This does not approve a real identity catalog, collection privileges or automatic competition enforcement.
+
 - [ ] Review the M1 coverage matrix and acceptance plan.
 - [ ] Agree privilege and lab scope for the first implementation chunk.
 - [ ] Agree which identity predicates and variants are required versus exploratory.
 - [ ] Identify a trusted synthetic/pinned artifact approach and record test ground truth.
 - [x] Authorize the first bounded M2 chunk: M2.1 foundation only.
+- [x] Authorize M2.2 contracts and fixture evaluation without device inspection.
 
-Help/version and argument errors now work; [development instructions](development.md) document their commands. Collector and report interfaces below remain planned.
+Help/version and argument errors now work; [development instructions](development.md) document their commands. M2.2 adds shared observation/report types and a pure evaluator; collectors, consent flow, serialization and CLI report integration remain planned.
 
 ## Proposed chunks
 
@@ -33,6 +36,10 @@ Deliver the minimal CLI/library structure, build prerequisites, license metadata
 Acceptance: a fresh contributor can follow the documented build steps; help/version and argument errors behave predictably; no scan occurs without the agreed consent/scope flow. Record the compiler/toolchain used and any untested target.
 
 ### M2.2: Shared observations, coverage and Policy A reporting
+
+State: implemented. [Shared-contract guide](shared-contracts.md) documents platform/scope metadata, separate installation/process observations, rule/evidence assessments, process-instance correlation, coverage concerns and diagnostic suggestions. The in-memory report retains evidence and can only return `NotIssued` eligibility. No device collection, real identity matcher or trusted catalog is present.
+
+Local format, strict Clippy, build, nineteen synthetic contract tests, seven existing CLI tests and the runnable fixture example passed using Rust 1.99.1 on the Windows GNU toolchain. Check the chunk's hosted CI result after publication. Synthetic supported assessments test evaluator behavior; they do not validate actual tool detection or satisfy the 33 scanner scenarios.
 
 Define platform/scope metadata, installation and process observations, identity evidence, coverage failures and diagnostic action suggestions. Keep these types independent of Windows collection where possible.
 
@@ -88,7 +95,7 @@ Use the [acceptance plan](acceptance-plan.md) as the detailed gate. The mileston
 - Report examples using synthetic data only.
 - Focused commits or pull requests for each completed chunk.
 
-The 33 planned scanner scenarios include later-milestone cases; M2 is accountable for its declared required subset, not a claim to have implemented FUT cases. Those scanner scenarios have not run. M2.1 has seven passing local CLI integration tests; they are separate from detector validation. Runtime recall/latency targets require later event-collector evaluation.
+The 33 planned scanner scenarios include later-milestone cases; M2 is accountable for its declared required subset, not a claim to have implemented FUT cases. Those scanner scenarios have not run. M2.1/M2.2 have seven passing local CLI tests and nineteen synthetic contract tests; they are separate from detector validation. Runtime recall/latency targets require later event-collector evaluation.
 
 ## Progress updates
 

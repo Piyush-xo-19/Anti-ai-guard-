@@ -130,4 +130,6 @@ Record scan duration, peak resource use where measurable and timeout behavior. S
 
 M2.1 now has seven passing local CLI integration tests documented in [development instructions](development.md). They do not execute or satisfy the 33 scanner scenarios above.
 
+M2.2 adds nineteen passing local [synthetic contract tests](shared-contracts.md) for preclassified observations, diagnostic policy, correlation and coverage. They test library semantics without device inspection or real catalog matching. All 33 scanner scenarios remain NOT RUN.
+
 This completes preparation of the M1 coverage/test documents, not approval of all architecture proposals or execution of their tests.

@@ -101,6 +101,8 @@ Proposed top-level report fields: schema version, scan ID/time, platform/build/a
 
 Each finding includes category, tool ID or unknown identity, installation versus observed execution, evidence class, rule ID, redacted source explanation and relevant process-instance reference. Do not persist raw command lines, credentials, prompts or unnecessary absolute personal paths.
 
+M2.2 now implements the [in-memory shared contracts and diagnostic evaluator](shared-contracts.md) for supplied observations. Scope uses opaque IDs/minimized labels, and gap/action explanations use typed reasons. Real collection, identity matching, rendered/serialized reports and consent enforcement remain planned; these types do not validate any coverage row above.
+
 Keep these concepts separate:
 
 - **Scan execution:** finished, partial or failed.

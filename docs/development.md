@@ -1,6 +1,6 @@
-# Building and testing the CLI foundation
+# Building and testing the CLI and shared contracts
 
-Updated: 2026-10-29 | Implemented scope: M2.1 only
+Updated: 2026-10-29 | Implemented scope: M2.1 and M2.2
 
 [Public status](../PROJECT_STATUS.md) | [M2 plan](m2-plan.md) | [Contributing](../CONTRIBUTING.md)
 
@@ -9,6 +9,8 @@ Updated: 2026-10-29 | Implemented scope: M2.1 only
 The `anti-ai-guard` CLI displays help or its package version and rejects unsupported arguments. It has no third-party Rust dependencies. There is no scan command, process collector, installation inventory or competition verification yet.
 
 The executable reads its command-line arguments; it does not enumerate processes, inspect installation roots or collect telemetry. Invalid-argument errors deliberately do not echo raw argument values, which might contain accidentally pasted private data.
+
+M2.2 adds library types and a pure diagnostic evaluator. It takes preclassified observations and produces suggestions, explicit coverage concerns and `NotIssued` eligibility. It contains no real identity catalog/matcher. See the [shared-contract guide](shared-contracts.md).
 
 ## Prerequisites
 
@@ -58,7 +60,11 @@ cargo test --locked --offline
 
 Seven binary integration tests cover default help, aliases, version consistency, error status/streams, an unavailable scan command, extra arguments and sensitive-argument redaction. They exercise the compiled executable. These are CLI-contract tests, not scanner acceptance results.
 
-The GitHub workflow runs these commands on `windows-latest`. [The initial feature-commit run passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40752729560). A hosted Windows runner does not establish detection support on Windows 10/11 desktop configurations. Check the actual workflow result for subsequent changes; local success is not a CI pass.
+Nineteen additional synthetic contract tests cover inventory versus execution, candidate versus supported assessments, rule approval, legitimate runtimes, process correlation, disappearing processes, scope integrity and incomplete coverage. Run them separately with `cargo test --locked --offline --test contracts`.
+
+Run `cargo run --locked --offline --example diagnostic` for the hard-coded example. It prints inventory/review suggestions, incomplete coverage and no issued eligibility. The example never inspects the host and is not the future scan command.
+
+The GitHub workflow runs these commands and the synthetic example on `windows-latest`. [The initial M2.1 feature-commit run passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40752729560). A hosted Windows runner does not establish detection support on Windows 10/11 desktop configurations. Check the actual workflow result for subsequent changes; local success is not a CI pass.
 
 ## Local tooling and the rustup crash observed during setup
 
@@ -89,6 +95,8 @@ Run it from the repository root, then use the Cargo check commands above. These 
 - Real assistant inventory, process visibility, permission scopes, Windows 10 compatibility and runtime performance remain untested because their collectors are not implemented.
 
 ## Independent testing and issue reports
+
+M2.2 local verification used the same pinned GNU toolchain: formatting, strict Clippy, build, all 26 integration tests (7 CLI + 19 contracts) and the synthetic example passed. The tests use preclassified fixtures, not real approved catalog entries. The 33 scanner scenarios remain NOT RUN; no real device detection or new platform validation follows from these results.
 
 Build/run this chunk before testing future features. For a problem, include the commit, toolchain/target, Windows version/build, redacted invocation, expected versus actual behavior, stdout/stderr and exit code. For the observed rustup dialog, report it as a toolchain-manager issue separately from CLI failures.
 

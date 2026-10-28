@@ -2,7 +2,7 @@
 
 **An open-source monitoring system for programming competitions that restrict AI coding assistance.**
 
-![Status: CLI foundation](https://img.shields.io/badge/status-CLI_foundation-amber)
+![Status: shared contracts](https://img.shields.io/badge/status-shared_contracts-amber)
 ![Planned platforms: Windows and Linux](https://img.shields.io/badge/planned_platforms-Windows_%7C_Linux-blue)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -10,7 +10,7 @@ Anti-AI Guard aims to let participants use documentation, the internet, terminal
 
 The design combines a pre-event software inventory, runtime observation of recognized coding assistants, and a competition-session policy. Participants retain control of their personal laptops.
 
-> **Current stage: M2.1 CLI foundation.** Help/version commands and argument validation are implemented. Scanning, monitoring, an installer and dashboards are not implemented. The detection features and event flows below remain proposed and unvalidated.
+> **Current stage: M2.2 shared contracts.** Help/version, observation and coverage types, and a diagnostic Policy A evaluator are implemented. The evaluator uses supplied assessments; real identity matching and device inspection are not implemented. Scanning, monitoring, an installer and dashboards remain planned and unvalidated.
 
 ## Explore the project
 
@@ -18,6 +18,7 @@ The design combines a pre-event software inventory, runtime observation of recog
 - [Accepted decisions and open proposals](docs/decisions.md)
 - [M2 implementation plan](docs/m2-plan.md)
 - [Build, run and test the CLI](docs/development.md)
+- [Shared contracts and synthetic diagnostic example](docs/shared-contracts.md)
 - [Competition policy](#competition-policy)
 - [How it is intended to work](#how-it-is-intended-to-work)
 - [Proposed architecture](#proposed-architecture)
@@ -153,13 +154,13 @@ Each milestone will be split further into reviewable changes. This roadmap descr
 | --- | --- | --- |
 | **M0 — Public foundation** | README, MIT license, contribution workflow, and architecture draft | Complete |
 | **M1 — Coverage and design** | Windows 10/11 target matrix, proposed privilege scope, evidence rules and acceptance plan | Documents ready for review; tests not run |
-| **M2 — Read-only preflight** | Rust structure, detection interfaces, installation/process inventory, reports, and tests | In progress: M2.1 CLI foundation implemented; collectors not started |
+| **M2 — Read-only preflight** | Rust structure, detection interfaces, installation/process inventory, reports, and tests | In progress: M2.1/M2.2 implemented; collectors not started |
 | **M3 — Runtime observation** | Process-event collectors, reconciliation, health checks, and failure reporting | Planned |
 | **M4 — Session and audit** | Policy transitions, bounded local persistence, notifications, and synchronization contract | Planned |
 | **M5 — Organizer workflow** | Enrollment, heartbeats, evidence review, and participant/organizer interfaces | Proposed scope |
 | **M6 — Controlled validation** | Windows/Linux acceptance results, measured performance, privacy checks, and release documentation | Planned |
 
-Windows 10 and Windows 11 are selected for the first prototype. M2.1 is authorized as non-inspection project/CLI setup. Before collection begins, review the proposed lab releases, x64 baseline, privilege scope and identity rules. Exact validated builds, later Linux configurations, offline verification rules, backend release scope and whole-application versus feature-level IDE restrictions remain open at their relevant milestones.
+Windows 10 and Windows 11 are selected for the first prototype. M2.1/M2.2 are authorized as non-inspection foundation and shared-contract work. Before collection begins, review the proposed lab releases, x64 baseline, privilege scope and identity rules. Exact validated builds, later Linux configurations, offline verification rules, backend release scope and whole-application versus feature-level IDE restrictions remain open at their relevant milestones.
 
 The initial engineering targets are at least 95% recall for supported known-agent cases, below 2% false positives across representative benign sessions, and detection of observable prohibited launches within five seconds. **These are unmeasured targets, not achieved results.**
 
@@ -184,6 +185,8 @@ cargo build --locked --offline
 ```
 
 See [development instructions](docs/development.md) for prerequisites, checks and known environment limitations. `scan` is deliberately rejected until collection and consent/scope handling are implemented.
+
+To exercise M2.2 with hard-coded synthetic data and no device inspection, run `cargo run --locked --offline --example diagnostic`. See the [shared-contract guide](docs/shared-contracts.md) for its output and identity/coverage boundaries.
 
 ## Contributing
 

@@ -1,7 +1,10 @@
-//! Command-line contract for the M2.1 project foundation.
+//! CLI, shared observations and diagnostic Policy A contracts.
 //!
-//! This module only parses arguments. It does not inspect the host, collect
-//! telemetry, or grant competition verification.
+//! No module inspects the host, collects telemetry or grants competition
+//! verification. Identity assessments are inputs, not detection proofs.
+
+pub mod model;
+pub mod policy;
 
 use std::ffi::OsString;
 use std::fmt;
@@ -19,7 +22,7 @@ Options:
   -h, --help       Show this help
   -V, --version    Show the program version
 
-M2.1 contains the CLI foundation only. Scanning is not implemented.
+M2.2 adds shared library contracts. Scanning is not implemented.
 Running this command does not inspect installations, processes, or files.
 ";
 

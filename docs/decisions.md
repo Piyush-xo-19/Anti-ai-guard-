@@ -16,13 +16,15 @@ This log makes project direction understandable without access to private notes.
 | First prototype platforms | Native Windows 10 and Windows 11 | Start Windows work first; Linux remains a later v1 target |
 | Open-source license | MIT | Public contributions follow the repository license |
 | Delivery workflow | Small, reviewable chunks with relevant checks and descriptive commits | Do not build the full product in one unreviewable change |
-| Milestone ordering | Review scope before the affected implementation chunk | M2.1 foundation authorized on 2026-10-29; inspection-specific privilege/lab/identity decisions remain pending before collection |
+| Milestone ordering | Review scope before the affected implementation chunk | M2.1 foundation and M2.2 synthetic shared contracts authorized on 2026-10-29; inspection-specific privilege/lab/identity decisions remain pending before collection |
 | Participant safeguards | Explicit consent and scoped inspection; no automatic uninstall, deletion, termination or disqualification | Preserve normal device use and provide explainable findings/review |
 | Privacy boundary | No keystrokes, terminal history, source-code or personal-document capture in v1 | Collect only relevant metadata and redact sensitive launch information |
 | Public planning | Publish milestone status, decisions and implementation plans | Contributors must not depend on the maintainer's ignored tracker |
 | Feature delivery | One feature, build, run, essential tests, then push and independent testing | Testers/contributors report reproducible issues; critical and dependency-blocking bugs are fixed before building on them |
 
-M2.1 authorization covers only CLI/project setup. It does not approve standard-user/elevated collection coverage, x64 test configurations, strong identity predicates or any automatic competition enforcement. The milestone plan otherwise remains unchanged.
+M2.1 authorization covers CLI/project setup, and the subsequent M2.2 authorization covers shared types and diagnostic evaluation of synthetic preclassified inputs. Neither approves standard-user/elevated collection coverage, x64 test configurations, real strong-identity predicates or automatic competition enforcement. The milestone plan otherwise remains unchanged.
+
+M2.2 implements the existing diagnostic-only boundary: separate inventory/execution/coverage, retain versioned rule references and require review for incomplete identity. Rule approval in the shared type means approval for a diagnostic closure suggestion only. It is not catalog authentication or authorization to suspend a competition session. See the [shared-contract guide](shared-contracts.md) for the implemented behavior and fixture boundary.
 
 Administrator elevation is not a switch to Ring 0. Any later elevation proposal still needs a narrow purpose, explicit capability reporting and review.
 
