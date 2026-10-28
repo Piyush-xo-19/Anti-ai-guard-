@@ -15,7 +15,7 @@ The executable reads its command-line arguments; it does not enumerate processes
 - Git and the Rust toolchain manager, rustup.
 - Rust 1.99.1, pinned in `rust-toolchain.toml`, with rustfmt and Clippy.
 - On the normal Windows MSVC toolchain, the linker and Windows SDK supplied by the Visual Studio C++ build tools.
-- Alternatively, an appropriately installed Windows GNU toolchain. The initial local checks used `x86_64-pc-windows-gnu`; MSVC validation is assigned to CI and has not been observed locally.
+- Alternatively, an appropriately installed Windows GNU toolchain. The initial local checks used `x86_64-pc-windows-gnu`; the hosted Windows workflow passed separately, and local MSVC validation was not performed.
 
 Follow the official [Rust installation guide](https://doc.rust-lang.org/book/ch01-01-installation.html) and [Windows toolchain guidance](https://rust-lang.github.io/rustup/installation/windows.html). Do not disable certificate checks or change Windows security policy to install build dependencies.
 
@@ -58,7 +58,7 @@ cargo test --locked --offline
 
 Seven binary integration tests cover default help, aliases, version consistency, error status/streams, an unavailable scan command, extra arguments and sensitive-argument redaction. They exercise the compiled executable. These are CLI-contract tests, not scanner acceptance results.
 
-The GitHub workflow runs these commands on `windows-latest`. A hosted Windows runner does not establish detection support on Windows 10/11 desktop configurations. Check the actual workflow result after pushing; local success is not a CI pass.
+The GitHub workflow runs these commands on `windows-latest`. [The initial feature-commit run passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40752729560). A hosted Windows runner does not establish detection support on Windows 10/11 desktop configurations. Check the actual workflow result for subsequent changes; local success is not a CI pass.
 
 ## Local tooling and the rustup crash observed during setup
 
@@ -85,6 +85,7 @@ Run it from the repository root, then use the Cargo check commands above. These 
 - Compiler: rustc 1.99.1; Cargo 1.99.1; target `x86_64-pc-windows-gnu`.
 - Local host reports Windows display version 25H2 and build 26200. Exact OS inspection via CIM was unavailable in the restricted development session; no Windows 10 test run was performed.
 - Debug build, formatting, strict Clippy and all seven binary integration tests passed locally.
+- The hosted Windows workflow for feature commit `72d62a4` completed successfully, including its formatting, lint, build and test steps.
 - Real assistant inventory, process visibility, permission scopes, Windows 10 compatibility and runtime performance remain untested because their collectors are not implemented.
 
 ## Independent testing and issue reports

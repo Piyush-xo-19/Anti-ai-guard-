@@ -26,7 +26,7 @@ Help/version and argument errors now work; [development instructions](developmen
 
 ### M2.1: Rust project and reproducible checks
 
-State: implemented. Pinned Rust package, dependency-free parser/library, help/version CLI, seven binary integration tests and Windows CI configuration are present. Local GNU build/format/lint/tests passed. CI execution and Windows 10 compatibility have not been confirmed. See the development document for exact evidence and the unresolved local rustup-manager crash.
+State: implemented. Pinned Rust package, dependency-free parser/library, help/version CLI, seven binary integration tests and Windows CI configuration are present. Local GNU build/format/lint/tests and the [initial hosted Windows CI run](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40752729560) passed. Windows 10 desktop compatibility has not been validated. See the development document for exact evidence and the unresolved local rustup-manager crash.
 
 Deliver the minimal CLI/library structure, build prerequisites, license metadata, formatting/lint/test commands and focused automated checks. Avoid empty placeholder services and unrelated UI/backend scaffolding.
 
