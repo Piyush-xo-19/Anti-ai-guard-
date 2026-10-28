@@ -1,6 +1,6 @@
 # M2 plan: read-only Windows preflight prototype
 
-Updated: 2026-10-28 | State: planned; implementation not started
+Updated: 2026-10-29 | State: in progress; M2.1 CLI foundation implemented
 
 [Public status](../PROJECT_STATUS.md) | [Decisions](decisions.md) | [Coverage contract](coverage-matrix.md) | [Acceptance plan](acceptance-plan.md)
 
@@ -12,17 +12,21 @@ M2 does not grant organizer verification. It cannot establish that nothing ran b
 
 ## Entry gate
 
+The maintainer authorized M2.1 on 2026-10-29. That approval covers project/CLI setup with no device inspection. Privilege/lab scope and tool-identity choices remain review gates before the chunks that collect or classify host observations.
+
 - [ ] Review the M1 coverage matrix and acceptance plan.
 - [ ] Agree privilege and lab scope for the first implementation chunk.
 - [ ] Agree which identity predicates and variants are required versus exploratory.
 - [ ] Identify a trusted synthetic/pinned artifact approach and record test ground truth.
-- [ ] Authorize the first bounded M2 chunk.
+- [x] Authorize the first bounded M2 chunk: M2.1 foundation only.
 
-No installation command, CLI flag or report field below is a claim that a command already works. Exact interfaces and dependencies will be documented with implementation.
+Help/version and argument errors now work; [development instructions](development.md) document their commands. Collector and report interfaces below remain planned.
 
 ## Proposed chunks
 
 ### M2.1: Rust project and reproducible checks
+
+State: implemented. Pinned Rust package, dependency-free parser/library, help/version CLI, seven binary integration tests and Windows CI configuration are present. Local GNU build/format/lint/tests passed. CI execution and Windows 10 compatibility have not been confirmed. See the development document for exact evidence and the unresolved local rustup-manager crash.
 
 Deliver the minimal CLI/library structure, build prerequisites, license metadata, formatting/lint/test commands and focused automated checks. Avoid empty placeholder services and unrelated UI/backend scaffolding.
 
@@ -84,7 +88,7 @@ Use the [acceptance plan](acceptance-plan.md) as the detailed gate. The mileston
 - Report examples using synthetic data only.
 - Focused commits or pull requests for each completed chunk.
 
-The 33 planned scenarios include later-milestone cases; M2 is accountable for its declared required subset, not a claim to have implemented FUT cases. No tests have run yet. Runtime recall/latency targets require later event-collector evaluation.
+The 33 planned scanner scenarios include later-milestone cases; M2 is accountable for its declared required subset, not a claim to have implemented FUT cases. Those scanner scenarios have not run. M2.1 has seven passing local CLI integration tests; they are separate from detector validation. Runtime recall/latency targets require later event-collector evaluation.
 
 ## Progress updates
 

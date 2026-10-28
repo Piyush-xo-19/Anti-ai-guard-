@@ -3,6 +3,7 @@
 
 # Future local build output and participant evidence.
 /target/
+/.tools/
 /reports/
 /logs/
 

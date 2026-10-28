@@ -2,7 +2,7 @@
 
 **An open-source monitoring system for programming competitions that restrict AI coding assistance.**
 
-![Status: architecture review](https://img.shields.io/badge/status-architecture_review-amber)
+![Status: CLI foundation](https://img.shields.io/badge/status-CLI_foundation-amber)
 ![Planned platforms: Windows and Linux](https://img.shields.io/badge/planned_platforms-Windows_%7C_Linux-blue)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -10,13 +10,14 @@ Anti-AI Guard aims to let participants use documentation, the internet, terminal
 
 The design combines a pre-event software inventory, runtime observation of recognized coding assistants, and a competition-session policy. Participants retain control of their personal laptops.
 
-> **Current stage: documentation and architecture review.** There is no working monitoring agent, installer, dashboard, or release yet. The features and flows below describe the proposed system. Detection and performance targets have not been validated.
+> **Current stage: M2.1 CLI foundation.** Help/version commands and argument validation are implemented. Scanning, monitoring, an installer and dashboards are not implemented. The detection features and event flows below remain proposed and unvalidated.
 
 ## Explore the project
 
 - [Current status and milestone plan](PROJECT_STATUS.md)
 - [Accepted decisions and open proposals](docs/decisions.md)
 - [M2 implementation plan](docs/m2-plan.md)
+- [Build, run and test the CLI](docs/development.md)
 - [Competition policy](#competition-policy)
 - [How it is intended to work](#how-it-is-intended-to-work)
 - [Proposed architecture](#proposed-architecture)
@@ -152,13 +153,13 @@ Each milestone will be split further into reviewable changes. This roadmap descr
 | --- | --- | --- |
 | **M0 — Public foundation** | README, MIT license, contribution workflow, and architecture draft | Complete |
 | **M1 — Coverage and design** | Windows 10/11 target matrix, proposed privilege scope, evidence rules and acceptance plan | Documents ready for review; tests not run |
-| **M2 — Read-only preflight** | Rust structure, detection interfaces, installation/process inventory, reports, and tests | Planned |
+| **M2 — Read-only preflight** | Rust structure, detection interfaces, installation/process inventory, reports, and tests | In progress: M2.1 CLI foundation implemented; collectors not started |
 | **M3 — Runtime observation** | Process-event collectors, reconciliation, health checks, and failure reporting | Planned |
 | **M4 — Session and audit** | Policy transitions, bounded local persistence, notifications, and synchronization contract | Planned |
 | **M5 — Organizer workflow** | Enrollment, heartbeats, evidence review, and participant/organizer interfaces | Proposed scope |
 | **M6 — Controlled validation** | Windows/Linux acceptance results, measured performance, privacy checks, and release documentation | Planned |
 
-Windows 10 and Windows 11 are selected for the first prototype. Before M2, review the proposed lab releases, x64 baseline, privilege scope and identity rules. Exact validated builds, later Linux configurations, offline verification rules, backend release scope and whole-application versus feature-level IDE restrictions remain open at their relevant milestones.
+Windows 10 and Windows 11 are selected for the first prototype. M2.1 is authorized as non-inspection project/CLI setup. Before collection begins, review the proposed lab releases, x64 baseline, privilege scope and identity rules. Exact validated builds, later Linux configurations, offline verification rules, backend release scope and whole-application versus feature-level IDE restrictions remain open at their relevant milestones.
 
 The initial engineering targets are at least 95% recall for supported known-agent cases, below 2% false positives across representative benign sessions, and detection of observable prohibited launches within five seconds. **These are unmeasured targets, not achieved results.**
 
@@ -174,7 +175,15 @@ We will build this project incrementally:
 
 Use short-lived branches and pull requests as collaboration grows. Commit messages should explain the change, for example `docs: define process evidence rules` or `feat: add read-only package inventory`. Working features will be documented only after they exist and are validated.
 
-There is no installation or run command yet. The first implementation milestone will introduce those instructions alongside working code.
+The implemented foundation can be built and run after installing the pinned Rust toolchain:
+
+```powershell
+cargo build --locked --offline
+.\target\debug\anti-ai-guard.exe --help
+.\target\debug\anti-ai-guard.exe --version
+```
+
+See [development instructions](docs/development.md) for prerequisites, checks and known environment limitations. `scan` is deliberately rejected until collection and consent/scope handling are implemented.
 
 ## Contributing
 

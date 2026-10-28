@@ -1,0 +1,26 @@
+name: Rust foundation checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  cli-foundation:
+    name: Build and test CLI foundation
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Rust toolchain
+        shell: pwsh
+        run: rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+      - name: Lint
+        run: cargo clippy --locked --offline --all-targets -- -D warnings
+      - name: Build
+        run: cargo build --locked --offline
+      - name: Test
+        run: cargo test --locked --offline

@@ -1,6 +1,6 @@
 # Contributing to Anti-AI Guard
 
-The project is currently in documentation and architecture review. Start with the [README](README.md), [public status](PROJECT_STATUS.md), [decision log](docs/decisions.md), and [M2 plan](docs/m2-plan.md). Agree on a bounded outcome before implementing a subsystem.
+The project is implementing M2 in small chunks; M2.1 provides the CLI foundation. Start with the [README](README.md), [public status](PROJECT_STATUS.md), [decision log](docs/decisions.md), [M2 plan](docs/m2-plan.md), and [development instructions](docs/development.md). Agree on a bounded outcome before implementing a subsystem.
 
 ## One reviewable chunk at a time
 
@@ -42,7 +42,7 @@ Make a commit when a coherent chunk has passed its relevant checks. Push complet
 
 For documentation changes, check links, terminology, Markdown structure, and whether claims match the actual implementation stage.
 
-When Rust implementation begins, its chunk must introduce the applicable formatting, lint, and test commands. OS collector changes require platform-specific evidence; unit tests alone do not establish Windows/Linux telemetry coverage.
+For Rust changes, run the formatting, strict Clippy, locked build and tests in the [development instructions](docs/development.md). Build/run and test each feature before pushing; independent testers can then open reproducible issues. Cosmetic and non-blocking issues may be scheduled later. Build failures, data-loss/privacy risks, incorrect violation reports and bugs that block dependent work must be resolved before building on them. OS collector changes require platform-specific evidence; unit tests alone do not establish Windows/Linux telemetry coverage.
 
 ## Maintainer's local progress tracker
 

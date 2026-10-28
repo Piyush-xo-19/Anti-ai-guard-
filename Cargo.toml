@@ -1,0 +1,11 @@
+[package]
+name = "anti-ai-guard"
+version = "0.1.0-alpha.1"
+edition = "2021"
+rust-version = "1.99"
+description = "Read-only preflight tooling for programming competition environments"
+license = "MIT"
+repository = "https://github.com/Piyush-xo-19/Anti-ai-guard-"
+publish = false
+
+[dependencies]

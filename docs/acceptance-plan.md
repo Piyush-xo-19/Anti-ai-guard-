@@ -126,6 +126,8 @@ Record scan duration, peak resource use where measurable and timeout behavior. S
 - [x] Include negative, ambiguous-identity, privacy and failure cases.
 - [x] Define the M2 report boundary and implementation exit gates.
 - [ ] Maintainer review of baseline privilege scope, x64/lab versions and identity/action rules.
-- [ ] Select the next bounded M2 implementation chunk after review.
+- [x] Authorize M2.1 non-inspection project/CLI setup on 2026-10-29; remaining review gates apply before the affected collection chunks.
+
+M2.1 now has seven passing local CLI integration tests documented in [development instructions](development.md). They do not execute or satisfy the 33 scanner scenarios above.
 
 This completes preparation of the M1 coverage/test documents, not approval of all architecture proposals or execution of their tests.

@@ -6,7 +6,7 @@ Version: 0.1 | Updated: 2026-10-28 | Status: implementation contract draft; no d
 
 ## 1. Decisions and boundaries
 
-**Maintainer decision:** the first prototype targets native Windows 10 and Windows 11. Linux remains a later v1 target. Do not begin M2 until this M1 contract has been reviewed.
+**Maintainer decision:** the first prototype targets native Windows 10 and Windows 11. Linux remains a later v1 target. M2.1 project/CLI setup was authorized on 2026-10-29 with no device inspection; the remaining M1 scope review is required before the affected collection/classification chunks.
 
 **Proposed implementation baseline:** standard-user inspection of the consenting participant's session and readable installation metadata. Elevation is optional diagnostic coverage to investigate, not a requirement to run the first CLI and not a claim of complete visibility. Both modes run in Ring 3.
 

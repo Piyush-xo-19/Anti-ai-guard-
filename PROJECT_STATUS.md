@@ -1,8 +1,8 @@
 # Project status and milestone plan
 
-Updated: 2026-10-28
+Updated: 2026-10-29
 
-**Current phase: M1 design review. M2 implementation has not started.**
+**Current phase: M2.1 CLI foundation implemented. Next proposed chunk: M2.2 shared observations and coverage contracts.**
 
 This is the public progress summary for contributors. No private maintainer notes or earlier chat history are needed to understand the project direction.
 
@@ -19,15 +19,17 @@ This is the public progress summary for contributors. No private maintainer note
 - [x] Define 33 planned acceptance scenarios covering detection, benign activity, privacy, failures and deferred work.
 - [x] Publish a contributor-facing decision log and bounded M2 implementation plan.
 
-These are documentation/design deliverables. There is no working scanner, runtime monitor, backend, installer or dashboard yet. None of the 33 scanner scenarios has been executed; there are no validated OS configurations or achieved performance results.
+- [x] Implement M2.1: pinned Rust project, help/version CLI, predictable argument errors, seven integration tests and Windows CI configuration.
+
+There is no working scanner, runtime monitor, backend, installer or dashboard yet. Seven CLI integration tests passed locally; none of the 33 scanner scenarios has been executed. No detection configuration or performance target has been validated.
 
 ## Milestones
 
 | Milestone | State | Deliverable / exit condition |
 | --- | --- | --- |
 | M0: public foundation | Complete | Project introduction, license, architecture entry points and contribution workflow published |
-| M1: coverage and design | Documents prepared; review pending | Agree the prototype privilege/lab/identity scope using the published coverage matrix and acceptance plan |
-| M2: read-only preflight | Planned; not started | Scoped Rust CLI, installation/process snapshots, diagnostic reports and documented Windows results; see the M2 plan |
+| M1: coverage and design | Documents prepared; inspection-specific review pending | Settle privilege/lab/identity scope before the affected collection chunks |
+| M2: read-only preflight | In progress: M2.1 implemented | CLI foundation works; shared contracts, collection and reporting remain planned |
 | M3: runtime observation | Not started | Supported process launch events, reconciliation, continuity and health measurements |
 | M4: sessions and audit | Not started | Policy transitions, bounded durable audit/outbox and recovery behavior |
 | M5: organizer workflow | Proposed scope; not started | Enrollment, admission/leases, heartbeats, review and interfaces |
@@ -41,15 +43,17 @@ Linux remains a later v1 target. The first prototype is native Windows 10 and Wi
 - [ ] Review the proposed x64 lab scope and exact Windows 10/11 test releases/builds.
 - [ ] Agree the evidence predicates for candidate versus supported identity findings.
 - [ ] Review required versus exploratory tool-installation variants and M2 exit gates.
-- [ ] Record the review outcome and select one initial M2 chunk.
+- [x] Authorize one initial M2 chunk: CLI/project foundation only; device inspection is not enabled.
 
 Backend lease deadlines, retention policy and IDE feature controls remain open at their relevant milestones. M2 must not silently implement or claim those capabilities.
 
 ## What M2 will deliver
 
+M2.1 now implements help/version and argument validation. [Build and test it](docs/development.md). Local format, strict Clippy, build and seven binary integration tests passed using Rust 1.99.1 on a Windows GNU host. The Windows GitHub workflow is configured; its result has not yet been checked. Windows 10 and scanner tests remain unexecuted.
+
 An on-demand, read-only diagnostic scanner that inventories supported assistant installations and processes alive during the scan. It will report scope, evidence and coverage limitations clearly. It will not issue verified competition status or automatically stop applications.
 
-The [M2 plan](docs/m2-plan.md) splits this into project setup, shared data/policy contracts, installation inventory, process snapshots, report integration and validation. Those chunks will be reviewed and committed separately.
+The [M2 plan](docs/m2-plan.md) splits this into project setup, shared data/policy contracts, installation inventory, process snapshots, report integration and validation. Remaining chunks will be reviewed and committed separately, then independently tested through GitHub issues.
 
 ## Evidence and publication history
 
