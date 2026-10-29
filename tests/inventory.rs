@@ -187,8 +187,10 @@ fn cli_outputs_scoped_inventory_and_empty_scope_warning() {
 fn junction(link: &Path, target: &Path) {
     let status = Command::new("cmd.exe")
         .args(["/d", "/c", "mklink", "/J"])
-        .arg(link)
-        .arg(target)
+        // cmd's mklink treats forward slashes as switches even though Rust's
+        // filesystem APIs accept them. Normalize only these synthetic paths.
+        .arg(link.to_string_lossy().replace('/', "\\"))
+        .arg(target.to_string_lossy().replace('/', "\\"))
         .output()
         .unwrap();
     assert!(
