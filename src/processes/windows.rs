@@ -2,7 +2,9 @@ use super::*;
 
 #[cfg(not(windows))]
 #[derive(Default)]
-pub(super) struct NativeProvider;
+pub(super) struct NativeProvider {
+    _unsupported: (),
+}
 #[cfg(not(windows))]
 impl Provider for NativeProvider {
     fn capture(&mut self) -> Result<Context, GapReason> {

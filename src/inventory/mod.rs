@@ -208,6 +208,8 @@ const PACKAGE_SELECTORS: &[Selector] = &[
     },
 ];
 
+// Successful probes are constructed only by the Windows backend or test doubles.
+#[cfg_attr(not(windows), allow(dead_code))]
 enum Probe {
     Absent,
     Indicator,
