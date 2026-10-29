@@ -6,9 +6,13 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+use std::sync::Mutex;
 use std::time::Duration;
 
 static NEXT: AtomicUsize = AtomicUsize::new(0);
+// The collector deliberately guards common ancestors against writers. Test
+// setup must not mutate those shared ancestors while another fixture scans.
+static SERIAL: Mutex<()> = Mutex::new(());
 struct Fixture {
     path: PathBuf,
 }
@@ -61,6 +65,7 @@ impl Drop for Fixture {
 
 #[test]
 fn inventory_reads_exact_package_metadata_and_preserves_generation() {
+    let _serial = SERIAL.lock().unwrap();
     let fixture = Fixture::new();
     for (relative, package) in [
         ("node_modules/@openai/codex/package.json", "@openai/codex"),
@@ -93,6 +98,7 @@ fn inventory_reads_exact_package_metadata_and_preserves_generation() {
 
 #[test]
 fn no_recursive_discovery_or_tool_execution_occurs() {
+    let _serial = SERIAL.lock().unwrap();
     let fixture = Fixture::new();
     fixture.write(
         "codex.cmd",
@@ -115,6 +121,7 @@ fn no_recursive_discovery_or_tool_execution_occurs() {
 
 #[test]
 fn invalid_or_oversized_manifests_report_partial_without_echoing_contents() {
+    let _serial = SERIAL.lock().unwrap();
     let fixture = Fixture::new();
     fixture.write(
         "node_modules/@openai/codex/package.json",
@@ -143,6 +150,7 @@ fn invalid_or_oversized_manifests_report_partial_without_echoing_contents() {
 
 #[test]
 fn missing_root_does_not_become_a_complete_empty_scan() {
+    let _serial = SERIAL.lock().unwrap();
     let fixture = Fixture::new();
     let request = InventoryRequest::new(
         true,
@@ -161,6 +169,7 @@ fn missing_root_does_not_become_a_complete_empty_scan() {
 
 #[test]
 fn cli_outputs_scoped_inventory_and_empty_scope_warning() {
+    let _serial = SERIAL.lock().unwrap();
     let fixture = Fixture::new();
     fixture.write("opencode.exe", b"fixture");
     let output = fixture.run("--bin-root");
@@ -182,11 +191,17 @@ fn junction(link: &Path, target: &Path) {
         .arg(target)
         .output()
         .unwrap();
-    assert!(status.status.success(), "fixture junction creation failed");
+    assert!(
+        status.status.success(),
+        "fixture junction creation failed: {} {}",
+        String::from_utf8_lossy(&status.stdout),
+        String::from_utf8_lossy(&status.stderr)
+    );
 }
 
 #[test]
 fn junction_roots_and_intermediate_package_junctions_are_never_followed() {
+    let _serial = SERIAL.lock().unwrap();
     let fixture = Fixture::new();
     let outside = Fixture::new();
     outside.write("codex.exe", b"outside-approved-root");
@@ -216,6 +231,7 @@ fn junction_roots_and_intermediate_package_junctions_are_never_followed() {
 
 #[test]
 fn concurrent_writer_is_reported_as_sharing_conflict() {
+    let _serial = SERIAL.lock().unwrap();
     let fixture = Fixture::new();
     fixture.write("codex.exe", b"fixture");
     let _writer = fs::OpenOptions::new()

@@ -72,7 +72,11 @@ mod native {
         if content {
             options.read(true);
         } else {
-            options.access_mode(FILE_READ_ATTRIBUTES);
+            // FILE_READ_ATTRIBUTES alone bypasses normal sharing checks on
+            // Windows. Also request FILE_READ_DATA/LIST_DIRECTORY (bit 1) so
+            // retaining the handle actually excludes concurrent writers.
+            // Native/shim file contents are still never read.
+            options.access_mode(FILE_READ_ATTRIBUTES | 1);
         }
         let file = match options.open(path) {
             Ok(file) => file,
