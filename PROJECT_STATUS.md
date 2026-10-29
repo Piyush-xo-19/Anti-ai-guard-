@@ -55,3 +55,12 @@ Run independent diagnostics only with explicit consent and selected roots/sessio
 ## Issue maintenance - 2026-10-30
 
 Regression fixes for #1/#3/#4/#5/#6 validate metadata and active coverage claims, distinguish unsupported collectors, normalize boot-ID boundaries and emit each concern once per target/reason. All 24 contract tests passed locally; hosted verification and remaining issue work follow in focused commits. These changes do not complete the outstanding M2 desktop/strong-identity gates.
+
+### CI and report contract follow-up
+
+- Added shared-code Linux CI and strict rustdoc on every CI OS (#7); no Linux collector support claimed.
+- Formalized schema v1 compatibility and retained the existing minimized serde_json boundary (#9).
+- Added a shared synthetic example/golden test; arbitrary free-text minimization stays covered.
+- Windows local checks: 65 selected tests plus two doctests pass; strict Clippy and rustdoc pass.
+- Full Windows fixture and new Linux CI results are pending on the maintenance branch.
+- M2 desktop/strong-identity exit gates remain incomplete.

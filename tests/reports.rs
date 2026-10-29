@@ -190,3 +190,21 @@ fn bad_path_environment_is_ignored_without_opt_in_and_rejected_with_it() {
     )
     .is_ok());
 }
+
+#[path = "../examples/support/report_fixture.rs"]
+mod published_synthetic;
+
+#[test]
+fn published_schema_v1_fixture_matches_json_and_text_golden_files() {
+    let public = report::project(&published_synthetic::fixture());
+    assert_eq!(public.value()["schema_version"], 1);
+    assert_eq!(
+        public.json(),
+        include_str!("../docs/examples/diagnostic.synthetic.json").replace("\r\n", "\n")
+    );
+    assert_eq!(
+        public.text(),
+        include_str!("../docs/examples/diagnostic.synthetic.txt").replace("\r\n", "\n")
+    );
+    assert_eq!(public.exit_code(), 3);
+}
