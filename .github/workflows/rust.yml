@@ -33,3 +33,21 @@ jobs:
           name: fixture-evidence-${{ matrix.os }}
           path: reports/validation/ci-${{ matrix.os }}.json
           if-no-files-found: error
+  shared-contracts-linux:
+    name: Shared contracts (Linux; no collector support claim)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      RUSTDOCFLAGS: -D warnings
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Rust toolchain
+        run: rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy
+      - run: cargo fetch --locked
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --locked --offline --all-targets -- -D warnings
+      - run: cargo build --locked --offline
+      - run: cargo test --locked --offline
+      - run: cargo run --locked --offline --example diagnostic
+      - run: cargo run --locked --offline --example report_fixture -- --json
+      - run: cargo doc --no-deps --locked --offline
