@@ -71,3 +71,12 @@ nulls, enum spellings and compatibility rules. Breaking wire changes require a
 schema-version bump; policy and indicator versions remain separate. A shared
 synthetic fixture must match the committed JSON/text golden files on every CI OS.
 This resolves issue #9 without expanding collection or enforcement scope.
+
+## Typed public DTOs (accepted 2026-10-30, issue #15)
+
+Use direct `serde` with its `derive` feature for private public-output DTOs only.
+This enables the already locked serde/proc-macro packages; it adds no new package
+versions. Explicit serde renames decouple wire enum names from Debug. Text renders
+from the typed minimized DTO, and `value()` remains a compatibility view built
+from that DTO. Shared raw snapshot types do not derive serialization. The v1
+JSON/text golden files must remain byte-identical in this refactor.

@@ -1,13 +1,114 @@
-//! Bounded, minimized human/JSON projections from the SAME diagnostic result.
-//! Never serializes a raw Snapshot, Debug dump, path, argument or free-text label.
-use crate::{model::*, policy::CoverageSummary, scan::ScanResult};
-use serde_json::{json, Value};
+//! Bounded, minimized typed public projections. Raw snapshots never serialize.
+use crate::{model::*, policy::*, scan::ScanResult};
+use serde::Serialize;
+use serde_json::Value;
+use std::fmt;
 
 const MAX_FINDINGS: usize = 512;
 const MAX_COVERAGE: usize = 64;
 const MAX_CONCERNS: usize = 1024;
 
+mod wire;
+use wire::*;
+
+#[derive(Serialize)]
+enum FindingKind {
+    #[serde(rename = "Installation")]
+    Installation,
+    #[serde(rename = "Process")]
+    Process,
+}
+#[derive(Serialize)]
+struct PlatformData {
+    os: Os,
+    build: Option<String>,
+    architecture: Arch,
+    architecture_basis: &'static str,
+    inspection_mode: Mode,
+}
+#[derive(Serialize)]
+struct ScopeData {
+    id: u32,
+    kind: ScopeType,
+    label: String,
+}
+#[derive(Serialize)]
+struct TargetData {
+    collector: CollectorType,
+    scope_id: u32,
+}
+#[derive(Serialize)]
+struct CollectorData {
+    collector: CollectorType,
+    scope_id: u32,
+    state: CollectorState,
+    gaps: Vec<Gap>,
+}
+#[derive(Serialize)]
+struct ConcernData {
+    scope_id: Option<u32>,
+    collector: Option<CollectorType>,
+    reason: ConcernReason,
+}
+#[derive(Serialize)]
+struct ProcessData {
+    pid: u32,
+    creation_filetime: Option<u64>,
+    state: State,
+    boot_identity_available: bool,
+}
+#[derive(Serialize)]
+struct FindingData {
+    index: usize,
+    scope_id: u32,
+    kind: FindingKind,
+    source: Source,
+    tool_id: &'static str,
+    evidence_class: Evidence,
+    indicator_rule_id: Option<&'static str>,
+    upstream_rule_reference_omitted: bool,
+    action: ActionWire,
+    reason: Reason,
+    process: Option<ProcessData>,
+}
+#[derive(Serialize)]
+struct LinkData {
+    process_finding: usize,
+    installation_finding: usize,
+    basis: &'static str,
+}
+#[derive(Serialize)]
+struct MetricsData {
+    inventory_probes: usize,
+    metadata_bytes: usize,
+    process_entries: usize,
+    process_queries: usize,
+    collection_elapsed_ms: u64,
+}
+#[derive(Serialize)]
+struct ReportData {
+    schema_version: u32,
+    policy_version: &'static str,
+    scan_id: String,
+    observed_at_ms: u64,
+    platform: PlatformData,
+    collection_execution: Execution,
+    coverage: Coverage,
+    eligibility: &'static str,
+    report_truncated: bool,
+    indicator_catalog_version: &'static str,
+    scopes: Vec<ScopeData>,
+    requested: Vec<TargetData>,
+    collectors: Vec<CollectorData>,
+    coverage_concerns: Vec<ConcernData>,
+    findings: Vec<FindingData>,
+    location_links: Vec<LinkData>,
+    metrics: MetricsData,
+    limitations: Vec<&'static str>,
+}
 pub struct PublicReport {
+    data: ReportData,
+    // Compatibility view for callers. Constructed only from the typed projection.
     value: Value,
     exit_code: u8,
 }
@@ -53,41 +154,158 @@ pub fn project(result: &ScanResult) -> PublicReport {
     } else {
         report.coverage
     };
-    let findings:Vec<_>=snapshot.observations.iter().take(MAX_FINDINGS).enumerate().map(|(index,o)| {
-        let (kind,pid,start,state,boot)=match &o.kind {
-            ObservationKind::Installation=>("Installation",None,None,None,false),
-            ObservationKind::Process {instance,state}=>("Process",Some(instance.pid),instance.start_time,Some(format!("{state:?}")),instance.boot_id.is_some()),
-        };
-        let suggestion=report.suggestions.get(index);
-        let rule=match (o.identity.class,o.source) {
-            (EvidenceClass::Candidate,ObservationSource::PackageMetadata)=>Some("npm-package-name-indicators-v1"),
-            (EvidenceClass::Candidate,ObservationSource::ExecutableArtifact)=>Some("native-file-name-indicators-v1"),
-            (EvidenceClass::Candidate,ObservationSource::ProcessSnapshot)=>Some("process-basename-indicators-v1"),
-            _=>None,
-        };
-        json!({"index":index,"scope_id":o.scope.0,"kind":kind,"source":format!("{:?}",o.source),"tool_id":tool(o.identity.tool.as_ref().map(|t|t.id.as_str())),
-            "evidence_class":format!("{:?}",o.identity.class),"indicator_rule_id":rule,"upstream_rule_reference_omitted":o.identity.rule_match.is_some(),
-            "action":suggestion.map(|s|format!("{:?}",s.action)).unwrap_or_else(||"RequestReview".into()),"reason":suggestion.map(|s|format!("{:?}",s.reason)).unwrap_or_else(||"MissingSuggestion".into()),
-            "process":pid.map(|pid|json!({"pid":pid,"creation_filetime":start,"state":state,"boot_identity_available":boot}))})
-    }).collect();
-    let scopes:Vec<_>=snapshot.scopes.iter().take(MAX_COVERAGE).map(|s|json!({"id":s.id.0,"kind":format!("{:?}",s.kind),"label":match s.kind {ScopeKind::InstallationRoot=>format!("installation-root-{}",s.id.0),ScopeKind::CurrentSessionProcesses=>"current-session-known-native-name-selectors".into()}})).collect();
-    let collectors:Vec<_>=snapshot.coverage.iter().take(MAX_COVERAGE).map(|c|json!({"collector":format!("{:?}",c.target.collector),"scope_id":c.target.scope.0,"state":format!("{:?}",c.state),"gaps":c.gaps.iter().take(32).map(|g|format!("{g:?}")).collect::<Vec<_>>()})).collect();
-    let requested:Vec<_>=snapshot.requested.iter().take(MAX_COVERAGE).map(|target|json!({"collector":format!("{:?}",target.collector),"scope_id":target.scope.0})).collect();
-    let concerns:Vec<_>=report.coverage_concerns.iter().take(MAX_CONCERNS).map(|c|json!({"scope_id":c.target.map(|t|t.scope.0),"collector":c.target.map(|t|format!("{:?}",t.collector)),"reason":format!("{:?}",c.reason)})).collect();
-    let links:Vec<_>=result.location_links.iter().take(MAX_FINDINGS).filter(|l|l.process_observation<findings.len() && l.installation_observation<findings.len()).map(|l|json!({"process_finding":l.process_observation,"installation_finding":l.installation_observation,"basis":"same-declared-location-only-not-artifact-proof"})).collect();
-    let build = snapshot
-        .platform
-        .build
-        .as_deref()
-        .filter(|s| !s.is_empty() && s.len() <= 20 && s.bytes().all(|b| b.is_ascii_digit()));
-    let value = json!({"schema_version":1,"policy_version":crate::policy::POLICY_VERSION,"scan_id":scan_id(&snapshot.scan_id),"observed_at_ms":snapshot.observed_at_ms,
-        "platform":{"os":format!("{:?}",snapshot.platform.os),"build":build,"architecture":format!("{:?}",snapshot.platform.architecture),"architecture_basis":"compiled-target","inspection_mode":format!("{:?}",snapshot.platform.inspection_mode)},
-        "collection_execution":format!("{:?}",snapshot.execution),"coverage":format!("{coverage:?}"),"eligibility":"NotIssued","report_truncated":truncated,"indicator_catalog_version":"windows-name-and-package-indicators-v1",
-        "scopes":scopes,"requested":requested,"collectors":collectors,"coverage_concerns":concerns,"findings":findings,"location_links":links,
-        "metrics":{"inventory_probes":result.metrics.inventory_probes,"metadata_bytes":result.metrics.metadata_bytes,"process_entries":result.metrics.process_entries,"process_queries":result.metrics.process_queries,"collection_elapsed_ms":result.metrics.collection_elapsed_ms},
-        "limitations":["only-explicit-installation-roots-and-known-native-name-selectors","no-trusted-strong-identity-catalog","missing-boot-identity-limits-process-correlation","generic-interpreters-renamed-custom-and-guest-agents-not-identified","snapshot-not-continuous-monitoring","empty-findings-never-prove-clean-device","this-report-does-not-establish-desktop-platform-support","no-eligibility-or-automatic-process-control"]});
+    let findings = snapshot
+        .observations
+        .iter()
+        .take(MAX_FINDINGS)
+        .enumerate()
+        .map(|(index, o)| {
+            let (kind, process) = match &o.kind {
+                ObservationKind::Installation => (FindingKind::Installation, None),
+                ObservationKind::Process { instance, state } => (
+                    FindingKind::Process,
+                    Some(ProcessData {
+                        pid: instance.pid,
+                        creation_filetime: instance.start_time,
+                        state: (*state).into(),
+                        boot_identity_available: instance.boot_id.is_some(),
+                    }),
+                ),
+            };
+            let suggestion = report.suggestions.get(index);
+            FindingData {
+                index,
+                scope_id: o.scope.0,
+                kind,
+                source: o.source.into(),
+                tool_id: tool(o.identity.tool.as_ref().map(|t| t.id.as_str())),
+                evidence_class: o.identity.class.into(),
+                indicator_rule_id: match (o.identity.class, o.source) {
+                    (EvidenceClass::Candidate, ObservationSource::PackageMetadata) => {
+                        Some("npm-package-name-indicators-v1")
+                    }
+                    (EvidenceClass::Candidate, ObservationSource::ExecutableArtifact) => {
+                        Some("native-file-name-indicators-v1")
+                    }
+                    (EvidenceClass::Candidate, ObservationSource::ProcessSnapshot) => {
+                        Some("process-basename-indicators-v1")
+                    }
+                    _ => None,
+                },
+                upstream_rule_reference_omitted: o.identity.rule_match.is_some(),
+                action: suggestion
+                    .map(|s| s.action.into())
+                    .unwrap_or(ActionWire::RequestReview),
+                reason: suggestion
+                    .map(|s| s.reason.into())
+                    .unwrap_or(Reason::MissingSuggestion),
+                process,
+            }
+        })
+        .collect::<Vec<_>>();
+    let data = ReportData {
+        schema_version: 1,
+        policy_version: POLICY_VERSION,
+        scan_id: scan_id(&snapshot.scan_id).into(),
+        observed_at_ms: snapshot.observed_at_ms,
+        platform: PlatformData {
+            os: snapshot.platform.os.into(),
+            build: snapshot
+                .platform
+                .build
+                .as_ref()
+                .filter(|s| !s.is_empty() && s.len() <= 20 && s.bytes().all(|b| b.is_ascii_digit()))
+                .cloned(),
+            architecture: snapshot.platform.architecture.into(),
+            architecture_basis: "compiled-target",
+            inspection_mode: snapshot.platform.inspection_mode.into(),
+        },
+        collection_execution: snapshot.execution.into(),
+        coverage: coverage.into(),
+        eligibility: "NotIssued",
+        report_truncated: truncated,
+        indicator_catalog_version: "windows-name-and-package-indicators-v1",
+        scopes: snapshot
+            .scopes
+            .iter()
+            .take(MAX_COVERAGE)
+            .map(|s| ScopeData {
+                id: s.id.0,
+                kind: s.kind.into(),
+                label: match s.kind {
+                    ScopeKind::InstallationRoot => format!("installation-root-{}", s.id.0),
+                    ScopeKind::CurrentSessionProcesses => {
+                        "current-session-known-native-name-selectors".into()
+                    }
+                },
+            })
+            .collect(),
+        requested: snapshot
+            .requested
+            .iter()
+            .take(MAX_COVERAGE)
+            .map(|t| TargetData {
+                collector: t.collector.into(),
+                scope_id: t.scope.0,
+            })
+            .collect(),
+        collectors: snapshot
+            .coverage
+            .iter()
+            .take(MAX_COVERAGE)
+            .map(|c| CollectorData {
+                collector: c.target.collector.into(),
+                scope_id: c.target.scope.0,
+                state: c.state.into(),
+                gaps: c.gaps.iter().take(32).copied().map(Into::into).collect(),
+            })
+            .collect(),
+        coverage_concerns: report
+            .coverage_concerns
+            .iter()
+            .take(MAX_CONCERNS)
+            .map(|c| ConcernData {
+                scope_id: c.target.map(|t| t.scope.0),
+                collector: c.target.map(|t| t.collector.into()),
+                reason: c.reason.into(),
+            })
+            .collect(),
+        location_links: result
+            .location_links
+            .iter()
+            .take(MAX_FINDINGS)
+            .filter(|l| {
+                l.process_observation < findings.len()
+                    && l.installation_observation < findings.len()
+            })
+            .map(|l| LinkData {
+                process_finding: l.process_observation,
+                installation_finding: l.installation_observation,
+                basis: "same-declared-location-only-not-artifact-proof",
+            })
+            .collect(),
+        findings,
+        metrics: MetricsData {
+            inventory_probes: result.metrics.inventory_probes,
+            metadata_bytes: result.metrics.metadata_bytes,
+            process_entries: result.metrics.process_entries,
+            process_queries: result.metrics.process_queries,
+            collection_elapsed_ms: result.metrics.collection_elapsed_ms,
+        },
+        limitations: vec![
+            "only-explicit-installation-roots-and-known-native-name-selectors",
+            "no-trusted-strong-identity-catalog",
+            "missing-boot-identity-limits-process-correlation",
+            "generic-interpreters-renamed-custom-and-guest-agents-not-identified",
+            "snapshot-not-continuous-monitoring",
+            "empty-findings-never-prove-clean-device",
+            "this-report-does-not-establish-desktop-platform-support",
+            "no-eligibility-or-automatic-process-control",
+        ],
+    };
     PublicReport {
-        value,
+        value: serde_json::to_value(&data).expect("bounded typed projection serializes"),
+        data,
         exit_code: if snapshot.execution == ScanExecution::Finished
             && coverage == CoverageSummary::InspectedRequestedScope
         {
@@ -105,86 +323,99 @@ impl PublicReport {
         self.exit_code
     }
     pub fn json(&self) -> String {
-        serde_json::to_string_pretty(&self.value).expect("bounded JSON value serializes") + "\n"
+        serde_json::to_string_pretty(&self.value).expect("bounded typed projection serializes")
+            + "\n"
     }
     pub fn text(&self) -> String {
-        fn string(value: &Value) -> &str {
-            value.as_str().unwrap_or("unknown")
-        }
-        let v = &self.value;
+        let v = &self.data;
         let mut out = format!(
             "Anti-AI Guard diagnostic {}\nExecution: {}; coverage: {}; eligibility: NotIssued\n",
-            string(&v["scan_id"]),
-            string(&v["collection_execution"]),
-            string(&v["coverage"])
+            v.scan_id, v.collection_execution, v.coverage
         );
         out.push_str(&format!(
             "Platform: {} build {} architecture {} (compiled target), mode {}\n",
-            string(&v["platform"]["os"]),
-            string(&v["platform"]["build"]),
-            string(&v["platform"]["architecture"]),
-            string(&v["platform"]["inspection_mode"])
+            v.platform.os,
+            v.platform.build.as_deref().unwrap_or("unknown"),
+            v.platform.architecture,
+            v.platform.inspection_mode
         ));
-        for finding in v["findings"].as_array().expect("constructed array") {
+        for finding in &v.findings {
             out.push_str(&format!(
                 "Finding {} scope {}: {} | {} | {} ({})",
-                finding["index"],
-                finding["scope_id"],
-                string(&finding["tool_id"]),
-                string(&finding["evidence_class"]),
-                string(&finding["action"]),
-                string(&finding["reason"])
+                finding.index,
+                finding.scope_id,
+                finding.tool_id,
+                finding.evidence_class,
+                finding.action,
+                finding.reason
             ));
-            if let Some(pid) = finding["process"]["pid"].as_u64() {
+            if let Some(process) = &finding.process {
                 out.push_str(&format!(
-                    " PID {pid} creation={} state={} boot_identity={}",
-                    finding["process"]["creation_filetime"],
-                    string(&finding["process"]["state"]),
-                    finding["process"]["boot_identity_available"]
+                    " PID {} creation={} state={} boot_identity={}",
+                    process.pid,
+                    serde_json::to_value(process.creation_filetime).expect("integer serializes"),
+                    process.state,
+                    process.boot_identity_available
                 ));
             }
             out.push_str(&format!(
-                " source={} indicator_rule={}",
-                string(&finding["source"]),
-                string(&finding["indicator_rule_id"])
+                " source={} indicator_rule={}\n",
+                finding.source,
+                finding.indicator_rule_id.unwrap_or("unknown")
             ));
-            out.push('\n');
         }
-        for collector in v["collectors"].as_array().expect("constructed array") {
+        for collector in &v.collectors {
             out.push_str(&format!(
                 "Scope {} {}: {} {}\n",
-                collector["scope_id"],
-                string(&collector["collector"]),
-                string(&collector["state"]),
-                collector["gaps"]
+                collector.scope_id,
+                collector.collector,
+                collector.state,
+                serde_json::to_value(&collector.gaps).expect("wire enums serialize")
             ));
         }
-        for concern in v["coverage_concerns"]
-            .as_array()
-            .expect("constructed array")
-        {
+        for concern in &v.coverage_concerns {
             out.push_str(&format!(
                 "Coverage concern scope {}: {}\n",
-                concern["scope_id"],
-                string(&concern["reason"])
+                serde_json::to_value(concern.scope_id).expect("integer serializes"),
+                concern.reason
             ));
         }
-        if v["report_truncated"] == true {
+        if v.report_truncated {
             out.push_str("ReportTruncated: bounded output; coverage incomplete.\n");
         }
-        for link in v["location_links"].as_array().expect("constructed array") {
+        for link in &v.location_links {
             out.push_str(&format!(
                 "Location link {} -> {}: {}\n",
-                link["process_finding"],
-                link["installation_finding"],
-                string(&link["basis"])
+                link.process_finding, link.installation_finding, link.basis
             ));
         }
-        out.push_str(&format!("Metrics: {}\n", v["metrics"]));
+        out.push_str(&format!(
+            "Metrics: {}\n",
+            serde_json::to_value(&v.metrics).expect("integer metrics serialize")
+        ));
         out.push_str("Scope is limited to documented selectors; an empty inventory does not mean a clean device.\n");
-        for limitation in v["limitations"].as_array().expect("constructed array") {
-            out.push_str(&format!("Limit: {}\n", string(limitation)));
+        for limitation in &v.limitations {
+            out.push_str(&format!("Limit: {limitation}\n"));
         }
         out
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[derive(Serialize, Debug)]
+    enum RenamedRustVariant {
+        #[serde(rename = "InventoryOnly")]
+        InternalInventoryName,
+    }
+    #[test]
+    fn wire_names_survive_rust_debug_identifier_changes() {
+        let renamed = RenamedRustVariant::InternalInventoryName;
+        assert_ne!(format!("{renamed:?}"), "InventoryOnly");
+        assert_eq!(
+            serde_json::to_value(renamed).unwrap(),
+            serde_json::to_value(ActionWire::from(SuggestedAction::InventoryOnly)).unwrap()
+        );
     }
 }
