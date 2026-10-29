@@ -4,7 +4,7 @@ Implemented: 2026-10-29 | In-memory library contract, schema version 1
 
 [M2 plan](m2-plan.md) | [Development](development.md) | [Public status](../PROJECT_STATUS.md)
 
-M2.2 supplies platform-independent Rust types and a pure evaluator. It does not inspect a device. The existing CLI still provides help/version only. Device collection, consent handling, report serialization and real identity matching remain later chunks.
+M2.2 supplies platform-independent Rust types and a pure evaluator. These M2.2 modules do not inspect a device. The CLI now separately offers [M2.3 consented installation inventory](installation-inventory.md). Process collection, full report serialization and real strong-identity matching remain later chunks.
 
 ## Code and responsibilities
 
@@ -15,7 +15,7 @@ M2.2 supplies platform-independent Rust types and a pure evaluator. It does not 
 | [contracts.rs](../tests/contracts.rs) | Synthetic contract scenarios, including uncertain identity, missing coverage and PID reuse |
 | [diagnostic.rs](../examples/diagnostic.rs) | Runnable hard-coded demonstration, without inspecting the host |
 
-There are no added dependencies. The types use enums for states/reasons and opaque scope references. String metadata must be minimized by the caller: a scope label is a description such as `declared package root 1`, not a personal absolute path. No raw command-line, environment, prompt, history or document-content field exists. This is not a general-purpose string redactor; callers must not put private data into labels or identifiers.
+The M2.2 types/evaluator use only the standard library; M2.3 separately adds serde_json for bounded manifests. The types use enums for states/reasons and opaque scope references. String metadata must be minimized by the caller: a scope label is a description such as `declared package root 1`, not a personal absolute path. No raw command-line, environment, prompt, history or document-content field exists. This is not a general-purpose string redactor; callers must not put private data into labels or identifiers.
 
 ## Observation and identity boundaries
 
@@ -95,4 +95,4 @@ The demonstration uses hard-coded fixture observations, unknown platform metadat
 
 Nineteen synthetic contract tests and seven existing CLI integration tests passed locally with Rust 1.99.1 on the existing Windows GNU toolchain. Formatting, strict Clippy, build and the synthetic example also passed. [Hosted Windows CI for the feature commit passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40757983515), including formatting, lint, build, tests and the example. Check subsequent commits independently.
 
-None of the 33 real scanner acceptance scenarios has run. Actual Windows 10/11 inspection, consent enforcement, trusted identity artifacts, privilege coverage and performance remain unvalidated. M2.3 is next, after the relevant collection-scope reviews; M3 has not started.
+None of the 33 real scanner acceptance scenarios has run. Actual Windows 10/11 inspection, consent enforcement, trusted identity artifacts, privilege coverage and performance remain unvalidated. M2.3 now supplies scoped candidate inventory; M2.4 process snapshots are next after the relevant reviews. M3 has not started.

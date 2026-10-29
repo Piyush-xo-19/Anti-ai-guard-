@@ -1,12 +1,12 @@
 # M1: platform, privileges and detection coverage
 
-Version: 0.1 | Updated: 2026-10-28 | Status: implementation contract draft; no detection results yet
+Version: 0.1 | Updated: 2026-10-28 | Status: contract plus bounded inventory implementation; real-tool desktop validation pending
 
 [Architecture](architecture-v1.md) | [Acceptance plan](acceptance-plan.md) | [README](../README.md)
 
 ## 1. Decisions and boundaries
 
-**Maintainer decision:** the first prototype targets native Windows 10 and Windows 11. Linux remains a later v1 target. M2.1 project/CLI setup was authorized on 2026-10-29 with no device inspection; the remaining M1 scope review is required before the affected collection/classification chunks.
+**Maintainer decision:** the first prototype targets native Windows 10 and Windows 11. Linux remains a later v1 target. M2.1 project/CLI setup was authorized on 2026-10-29 with no device inspection; M2.3 was subsequently authorized with explicit bounded roots, current-token access without elevation and candidate-only identity. Remaining lab/process/strong-identity reviews apply to their affected chunks.
 
 **Proposed implementation baseline:** standard-user inspection of the consenting participant's session and readable installation metadata. Elevation is optional diagnostic coverage to investigate, not a requirement to run the first CLI and not a claim of complete visibility. Both modes run in Ring 3.
 
@@ -68,7 +68,7 @@ Discovery must never execute an unknown assistant, invoke its help/version comma
 
 ## 5. Coverage rows and acceptance mapping
 
-All rows below are planned and unexecuted. M2 identity findings are diagnostic and never grant competition verification.
+All rows below remain unexecuted as real-tool desktop lab scenarios. M2.3 has separate synthetic filesystem fixtures; see the [inventory guide](installation-inventory.md). M2 identity findings are diagnostic and never grant competition verification.
 
 Evidence abbreviations: **P** = readable package metadata; **X** = executable identity/path; **H** = trusted pinned executable hash or equivalent approved strong identity; **I** = process instance including start identity where available; **C** = corroborated package entry point/launch context.
 
@@ -101,7 +101,7 @@ Proposed top-level report fields: schema version, scan ID/time, platform/build/a
 
 Each finding includes category, tool ID or unknown identity, installation versus observed execution, evidence class, rule ID, redacted source explanation and relevant process-instance reference. Do not persist raw command lines, credentials, prompts or unnecessary absolute personal paths.
 
-M2.2 now implements the [in-memory shared contracts and diagnostic evaluator](shared-contracts.md) for supplied observations. Scope uses opaque IDs/minimized labels, and gap/action explanations use typed reasons. Real collection, identity matching, rendered/serialized reports and consent enforcement remain planned; these types do not validate any coverage row above.
+M2.2 now implements the [in-memory shared contracts and diagnostic evaluator](shared-contracts.md) for supplied observations. Scope uses opaque IDs/minimized labels, and gap/action explanations use typed reasons. M2.3 now adds consent-gated installation collection. Process collection, trusted identity matching and full rendered/serialized reports remain planned; these types do not validate any coverage row above.
 
 Keep these concepts separate:
 

@@ -2,7 +2,7 @@
 
 Updated: 2026-10-29
 
-**Current phase: M2.1 CLI foundation and M2.2 shared contracts implemented. Next proposed chunk: M2.3 bounded installation inventory, after collection-scope review.**
+**Current phase: M2.3 bounded installation inventory implemented; all 46 tests passed in hosted Windows CI. Next proposed chunk: M2.4 process snapshots, after relevant scope/identity review.**
 
 This is the public progress summary for contributors. No private maintainer notes or earlier chat history are needed to understand the project direction.
 
@@ -22,7 +22,9 @@ This is the public progress summary for contributors. No private maintainer note
 - [x] Implement M2.1: pinned Rust project, help/version CLI, predictable argument errors, seven integration tests and Windows CI configuration.
 - [x] Implement M2.2: observation/coverage/process-identity contracts, diagnostic Policy A suggestions, nineteen synthetic contract tests and a runnable fixture example.
 
-There is no working scanner, runtime monitor, backend, installer or dashboard yet. All 26 integration tests passed locally (7 CLI + 19 synthetic contracts); none of the 33 scanner scenarios has been executed. No real identity catalog, detection configuration or performance target has been validated.
+A bounded Windows installation collector and consent-gated inventory command are implemented. There is no process scanner, runtime monitor, backend, installer or dashboard yet. Local format/lint/build and 39 unit/CLI/contract tests passed; seven filesystem fixtures remain blocked locally by ancestor access. [Hosted Windows CI passed all 46 tests](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40925592116), including those fixtures. None of the 33 real-tool desktop scenarios has run; no trusted identity catalog or performance target is validated.
+
+- [x] Implement M2.3: explicit consent/root selection, bounded candidate inventory, reparse/sharing guards, minimized output and Windows filesystem fixtures.
 
 ## Milestones
 
@@ -30,7 +32,7 @@ There is no working scanner, runtime monitor, backend, installer or dashboard ye
 | --- | --- | --- |
 | M0: public foundation | Complete | Project introduction, license, architecture entry points and contribution workflow published |
 | M1: coverage and design | Documents prepared; inspection-specific review pending | Settle privilege/lab/identity scope before the affected collection chunks |
-| M2: read-only preflight | In progress: M2.1/M2.2 implemented | CLI and synthetic contract evaluation work; device collection and report integration remain planned |
+| M2: read-only preflight | In progress: bounded M2.3 implemented | Consented installation candidates work; hosted Windows fixture checks passed; process snapshots and full reports remain planned |
 | M3: runtime observation | Not started | Supported process launch events, reconciliation, continuity and health measurements |
 | M4: sessions and audit | Not started | Policy transitions, bounded durable audit/outbox and recovery behavior |
 | M5: organizer workflow | Proposed scope; not started | Enrollment, admission/leases, heartbeats, review and interfaces |
@@ -47,6 +49,8 @@ Linux remains a later v1 target. The first prototype is native Windows 10 and Wi
 - [x] Authorize one initial M2 chunk: CLI/project foundation only; device inspection is not enabled.
 - [x] Authorize M2.2 shared contracts and synthetic evaluation on 2026-10-29; inspection/real identity matching remain disabled.
 
+- [x] Authorize M2.3 explicit bounded installation roots, opt-in PATH, current-token reads without elevation and candidate-only identity.
+
 Backend lease deadlines, retention policy and IDE feature controls remain open at their relevant milestones. M2 must not silently implement or claim those capabilities.
 
 ## What M2 will deliver
@@ -55,7 +59,9 @@ M2.1 now implements help/version and argument validation. [Build and test it](do
 
 M2.2 implements [shared contracts and diagnostic evaluation](docs/shared-contracts.md), including coverage concerns and process-instance correlation. Local format, strict Clippy, build, nineteen synthetic contract tests and the runnable example passed on the same GNU toolchain; existing CLI tests still pass. [The M2.2 hosted Windows checks also passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40757983515), including the example. All identity assessments in tests are synthetic upstream inputs, not trusted production catalog matches. Eligibility is always `NotIssued`.
 
-An on-demand, read-only diagnostic scanner that inventories supported assistant installations and processes alive during the scan. It will report scope, evidence and coverage limitations clearly. It will not issue verified competition status or automatically stop applications.
+M2.3 adds [bounded installation inventory](docs/installation-inventory.md). It checks nine executable/shim names and four exact npm manifests without running tools, recursively searching or claiming execution. Coverage remains explicit, including denied ancestors, missing roots, reparse points and exhausted budgets. [Hosted fixture validation passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40925592116); the local restriction remains documented.
+
+The remaining M2 outcome is an on-demand, read-only diagnostic scanner that inventories supported assistant installations and processes alive during the scan. It will report scope, evidence and coverage limitations clearly. It will not issue verified competition status or automatically stop applications.
 
 The [M2 plan](docs/m2-plan.md) splits this into project setup, shared data/policy contracts, installation inventory, process snapshots, report integration and validation. Remaining chunks will be reviewed and committed separately, then independently tested through GitHub issues.
 
@@ -71,6 +77,8 @@ The [M2 plan](docs/m2-plan.md) splits this into project setup, shared data/polic
 | [c3b9c1a](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/c3b9c1ad5aa1c73ec33322dd1596072a00c1be40) | M2.2 shared contracts, diagnostic evaluator and fixture example; 26 local tests and Windows CI passed |
 
 Published documentation has been checked for local links, whitespace and scope consistency. Architecture views were visually reviewed during composition. These checks are not evidence of product functionality.
+
+M2.3 source and safety-fixture fixes are published through [5a8f937](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/5a8f9374b30abac0ea4b49089e8343edb7b6b755), with all 46 hosted Windows tests passing. Local format/lint/build and 39 unit/CLI/contract tests passed; the seven local filesystem fixtures remain blocked by sandbox ancestor access.
 
 ## How this page stays current
 

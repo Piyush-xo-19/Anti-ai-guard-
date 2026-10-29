@@ -1,6 +1,6 @@
 # M2 plan: read-only Windows preflight prototype
 
-Updated: 2026-10-29 | State: in progress; M2.1/M2.2 implemented
+Updated: 2026-10-29 | State: in progress; M2.3 bounded inventory implemented; hosted Windows fixture checks passed
 
 [Public status](../PROJECT_STATUS.md) | [Decisions](decisions.md) | [Coverage contract](coverage-matrix.md) | [Acceptance plan](acceptance-plan.md)
 
@@ -22,8 +22,9 @@ The maintainer subsequently authorized M2.2 on the same date: shared contracts a
 - [ ] Identify a trusted synthetic/pinned artifact approach and record test ground truth.
 - [x] Authorize the first bounded M2 chunk: M2.1 foundation only.
 - [x] Authorize M2.2 contracts and fixture evaluation without device inspection.
+- [x] Authorize M2.3 bounded installation inventory on 2026-10-29: explicit roots, current token without elevation and candidate-only identity.
 
-Help/version and argument errors now work; [development instructions](development.md) document their commands. M2.2 adds shared observation/report types and a pure evaluator; collectors, consent flow, serialization and CLI report integration remain planned.
+Help/version and argument errors now work; [development instructions](development.md) document their commands. M2.2 adds shared observation/report types and a pure evaluator; M2.3 now adds consent-gated installation collection. Process collection, serialization and full CLI report integration remain planned.
 
 ## Proposed chunks
 
@@ -46,6 +47,8 @@ Define platform/scope metadata, installation and process observations, identity 
 Acceptance: synthetic fixtures demonstrate inactive inventory versus observed execution, candidate versus supported identity, incomplete coverage, process-instance correlation and no issued competition eligibility. Do not fabricate trusted identity catalog entries to make positive tests pass.
 
 ### M2.3: Bounded installation inventory
+
+State: implemented for the [documented fixed selectors](installation-inventory.md). Explicit bin/npm-prefix roots and opt-in PATH roots, mandatory consent, budgets, no-reparse guards, minimized output and candidate-only identity are present. Local format/lint/build and 39 unit/CLI/contract tests passed; seven filesystem fixtures remain locally blocked by sandbox ancestor access. [Hosted Windows CI passed all 46 tests](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40925592116), including those fixtures. No pinned real-tool/desktop support is validated.
 
 Inspect documented readable PATH/installation/package roots for Codex CLI, Claude Code and the separately identified OpenCode generations. Handle supported declared custom prefixes, scope budgets and access errors.
 

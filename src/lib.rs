@@ -31,7 +31,7 @@ Help/version do not inspect installations, processes, or files.
 Process scanning is not implemented.
 ";
 
-/// Actions available before collectors are introduced in later chunks.
+/// Implemented CLI actions; process scanning remains a later chunk.
 #[derive(Debug, PartialEq, Eq)]
 pub enum Command {
     Help,
@@ -82,8 +82,8 @@ impl std::error::Error for ArgumentError {}
 
 /// Parse arguments excluding the executable name.
 ///
-/// No arguments show help. Exactly one supported option is accepted. Every
-/// other input is rejected, including extra options following `--help`.
+/// No arguments show help. Global help/version accept no extra arguments.
+/// Inventory requires explicit consent and bounded scope flags.
 /// Operating-system strings avoid panicking on non-Unicode arguments.
 pub fn parse_args(args: impl IntoIterator<Item = OsString>) -> Result<Command, ArgumentError> {
     let mut args = args.into_iter();

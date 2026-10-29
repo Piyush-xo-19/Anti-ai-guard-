@@ -1,14 +1,14 @@
 # Building and testing the CLI and shared contracts
 
-Updated: 2026-10-29 | Implemented scope: M2.1 and M2.2
+Updated: 2026-10-29 | Implemented scope: M2.1/M2.2 and bounded M2.3 inventory
 
 [Public status](../PROJECT_STATUS.md) | [M2 plan](m2-plan.md) | [Contributing](../CONTRIBUTING.md)
 
 ## What runs today
 
-The `anti-ai-guard` CLI displays help or its package version and rejects unsupported arguments. It has no third-party Rust dependencies. There is no scan command, process collector, installation inventory or competition verification yet.
+The CLI provides help/version and consent-gated `inventory` for exact installation selectors in approved Windows roots. `serde_json` parses bounded manifests, with dependencies pinned in Cargo.lock. No process collector, generic scan command or competition verification exists. See the [inventory guide](installation-inventory.md).
 
-The executable reads its command-line arguments; it does not enumerate processes, inspect installation roots or collect telemetry. Invalid-argument errors deliberately do not echo raw argument values, which might contain accidentally pasted private data.
+Help/version inspect no installations. Inventory reads only disclosed root/ancestor metadata and selected manifests after consent. It does not enumerate processes or collect telemetry. Invalid-argument errors deliberately do not echo raw argument values, which might contain accidentally pasted private data.
 
 M2.2 adds library types and a pure diagnostic evaluator. It takes preclassified observations and produces suggestions, explicit coverage concerns and `NotIssued` eligibility. It contains no real identity catalog/matcher. See the [shared-contract guide](shared-contracts.md).
 
@@ -27,10 +27,11 @@ Clone the repository, enter its root, then explicitly install the pinned toolcha
 
 ```powershell
 rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy
+cargo fetch --locked
 cargo build --locked --offline
 ```
 
-The rustup installation step needs network access if components are not cached. The current dependency-free Cargo build/test commands work offline after that setup. Commit `Cargo.lock` with this application so contributors use the reviewed lockfile.
+Toolchain installation and the first locked dependency fetch need network access if not cached. Subsequent build/test commands work offline. Commit Cargo.lock with this application so contributors use the reviewed dependency graph.
 
 ## Run and expected behavior
 
@@ -47,7 +48,7 @@ The rustup installation step needs network access if components are not cached. 
 | Unsupported option or `scan` | Print a generic usage error to stderr, without echoing the arguments | 2 |
 | More than one argument, including after help/version | Reject the invocation | 2 |
 
-No consent/scope interface is needed for these non-inspection commands. Any future command that inspects the device must introduce the agreed consent and scope flow before collection is enabled.
+Help/version need no consent. Inventory requires `inventory --consent` and explicit `--bin-root PATH`, `--npm-prefix PATH` and/or `--include-path` scope. Missing consent/invalid scope returns 2 before collection; partial/unavailable coverage returns 3; finished selector inspection returns 0. The [inventory guide](installation-inventory.md) explains scope and remaining limits.
 
 ## Required checks for each feature chunk
 
@@ -64,7 +65,7 @@ Nineteen additional synthetic contract tests cover inventory versus execution, c
 
 Run `cargo run --locked --offline --example diagnostic` for the hard-coded example. It prints inventory/review suggestions, incomplete coverage and no issued eligibility. The example never inspects the host and is not the future scan command.
 
-The GitHub workflow runs these commands and the synthetic example on `windows-latest`. [The initial M2.1 feature-commit run passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40752729560). A hosted Windows runner does not establish detection support on Windows 10/11 desktop configurations. Check the actual workflow result for subsequent changes; local success is not a CI pass.
+The GitHub workflow fetches locked dependencies, then runs these commands and the synthetic example on `windows-latest`. [The initial M2.1 feature-commit run passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40752729560). A hosted Windows runner does not establish detection support on Windows 10/11 desktop configurations. Check the actual workflow result for subsequent changes; local success is not a CI pass.
 
 ## Local tooling and the rustup crash observed during setup
 
@@ -93,6 +94,12 @@ Run it from the repository root, then use the Cargo check commands above. These 
 - Debug build, formatting, strict Clippy and all seven binary integration tests passed locally.
 - The hosted Windows workflow for feature commit `72d62a4` completed successfully, including its formatting, lint, build and test steps.
 - Real assistant inventory, process visibility, permission scopes, Windows 10 compatibility and runtime performance remain untested because their collectors are not implemented.
+
+## M2.3 verification and environment notes
+
+Local Windows GNU format, strict Clippy and build passed. Eleven collector unit tests, nine CLI tests and nineteen contract tests passed locally. Seven filesystem integration fixtures are locally blocked by this session denying ancestor-directory metadata access (Windows error 5); they are not local passes. [Hosted Windows CI passed all 46 tests](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40925592116) for source commit 5a8f937, including the seven filesystem fixtures. No real assistant or personal root was scanned.
+
+Local Cargo fetching also hit the previously observed Windows Schannel credential failure. An ignored loopback helper under .tools fetched only official crates.io index/archive resources via Node HTTPS with certificate verification enabled. Cargo retained registry checksums and a normal crates.io lockfile. Its cache/source configuration is local-only; normal contributors and hosted CI use `cargo fetch --locked` directly. No certificate checks were disabled.
 
 ## Independent testing and issue reports
 

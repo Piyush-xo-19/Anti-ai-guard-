@@ -132,4 +132,6 @@ M2.1 now has seven passing local CLI integration tests documented in [developmen
 
 M2.2 adds nineteen passing local [synthetic contract tests](shared-contracts.md) for preclassified observations, diagnostic policy, correlation and coverage. They test library semantics without device inspection or real catalog matching. All 33 scanner scenarios remain NOT RUN.
 
+M2.3 adds separate bounded Windows filesystem fixtures described in the [inventory guide](installation-inventory.md). They cover portions of INST/SCOPE/NEG/FAIL/PRIV/SAFE using generated metadata, without real assistant artifacts. They are locally blocked by ancestor-directory access in this restricted session and run in hosted Windows CI. They do not turn the 33 desktop lab rows into PASS results.
+
 This completes preparation of the M1 coverage/test documents, not approval of all architecture proposals or execution of their tests.
