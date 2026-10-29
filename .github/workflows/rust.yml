@@ -8,9 +8,14 @@ permissions:
   contents: read
 
 jobs:
-  cli-foundation:
-    name: Build and test CLI and shared contracts
-    runs-on: windows-latest
+  windows-fixtures:
+    name: Windows fixtures (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Rust toolchain
@@ -18,13 +23,13 @@ jobs:
         run: rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy
       - name: Fetch locked dependencies
         run: cargo fetch --locked
-      - name: Check formatting
-        run: cargo fmt --all -- --check
-      - name: Lint
-        run: cargo clippy --locked --offline --all-targets -- -D warnings
-      - name: Build
-        run: cargo build --locked --offline
-      - name: Test
-        run: cargo test --locked --offline
-      - name: Run synthetic diagnostic example
-        run: cargo run --locked --offline --example diagnostic
+      - name: Validate fixtures and minimized evidence
+        shell: pwsh
+        run: ./scripts/validate-windows.ps1 -Consent -OutputPath reports/validation/ci-${{ matrix.os }}.json
+      - name: Preserve sanitized fixture evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: fixture-evidence-${{ matrix.os }}
+          path: reports/validation/ci-${{ matrix.os }}.json
+          if-no-files-found: error

@@ -10,7 +10,7 @@ Anti-AI Guard aims to let participants use documentation, the internet, terminal
 
 The design combines a pre-event software inventory, runtime observation of recognized coding assistants, and a competition-session policy. Participants retain control of their personal laptops.
 
-> **Current stage: M2.3 installation inventory.** Explicitly consented Windows roots can be checked for installation candidates. Shared contracts and diagnostic Policy A evaluation are implemented. Current-session process-name candidates are also implemented. Trusted artifact identity, continuous monitoring, an installer and dashboards remain planned. Desktop/tool coverage remains unvalidated.
+> **Current stage: M2.4/M2.5 candidate-only preflight and reports.** Consented bounded installation inventory and current-session process-name candidates work with text/JSON output. M2.6 validation tooling is available, but the full Windows 10/11 desktop exit gate remains incomplete. No trusted strong-identity catalog, continuous monitor, installer or dashboard is implemented.
 
 ## Explore the project
 
@@ -22,6 +22,7 @@ The design combines a pre-event software inventory, runtime observation of recog
 - [Bounded Windows installation inventory](docs/installation-inventory.md)
 - [Current-session process snapshots](docs/process-snapshots.md)
 - [Combined scans and text/JSON reports](docs/diagnostic-reports.md)
+- [Validation evidence and remaining M2 gates](docs/validation/README.md)
 - [Competition policy](#competition-policy)
 - [How it is intended to work](#how-it-is-intended-to-work)
 - [Proposed architecture](#proposed-architecture)
@@ -157,7 +158,7 @@ Each milestone will be split further into reviewable changes. This roadmap descr
 | --- | --- | --- |
 | **M0 — Public foundation** | README, MIT license, contribution workflow, and architecture draft | Complete |
 | **M1 — Coverage and design** | Windows 10/11 target matrix, proposed privilege scope, evidence rules and acceptance plan | Documents ready for review; tests not run |
-| **M2 — Read-only preflight** | Rust structure, detection interfaces, installation/process inventory, reports, and tests | In progress: bounded installation inventory added; process snapshots and full reports remain planned |
+| **M2 — Read-only preflight** | Rust structure, detection interfaces, installation/process inventory, reports, and tests | Candidate-only collectors and reports implemented; trusted identity/boot and desktop acceptance gates incomplete |
 | **M3 — Runtime observation** | Process-event collectors, reconciliation, health checks, and failure reporting | Planned |
 | **M4 — Session and audit** | Policy transitions, bounded local persistence, notifications, and synchronization contract | Planned |
 | **M5 — Organizer workflow** | Enrollment, heartbeats, evidence review, and participant/organizer interfaces | Proposed scope |

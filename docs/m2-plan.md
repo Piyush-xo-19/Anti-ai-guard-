@@ -1,6 +1,6 @@
 # M2 plan: read-only Windows preflight prototype
 
-Updated: 2026-10-29 | State: in progress; M2.3 bounded inventory implemented; hosted Windows fixture checks passed
+Updated: 2026-10-30 | M2.4/M2.5 implemented; M2.6 validation automation ready, desktop exit gate incomplete
 
 [Public status](../PROJECT_STATUS.md) | [Decisions](decisions.md) | [Coverage contract](coverage-matrix.md) | [Acceptance plan](acceptance-plan.md)
 
@@ -72,6 +72,8 @@ Connect consent/scope selection, collectors and identity classification to reada
 Acceptance: output paths agree and redact fake secrets in normal and error cases. Empty findings do not imply a clean entire device. Cancellation and partial failure remain visible. No complete command-line dump or unbounded report storage.
 
 ### M2.6: Windows integration evidence and milestone review
+
+State: validation harness, minimized evidence artifacts, two hosted Windows Server jobs and the complete 33-case desktop template are implemented. See [validation review](validation/README.md) and [results](validation/results.md). M2.4 and M2.5 hosted checks passed. The new matrix is checked after publication. Full M2.6 is NOT complete: no Windows 10/full Windows 11 pinned-tool lab, trusted strong catalog or boot identity is available. Local script policy and ancestor access restrictions are recorded without bypassing them.
 
 Run the implemented contract on the selected Windows 10 and Windows 11 lab configurations. Record exact OS builds, mode, scanner/catalog/tool versions, ground truth and results without publishing private inventories.
 
