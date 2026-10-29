@@ -51,3 +51,7 @@ The ignored local tracker is optional maintainer context. All contributor-facing
 ## Next work
 
 Run independent diagnostics only with explicit consent and selected roots/session. Resolve trusted identity and boot correlation requirements, approve exact lab/variant scope, then execute the required desktop matrix before promoting support or completing M2. Preserve milestone order; M3 has not started.
+
+## Issue maintenance - 2026-10-30
+
+Regression fixes for #1/#3/#4/#5/#6 validate metadata and active coverage claims, distinguish unsupported collectors, normalize boot-ID boundaries and emit each concern once per target/reason. All 24 contract tests passed locally; hosted verification and remaining issue work follow in focused commits. These changes do not complete the outstanding M2 desktop/strong-identity gates.

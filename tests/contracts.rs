@@ -467,3 +467,130 @@ fn package_metadata_is_not_a_process_observation() {
     );
     assert_eq!(report.coverage, CoverageSummary::Incomplete);
 }
+
+#[test]
+fn repeated_requests_report_each_target_reason_once() {
+    let mut input = snapshot(vec![]);
+    let target = input.requested[0];
+    input.requested.extend([target, target]);
+    input.coverage.retain(|c| c.target != target);
+    let report = evaluate(input);
+    for reason in [
+        CoverageConcernReason::DuplicateRequest,
+        CoverageConcernReason::MissingRecord,
+    ] {
+        assert_eq!(
+            report
+                .coverage_concerns
+                .iter()
+                .filter(|c| c.target == Some(target) && c.reason == reason)
+                .count(),
+            1
+        );
+    }
+}
+
+#[test]
+fn surrounding_boot_whitespace_is_normalized_consistently() {
+    let first = instance();
+    let mut padded = first.clone();
+    padded.boot_id = Some(" \t synthetic-boot \n".into());
+    assert!(padded.has_stable_identity());
+    assert_eq!(first.correlate(&padded), Correlation::SameInstance);
+    assert_eq!(padded.correlate(&first), Correlation::SameInstance);
+    padded.boot_id = Some("synthetic- boot".into());
+    assert_eq!(first.correlate(&padded), Correlation::DifferentInstance);
+}
+
+#[test]
+fn requested_runtime_events_have_a_milestone_concern_not_a_false_scope_error() {
+    let mut input = snapshot(vec![]);
+    let target = CoverageTarget {
+        collector: Collector::RuntimeEvents,
+        scope: ScopeId(2),
+    };
+    input.requested.push(target);
+    input.coverage.push(CollectorCoverage {
+        target,
+        state: CoverageState::OutsideMilestone,
+        gaps: vec![GapReason::Unsupported],
+    });
+    let report = evaluate(input);
+    assert!(report
+        .coverage_concerns
+        .iter()
+        .any(|c| c.target == Some(target)
+            && c.reason == CoverageConcernReason::CollectorOutsideMilestone));
+    assert!(!report
+        .coverage_concerns
+        .iter()
+        .any(|c| c.target == Some(target)
+            && matches!(
+                c.reason,
+                CoverageConcernReason::InvalidScope | CoverageConcernReason::CollectorIncomplete
+            )));
+    assert_eq!(report.coverage, CoverageSummary::Incomplete);
+}
+
+#[test]
+fn unrequested_active_records_are_concerns_but_passive_capability_records_are_allowed() {
+    for state in [
+        CoverageState::Inspected,
+        CoverageState::Partial,
+        CoverageState::Unavailable,
+        CoverageState::NotRequested,
+        CoverageState::OutsideMilestone,
+    ] {
+        let mut input = snapshot(vec![]);
+        let target = CoverageTarget {
+            collector: Collector::InstallationInventory,
+            scope: ScopeId(99),
+        };
+        input.coverage.push(CollectorCoverage {
+            target,
+            state,
+            gaps: vec![],
+        });
+        let report = evaluate(input);
+        let active = matches!(
+            state,
+            CoverageState::Inspected | CoverageState::Partial | CoverageState::Unavailable
+        );
+        assert_eq!(
+            report
+                .coverage_concerns
+                .iter()
+                .any(|c| c.target == Some(target)
+                    && c.reason == CoverageConcernReason::UnrequestedRecord),
+            active
+        );
+        assert_eq!(
+            report.coverage,
+            if active {
+                CoverageSummary::Incomplete
+            } else {
+                CoverageSummary::InspectedRequestedScope
+            }
+        );
+    }
+}
+
+#[test]
+fn blank_scan_identifiers_are_concerns_and_epoch_zero_is_an_allowed_synthetic_timestamp() {
+    for id in ["", " \t\n"] {
+        let mut input = snapshot(vec![]);
+        input.scan_id = id.into();
+        let report = evaluate(input);
+        assert!(report
+            .coverage_concerns
+            .iter()
+            .any(|c| c.target.is_none() && c.reason == CoverageConcernReason::InvalidScanId));
+        assert_eq!(report.coverage, CoverageSummary::Incomplete);
+    }
+    let mut input = snapshot(vec![]);
+    input.observed_at_ms = 0;
+    assert_eq!(
+        evaluate(input).coverage,
+        CoverageSummary::InspectedRequestedScope
+    );
+}

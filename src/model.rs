@@ -128,17 +128,20 @@ pub enum Correlation {
 }
 
 impl ProcessInstance {
-    pub fn has_stable_identity(&self) -> bool {
+    fn normalized_boot_id(&self) -> Option<&str> {
         self.boot_id
             .as_deref()
-            .is_some_and(|id| !id.trim().is_empty())
-            && self.start_time.is_some()
+            .map(str::trim)
+            .filter(|id| !id.is_empty())
+    }
+    pub fn has_stable_identity(&self) -> bool {
+        self.normalized_boot_id().is_some() && self.start_time.is_some()
     }
 
     /// PID equality never establishes identity on its own.
     pub fn correlate(&self, other: &Self) -> Correlation {
-        let boot = self.boot_id.as_deref().filter(|id| !id.trim().is_empty());
-        let other_boot = other.boot_id.as_deref().filter(|id| !id.trim().is_empty());
+        let boot = self.normalized_boot_id();
+        let other_boot = other.normalized_boot_id();
         if self.pid != other.pid
             || matches!((boot, other_boot), (Some(a), Some(b)) if a != b)
             || matches!((self.start_time, other.start_time), (Some(a), Some(b)) if a != b)

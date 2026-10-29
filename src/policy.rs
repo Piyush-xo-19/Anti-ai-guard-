@@ -108,6 +108,9 @@ pub enum Eligibility {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum CoverageConcernReason {
+    InvalidScanId,
+    CollectorOutsideMilestone,
+    UnrequestedRecord,
     ScanNotFinished,
     InvalidScope,
     DuplicateRequest,
@@ -161,6 +164,7 @@ fn target_is_declared(snapshot: &Snapshot, target: CoverageTarget) -> bool {
         (target.collector, scope.kind),
         (Collector::InstallationInventory, ScopeKind::InstallationRoot)
             | (Collector::ProcessSnapshot, ScopeKind::CurrentSessionProcesses)
+            | (Collector::RuntimeEvents, ScopeKind::CurrentSessionProcesses)
     ))
 }
 
@@ -177,13 +181,24 @@ fn observation_target(observation: &Observation) -> CoverageTarget {
 /// In-memory evaluation only: no rendering, serialization, collection or storage.
 pub fn evaluate(snapshot: Snapshot) -> DiagnosticReport {
     let mut concerns = Vec::new();
+    if snapshot.scan_id.trim().is_empty() {
+        concerns.push(CoverageConcern {
+            target: None,
+            reason: CoverageConcernReason::InvalidScanId,
+        });
+    }
     if snapshot.execution != ScanExecution::Finished {
         concerns.push(CoverageConcern {
             target: None,
             reason: CoverageConcernReason::ScanNotFinished,
         });
     }
+    let mut checked_targets = Vec::new();
     for target in &snapshot.requested {
+        if checked_targets.contains(target) {
+            continue;
+        }
+        checked_targets.push(*target);
         let entries: Vec<_> = snapshot
             .coverage
             .iter()
@@ -198,14 +213,35 @@ pub fn evaluate(snapshot: Snapshot) -> DiagnosticReport {
         if !target_is_declared(&snapshot, *target) {
             add(CoverageConcernReason::InvalidScope);
         }
+        let outside_milestone = target.collector == Collector::RuntimeEvents;
+        if outside_milestone {
+            add(CoverageConcernReason::CollectorOutsideMilestone);
+        }
         if snapshot.requested.iter().filter(|t| *t == target).count() != 1 {
             add(CoverageConcernReason::DuplicateRequest);
         }
         match entries.as_slice() {
             [] => add(CoverageConcernReason::MissingRecord),
+            [_] if outside_milestone => {}
+            [entry] if entry.state == CoverageState::OutsideMilestone => {
+                add(CoverageConcernReason::CollectorOutsideMilestone)
+            }
             [entry] if entry.state == CoverageState::Inspected && entry.gaps.is_empty() => {}
             [_] => add(CoverageConcernReason::CollectorIncomplete),
             _ => add(CoverageConcernReason::DuplicateRecord),
+        }
+    }
+    for entry in &snapshot.coverage {
+        if !snapshot.requested.contains(&entry.target)
+            && !matches!(
+                entry.state,
+                CoverageState::NotRequested | CoverageState::OutsideMilestone
+            )
+        {
+            concerns.push(CoverageConcern {
+                target: Some(entry.target),
+                reason: CoverageConcernReason::UnrequestedRecord,
+            });
         }
     }
     let suggestions = snapshot
@@ -247,6 +283,17 @@ pub fn evaluate(snapshot: Snapshot) -> DiagnosticReport {
             }
         })
         .collect();
+    // Concerns describe a reason per collector/scope, not observation counts.
+    // Preserve first-occurrence order while removing identical target/reason pairs.
+    let mut unique_concerns = Vec::new();
+    concerns.retain(|concern| {
+        if unique_concerns.contains(concern) {
+            false
+        } else {
+            unique_concerns.push(*concern);
+            true
+        }
+    });
     let coverage = if !concerns.is_empty() {
         CoverageSummary::Incomplete
     } else if snapshot.requested.is_empty() {

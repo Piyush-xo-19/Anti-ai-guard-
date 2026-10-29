@@ -96,3 +96,11 @@ The demonstration uses hard-coded fixture observations, unknown platform metadat
 Nineteen synthetic contract tests and seven existing CLI integration tests passed locally with Rust 1.99.1 on the existing Windows GNU toolchain. Formatting, strict Clippy, build and the synthetic example also passed. [Hosted Windows CI for the feature commit passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40757983515), including formatting, lint, build, tests and the example. Check subsequent commits independently.
 
 None of the 33 real scanner acceptance scenarios has run. Full Windows 10/11 desktop/real-tool acceptance, trusted identity artifacts, privilege coverage and performance remain unvalidated. M2.3/M2.4/M2.5 now supply consented candidate inventory/snapshots and reports; see [validation evidence](validation/README.md). M3 has not started.
+
+## Input validation and concern identity
+
+Boot IDs are opaque and case-sensitive after trimming surrounding Unicode whitespace; internal whitespace remains significant. Both stable-identity checks and correlation use that normalization. Blank boot IDs remain missing.
+
+A blank/whitespace scan ID produces InvalidScanId and incomplete coverage. Internal nonblank fixture IDs remain valid; the public report projection still applies its stricter generated-ID syntax. Timestamp zero is the valid Unix epoch and is allowed for synthetic inputs; it never establishes current event freshness or eligibility.
+
+Coverage concerns are unique by (optional collector/scope target, reason), preserving first occurrence. Duplicate requested targets are checked once and yield one DuplicateRequest plus any other distinct reasons. Requested RuntimeEvents on a current-session scope yields CollectorOutsideMilestone, not a false InvalidScope; unknown/duplicate/wrong-kind scope declarations remain invalid independently. Unrequested records claiming Inspected, Partial or Unavailable produce UnrequestedRecord. NotRequested/OutsideMilestone capability records remain passive information, even for an undeclared target, and do not claim inspection or satisfy a requested collector.
