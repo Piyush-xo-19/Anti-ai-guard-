@@ -1,11 +1,12 @@
 //! CLI, shared observations and diagnostic Policy A contracts.
 //!
 //! Installation inventory requires explicit consent and bounded roots. There is
-//! no process collection or competition verification. Inventory is not execution.
+//! no competition verification. Inventory alone is not execution.
 
 pub mod inventory;
 pub mod model;
 pub mod policy;
+pub mod processes;
 
 use std::ffi::OsString;
 use std::fmt;
@@ -19,6 +20,7 @@ Read-only competition preflight tooling (early development).
 
 Usage: anti-ai-guard [OPTION]
        anti-ai-guard inventory --consent [--bin-root PATH] [--npm-prefix PATH] [--include-path]
+       anti-ai-guard processes --consent
 
 Options:
   -h, --help       Show this help
@@ -28,7 +30,8 @@ Inventory inspects only known executable names and npm manifests in approved roo
 --include-path opts into PATH directories; relative/empty/network roots are rejected.
 No tool is executed. Findings are installation candidates, never execution violations.
 Help/version do not inspect installations, processes, or files.
-Process scanning is not implemented.
+Processes checks known native name indicators in the current Windows session.
+No command lines or process memory are read. Names alone require review.
 ";
 
 /// Implemented CLI actions; process scanning remains a later chunk.
@@ -37,6 +40,7 @@ pub enum Command {
     Help,
     Version,
     Inventory(InventoryOptions),
+    Processes,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -90,6 +94,21 @@ pub fn parse_args(args: impl IntoIterator<Item = OsString>) -> Result<Command, A
     let Some(first) = args.next() else {
         return Ok(Command::Help);
     };
+
+    if first == "processes" {
+        let option = args.next().ok_or(ArgumentError)?;
+        if args.next().is_some() {
+            return Err(ArgumentError);
+        }
+        if option == "--help" {
+            return Ok(Command::Help);
+        }
+        return if option == "--consent" {
+            Ok(Command::Processes)
+        } else {
+            Err(ArgumentError)
+        };
+    }
 
     if first == "inventory" {
         let mut consent = false;

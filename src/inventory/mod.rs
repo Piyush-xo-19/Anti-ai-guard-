@@ -55,6 +55,25 @@ pub struct InventoryRequest {
 }
 
 impl InventoryRequest {
+    /// Weak same-location linkage only. Never upgrades a candidate or reuses a
+    /// cached artifact hash. Paths are compared transiently and not returned.
+    pub(crate) fn finding_at_path(&self, result: &InventoryResult, path: &Path) -> Option<usize> {
+        result.findings.iter().position(|finding| {
+            let Some(root) = self
+                .roots
+                .get(finding.observation.scope.0.saturating_sub(1) as usize)
+            else {
+                return false;
+            };
+            finding.observation.source == ObservationSource::ExecutableArtifact
+                && root
+                    .path
+                    .join(finding.selector)
+                    .as_os_str()
+                    .eq_ignore_ascii_case(path.as_os_str())
+        })
+    }
+
     pub fn new(
         consent: bool,
         roots: Vec<InventoryRoot>,

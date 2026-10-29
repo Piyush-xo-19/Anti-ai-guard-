@@ -14,7 +14,7 @@ fn no_arguments_show_help_without_scanning() {
     assert!(output.stderr.is_empty());
     let text = String::from_utf8(output.stdout).unwrap();
     assert!(text.contains("Usage: anti-ai-guard [OPTION]"));
-    assert!(text.contains("Process scanning is not implemented."));
+    assert!(text.contains("Names alone require review."));
     assert!(text.contains("Help/version do not inspect installations, processes, or files"));
 }
 
@@ -79,6 +79,21 @@ fn inventory_help_does_not_require_consent_or_inspect() {
     let output = run(&["inventory", "--help"]);
     assert!(output.status.success());
     assert_eq!(output.stdout, run(&["--help"]).stdout);
+}
+
+#[test]
+fn processes_requires_consent_and_rejects_extra_scope_arguments() {
+    for args in [
+        vec!["processes"],
+        vec!["processes", "--unknown"],
+        vec!["processes", "--consent", "fake-private-argument"],
+    ] {
+        let output = run(&args);
+        assert_eq!(output.status.code(), Some(2));
+        assert!(output.stdout.is_empty());
+        assert!(!String::from_utf8_lossy(&output.stderr).contains("fake-private-argument"));
+    }
+    assert!(run(&["processes", "--help"]).status.success());
 }
 
 #[test]

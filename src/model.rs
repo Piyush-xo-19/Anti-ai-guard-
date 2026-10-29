@@ -91,6 +91,8 @@ pub enum GapReason {
     MissingRoot,
     InvalidScope,
     SharingConflict,
+    MissingBootIdentity,
+    ProcessIdentityChanged,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

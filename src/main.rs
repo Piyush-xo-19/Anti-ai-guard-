@@ -59,6 +59,42 @@ fn main() -> ExitCode {
                 ExitCode::from(3)
             }
         }
+        Ok(Command::Processes) => {
+            let request = anti_ai_guard::processes::ProcessRequest::new(
+                true,
+                anti_ai_guard::model::ScopeId(1),
+                anti_ai_guard::processes::Limits::default(),
+            )
+            .expect("validated constant process scope");
+            let result = anti_ai_guard::processes::collect(&request, &AtomicBool::new(false), None);
+            println!("Current-session name candidates only; no command lines, memory reads or eligibility issued.");
+            for finding in &result.findings {
+                if let anti_ai_guard::model::ObservationKind::Process { instance, .. } =
+                    &finding.observation.kind
+                {
+                    println!(
+                        "PID {}: {} | Candidate | RequestReview",
+                        instance.pid,
+                        finding
+                            .observation
+                            .identity
+                            .tool
+                            .as_ref()
+                            .map(|t| t.id.as_str())
+                            .unwrap_or("unknown")
+                    );
+                }
+            }
+            println!(
+                "Coverage: {:?} {:?}; enumerated: {}; queried: {}",
+                result.coverage.state, result.coverage.gaps, result.enumerated, result.queried
+            );
+            if result.execution == anti_ai_guard::model::ScanExecution::Finished {
+                ExitCode::SUCCESS
+            } else {
+                ExitCode::from(3)
+            }
+        }
         Err(error) => {
             eprintln!("error: {error}");
             ExitCode::from(2)

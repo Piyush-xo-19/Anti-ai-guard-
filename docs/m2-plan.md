@@ -23,6 +23,7 @@ The maintainer subsequently authorized M2.2 on the same date: shared contracts a
 - [x] Authorize the first bounded M2 chunk: M2.1 foundation only.
 - [x] Authorize M2.2 contracts and fixture evaluation without device inspection.
 - [x] Authorize M2.3 bounded installation inventory on 2026-10-29: explicit roots, current token without elevation and candidate-only identity.
+- [x] Authorize M2.4, M2.5 and M2.6 on 2026-10-29, in separate ordered commits; preserve diagnostic-only scope and honest validation gaps.
 
 Help/version and argument errors now work; [development instructions](development.md) document their commands. M2.2 adds shared observation/report types and a pure evaluator; M2.3 now adds consent-gated installation collection. Process collection, serialization and full CLI report integration remain planned.
 
@@ -55,6 +56,8 @@ Inspect documented readable PATH/installation/package roots for Codex CLI, Claud
 Acceptance: relevant INST/SCOPE/NEG cases in the acceptance plan pass for the implemented variants. The scanner must not execute discovered tools, install packages, run lifecycle scripts, inspect personal document contents or follow paths outside approved scope.
 
 ### M2.4: Process snapshot and identity correlation
+
+State: candidate-only Windows collector implemented. See [process snapshots](process-snapshots.md). Explicit consent gates current-session known-name selection, limited-query/synchronization handles, creation/image/exit checks, PID-race handling and weak same-location installation links. No trusted artifact catalog, boot ID fabrication, command-line inspection or process control is added. Boot identity remains an explicit coverage gap; full M2 identity/desktop gates remain open. Local unit/CLI/contracts and the self-built native process fixture passed; hosted checks follow publication.
 
 Enumerate processes and enrich only permitted metadata. Correlate process instances with available executable/package evidence. Handle inaccessible metadata, exiting processes, PID reuse and stale artifact caches explicitly.
 

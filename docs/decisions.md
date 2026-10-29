@@ -18,6 +18,7 @@ This log makes project direction understandable without access to private notes.
 | Delivery workflow | Small, reviewable chunks with relevant checks and descriptive commits | Do not build the full product in one unreviewable change |
 | Milestone ordering | Review scope before the affected implementation chunk | M2.1 foundation and M2.2 synthetic shared contracts authorized on 2026-10-29; inspection-specific privilege/lab/identity decisions remain pending before collection |
 | M2.3 implementation scope | Maintainer authorized bounded installation inventory on 2026-10-29 | Explicit bin/npm-prefix roots, opt-in PATH, current token without elevation, candidate-only metadata; no production strong-identity approval |
+| M2.4/M2.5/M2.6 authorization | Maintainer requested these chunks in order on 2026-10-29, with separate commits | Current-session read-only native candidates, integrated diagnostic reports and available validation; no invented boot/strong identity or desktop test results |
 | Participant safeguards | Explicit consent and scoped inspection; no automatic uninstall, deletion, termination or disqualification | Preserve normal device use and provide explainable findings/review |
 | Privacy boundary | No keystrokes, terminal history, source-code or personal-document capture in v1 | Collect only relevant metadata and redact sensitive launch information |
 | Public planning | Publish milestone status, decisions and implementation plans | Contributors must not depend on the maintainer's ignored tracker |

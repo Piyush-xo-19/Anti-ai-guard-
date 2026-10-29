@@ -10,7 +10,7 @@ Anti-AI Guard aims to let participants use documentation, the internet, terminal
 
 The design combines a pre-event software inventory, runtime observation of recognized coding assistants, and a competition-session policy. Participants retain control of their personal laptops.
 
-> **Current stage: M2.3 installation inventory.** Explicitly consented Windows roots can be checked for installation candidates. Shared contracts and diagnostic Policy A evaluation are implemented. Process scanning, trusted executable identity matching, continuous monitoring, an installer and dashboards remain planned. Desktop/tool coverage remains unvalidated.
+> **Current stage: M2.3 installation inventory.** Explicitly consented Windows roots can be checked for installation candidates. Shared contracts and diagnostic Policy A evaluation are implemented. Current-session process-name candidates are also implemented. Trusted artifact identity, continuous monitoring, an installer and dashboards remain planned. Desktop/tool coverage remains unvalidated.
 
 ## Explore the project
 
@@ -20,6 +20,7 @@ The design combines a pre-event software inventory, runtime observation of recog
 - [Build, run and test the CLI](docs/development.md)
 - [Shared contracts and synthetic diagnostic example](docs/shared-contracts.md)
 - [Bounded Windows installation inventory](docs/installation-inventory.md)
+- [Current-session process snapshots](docs/process-snapshots.md)
 - [Competition policy](#competition-policy)
 - [How it is intended to work](#how-it-is-intended-to-work)
 - [Proposed architecture](#proposed-architecture)

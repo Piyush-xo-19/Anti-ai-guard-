@@ -2,7 +2,7 @@
 
 Updated: 2026-10-29
 
-**Current phase: M2.3 bounded installation inventory implemented; all 46 tests passed in hosted Windows CI. Next proposed chunk: M2.4 process snapshots, after relevant scope/identity review.**
+**Current phase: M2.4 candidate-only process snapshots implemented. M2.5 report integration is next; strong-identity and desktop validation gates remain open.**
 
 This is the public progress summary for contributors. No private maintainer notes or earlier chat history are needed to understand the project direction.
 
@@ -22,9 +22,11 @@ This is the public progress summary for contributors. No private maintainer note
 - [x] Implement M2.1: pinned Rust project, help/version CLI, predictable argument errors, seven integration tests and Windows CI configuration.
 - [x] Implement M2.2: observation/coverage/process-identity contracts, diagnostic Policy A suggestions, nineteen synthetic contract tests and a runnable fixture example.
 
-A bounded Windows installation collector and consent-gated inventory command are implemented. There is no process scanner, runtime monitor, backend, installer or dashboard yet. Local format/lint/build and 39 unit/CLI/contract tests passed; seven filesystem fixtures remain blocked locally by ancestor access. [Hosted Windows CI passed all 46 tests](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40925592116), including those fixtures. None of the 33 real-tool desktop scenarios has run; no trusted identity catalog or performance target is validated.
+A bounded Windows installation collector and consent-gated inventory command are implemented. A candidate-only current-session process snapshot collector is also implemented; runtime monitoring, backend, installer and dashboard remain planned. Local format/lint/build and 39 unit/CLI/contract tests passed; seven filesystem fixtures remain blocked locally by ancestor access. [Hosted Windows CI passed all 46 tests](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40925592116), including those fixtures. None of the 33 real-tool desktop scenarios has run; no trusted identity catalog or performance target is validated.
 
 - [x] Implement M2.3: explicit consent/root selection, bounded candidate inventory, reparse/sharing guards, minimized output and Windows filesystem fixtures.
+
+- [x] Implement M2.4 current-session name candidates, creation/image/exit queries, PID-race checks and weak installation linkage. Boot-scoped/strong identity remains incomplete.
 
 ## Milestones
 
