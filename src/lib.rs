@@ -22,6 +22,8 @@ Options:
   -h, --help       Show this help
   -V, --version    Show the program version
 
+Inventory requires at least one of --bin-root, --npm-prefix or --include-path.
+Scan requires at least one of those scope options or --processes.
 Inventory checks fixed executable names and npm manifests in approved roots.
 Processes checks current-session known native name indicators. Names alone require review.
 Scan combines only the scopes explicitly selected; no default disk/PATH/process inspection.
@@ -55,10 +57,20 @@ pub struct InventoryOptions {
     pub include_path: bool,
 }
 #[derive(Debug, PartialEq, Eq)]
-pub struct ArgumentError;
+pub enum ArgumentError {
+    Unsupported,
+    PathUnavailable,
+    InvalidPathEntry(usize),
+    TooManyPathRoots,
+}
 impl fmt::Display for ArgumentError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str("unsupported arguments; run anti-ai-guard --help for usage")
+        match self {
+            Self::Unsupported => f.write_str("unsupported arguments; run anti-ai-guard --help for usage"),
+            Self::PathUnavailable => f.write_str("PATH scope rejected: missing, empty or over 32768 characters; use explicit roots"),
+            Self::InvalidPathEntry(index) => write!(f, "PATH scope rejected: invalid entry {index}; use absolute local directory entries or explicit roots"),
+            Self::TooManyPathRoots => f.write_str("PATH scope rejected: more than 32 distinct root/selector pairs; use explicit roots"),
+        }
     }
 }
 impl std::error::Error for ArgumentError {}
@@ -68,25 +80,33 @@ pub fn inventory_request(
     path: Option<&OsStr>,
 ) -> Result<inventory::InventoryRequest, ArgumentError> {
     let mut roots = options.roots;
+    if roots.iter().any(|r| !inventory::valid_root(&r.path)) {
+        return Err(ArgumentError::Unsupported);
+    }
     if options.include_path {
         let path = path
             .filter(|p| !p.is_empty() && p.len() <= 32768)
-            .ok_or(ArgumentError)?;
-        roots.extend(
-            std::env::split_paths(path).map(|path| inventory::InventoryRoot {
+            .ok_or(ArgumentError::PathUnavailable)?;
+        for (index, path) in std::env::split_paths(path).enumerate() {
+            if !inventory::valid_root(&path) {
+                return Err(ArgumentError::InvalidPathEntry(index + 1));
+            }
+            roots.push(inventory::InventoryRoot {
                 path,
                 kind: inventory::RootKind::WindowsNpmPrefix,
-            }),
-        );
+            });
+        }
+        return inventory::InventoryRequest::new(true, roots, inventory::Limits::default())
+            .map_err(|_| ArgumentError::TooManyPathRoots);
     }
     inventory::InventoryRequest::new(true, roots, inventory::Limits::default())
-        .map_err(|_| ArgumentError)
+        .map_err(|_| ArgumentError::Unsupported)
 }
 /// Bounded argument parsing; raw input never enters error messages.
 pub fn parse_args(args: impl IntoIterator<Item = OsString>) -> Result<Command, ArgumentError> {
     let bounded: Vec<_> = args.into_iter().take(132).collect();
     if bounded.len() > 131 {
-        return Err(ArgumentError);
+        return Err(ArgumentError::Unsupported);
     }
     let mut args = bounded.into_iter();
     let Some(first) = args.next() else {
@@ -113,7 +133,10 @@ pub fn parse_args(args: impl IntoIterator<Item = OsString>) -> Result<Command, A
             } else if option == "--include-path" && first != "processes" && !include_path {
                 include_path = true;
             } else if first != "processes" && (option == "--bin-root" || option == "--npm-prefix") {
-                let path = args.next().filter(|p| !p.is_empty()).ok_or(ArgumentError)?;
+                let path = args
+                    .next()
+                    .filter(|p| !p.is_empty())
+                    .ok_or(ArgumentError::Unsupported)?;
                 roots.push(inventory::InventoryRoot {
                     path: path.into(),
                     kind: if option == "--bin-root" {
@@ -123,14 +146,14 @@ pub fn parse_args(args: impl IntoIterator<Item = OsString>) -> Result<Command, A
                     },
                 });
                 if roots.len() > 32 {
-                    return Err(ArgumentError);
+                    return Err(ArgumentError::Unsupported);
                 }
             } else {
-                return Err(ArgumentError);
+                return Err(ArgumentError::Unsupported);
             }
         }
         if !consent || (roots.is_empty() && !include_path && !processes) {
-            return Err(ArgumentError);
+            return Err(ArgumentError::Unsupported);
         }
         return Ok(Command::Collect(ScanOptions {
             roots,
@@ -141,13 +164,13 @@ pub fn parse_args(args: impl IntoIterator<Item = OsString>) -> Result<Command, A
         }));
     }
     if args.next().is_some() {
-        return Err(ArgumentError);
+        return Err(ArgumentError::Unsupported);
     }
     if first == "--help" || first == "-h" {
         Ok(Command::Help)
     } else if first == "--version" || first == "-V" {
         Ok(Command::Version)
     } else {
-        Err(ArgumentError)
+        Err(ArgumentError::Unsupported)
     }
 }

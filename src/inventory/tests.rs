@@ -88,7 +88,14 @@ fn consent_and_scope_validation_precede_any_io() {
         InventoryRequest::new(true, vec![relative], Limits::default()).unwrap_err(),
         RequestError::InvalidScope
     );
-    assert!(InventoryRequest::new(true, vec![root(); 33], Limits::default()).is_err());
+    assert!(InventoryRequest::new(true, vec![root(); 33], Limits::default()).is_ok());
+    let distinct = (0..33)
+        .map(|i| InventoryRoot {
+            path: root().path.join(i.to_string()),
+            ..root()
+        })
+        .collect();
+    assert!(InventoryRequest::new(true, distinct, Limits::default()).is_err());
 }
 
 #[test]
@@ -293,4 +300,37 @@ fn windows_rejects_network_device_drive_roots_and_parent_traversal() {
             "invalid Windows scope accepted"
         );
     }
+}
+
+#[cfg(windows)]
+#[test]
+fn equivalent_root_spellings_deduplicate_and_link_without_filesystem_access() {
+    let request = InventoryRequest::new(
+        true,
+        vec![
+            InventoryRoot {
+                path: r"C:\fixture".into(),
+                kind: RootKind::BinDirectory,
+            },
+            InventoryRoot {
+                path: r"c:\fixture\".into(),
+                kind: RootKind::BinDirectory,
+            },
+            InventoryRoot {
+                path: "C:/fixture".into(),
+                kind: RootKind::BinDirectory,
+            },
+        ],
+        Limits::default(),
+    )
+    .unwrap();
+    assert_eq!(request.roots.len(), 1);
+    assert!(same_location(
+        &request.roots[0].path.join("codex.exe"),
+        Path::new(r"C:\fixture\codex.exe")
+    ));
+    assert!(!same_location(
+        Path::new(r"C:\fixture\codex.exe"),
+        Path::new(r"C:\fixture-other\codex.exe")
+    ));
 }

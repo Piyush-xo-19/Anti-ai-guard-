@@ -35,12 +35,40 @@ fn main() -> ExitCode {
             return ExitCode::from(2);
         }
     };
-    match io::stdout().lock().write_all(output.as_bytes()) {
-        Ok(()) => ExitCode::from(code),
-        Err(error) if error.kind() == io::ErrorKind::BrokenPipe => ExitCode::SUCCESS,
-        Err(_) => {
-            let _ = writeln!(io::stderr(), "error: unable to write diagnostic output");
-            ExitCode::from(1)
+    let exit = write_output(&output, code, io::stdout().lock());
+    if exit == 1 {
+        let _ = writeln!(io::stderr(), "error: unable to write diagnostic output");
+    }
+    ExitCode::from(exit)
+}
+
+fn write_output(output: &str, report_code: u8, mut writer: impl Write) -> u8 {
+    match writer.write_all(output.as_bytes()) {
+        Ok(()) => report_code,
+        Err(_) => 1,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    struct BrokenPipe;
+    impl Write for BrokenPipe {
+        fn write(&mut self, _: &[u8]) -> io::Result<usize> {
+            Err(io::ErrorKind::BrokenPipe.into())
+        }
+        fn flush(&mut self) -> io::Result<()> {
+            Ok(())
+        }
+    }
+    #[test]
+    fn closed_consumer_is_output_failure_for_complete_and_incomplete_reports() {
+        for report_code in [0, 3] {
+            assert_eq!(write_output("diagnostic", report_code, BrokenPipe), 1);
+            assert_eq!(
+                write_output("diagnostic", report_code, Vec::new()),
+                report_code
+            );
         }
     }
 }
