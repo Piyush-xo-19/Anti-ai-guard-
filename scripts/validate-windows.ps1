@@ -74,8 +74,10 @@ function Invoke-ValidationCheck {
     $checkResult = Invoke-ValidationProgram $Executable $ProgramArguments
     $summaries = [regex]::Matches(($checkResult.Out + "`n" + $checkResult.Err), 'test result: \w+\. (\d+) passed; (\d+) failed; (\d+) ignored;')
     $passed = 0; $failed = 0; $ignored = 0
+    $failedTests = @([regex]::Matches(($checkResult.Out + "`n" + $checkResult.Err), '(?m)^test ([A-Za-z0-9_:]+) \.\.\. FAILED\r?$') | ForEach-Object { $_.Groups[1].Value })
+    $safeDiagnostics = @([regex]::Matches(($checkResult.Out + "`n" + $checkResult.Err), '(?m)^NATIVE_FIXTURE_DIAGNOSTIC state=[A-Za-z]+ gaps=\[[A-Za-z, ]*\]\r?$') | ForEach-Object { $_.Value.Trim() })
     foreach ($summary in $summaries) { $passed += [int]$summary.Groups[1].Value; $failed += [int]$summary.Groups[2].Value; $ignored += [int]$summary.Groups[3].Value }
-    $record = [pscustomobject]@{ name = $Name; status = $(if ($checkResult.Code -eq 0) { 'PASS' } else { 'FAIL' }); exit_code = $checkResult.Code; duration_ms = $checkWatch.ElapsedMilliseconds; passed = $passed; failed = $failed; ignored = $ignored; timed_out = $checkResult.TimedOut }
+    $record = [pscustomobject]@{ name = $Name; status = $(if ($checkResult.Code -eq 0) { 'PASS' } else { 'FAIL' }); exit_code = $checkResult.Code; duration_ms = $checkWatch.ElapsedMilliseconds; passed = $passed; failed = $failed; ignored = $ignored; failed_tests = $failedTests; diagnostic_codes = $safeDiagnostics; timed_out = $checkResult.TimedOut }
     $validationChecks.Add($record)
     Write-Host ($Name + ': ' + $record.status + ' (exit ' + $record.exit_code + ')')
     # Raw stdout/stderr is never copied into an evidence artifact or printed.

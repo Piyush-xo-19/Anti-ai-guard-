@@ -78,6 +78,9 @@ fn controlled_candidate_is_observed_without_retaining_paths_or_arguments() {
     )
     .unwrap();
     let result = collect(&request, &AtomicBool::new(false), None);
+    if !result.findings.iter().any(|f|matches!(&f.observation.kind,ObservationKind::Process {instance,..} if instance.pid==fixture.child.id())) {
+        println!("NATIVE_FIXTURE_DIAGNOSTIC state={:?} gaps={:?}",result.coverage.state,result.coverage.gaps);
+    }
     let finding=result.findings.iter().find(|f|matches!(&f.observation.kind,ObservationKind::Process {instance,..} if instance.pid==fixture.child.id())).expect("controlled current-session candidate must be visible");
     assert_eq!(finding.observation.identity.class, EvidenceClass::Candidate);
     assert_eq!(finding.observation.identity.rule_match, None);

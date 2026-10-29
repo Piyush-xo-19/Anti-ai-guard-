@@ -61,7 +61,7 @@ mod native {
         fn CloseHandle(handle: Handle) -> i32;
         fn OpenProcess(access: u32, inherit: i32, pid: u32) -> Handle;
         fn ProcessIdToSessionId(pid: u32, session: *mut u32) -> i32;
-        fn GetSystemTimeAsFileTime(time: *mut FileTime);
+        fn GetSystemTimePreciseAsFileTime(time: *mut FileTime);
         fn GetProcessTimes(
             process: Handle,
             creation: *mut FileTime,
@@ -114,7 +114,7 @@ mod native {
             let mut checkpoint = FileTime::default();
             // SAFETY: valid output pointer; process-only snapshot flags, no heaps/modules.
             let handle = unsafe {
-                GetSystemTimeAsFileTime(&mut checkpoint);
+                GetSystemTimePreciseAsFileTime(&mut checkpoint);
                 CreateToolhelp32Snapshot(2, 0)
             };
             if handle as isize == -1 {
