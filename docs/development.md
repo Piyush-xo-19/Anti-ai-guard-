@@ -112,3 +112,13 @@ Do not attach real credentials, raw participant inventories or personal files. T
 ## Current commands and validation gates
 
 Use `processes --consent [--json]` or `scan --consent --processes [--bin-root PATH] [--npm-prefix PATH] [--include-path] [--json]`. Choose explicit roots; there is no automatic whole-device scan. See the [report guide](diagnostic-reports.md) and [M2.6 results](validation/results.md). The local environment passed 57 selected tests, with seven installation filesystem cases blocked. Direct .ps1 harness execution is blocked by local script policy; no policy change or bypass is recommended or applied. Hosted server fixtures do not establish Windows 10/11 desktop support.
+
+## Issue maintenance checks (2026-10-30)
+
+[Source 8bae7e6 CI](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40938599135)
+passed on Windows Server 2022/2025 (74 tests/doctests each, one controlled-child
+helper ignored) and Ubuntu (65 tests/doctests). All jobs check formatting, strict
+Clippy, build, synthetic examples and rustdoc with warnings denied. Linux remains
+shared-code validation only. Local selected suites passed 65 tests and two
+doctests; the seven filesystem fixtures and direct script restrictions described
+above remain local limitations. Shared golden-file tests now run on every OS.

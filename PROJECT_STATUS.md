@@ -62,5 +62,5 @@ Regression fixes for #1/#3/#4/#5/#6 validate metadata and active coverage claims
 - Formalized schema v1 compatibility and retained the existing minimized serde_json boundary (#9).
 - Added a shared synthetic example/golden test; arbitrary free-text minimization stays covered.
 - Windows local checks: 65 selected tests plus two doctests pass; strict Clippy and rustdoc pass.
-- Full Windows fixture and new Linux CI results are pending on the maintenance branch.
+- [Maintenance CI for 8bae7e6](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40938599135) passed: 74 tests/doctests on each Windows Server runner (one controlled-child helper ignored), 65 on Ubuntu. Format, strict Clippy/rustdoc, build and synthetic examples passed. These results cover issues #1-#9; see [PR #19](https://github.com/Piyush-xo-19/Anti-ai-guard-/pull/19).
 - M2 desktop/strong-identity exit gates remain incomplete.
