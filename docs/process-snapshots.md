@@ -12,7 +12,7 @@ Handles request only `PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE`. Creation
 
 Full image paths are used transiently, then discarded. An optional link to an installation indicator means only the same declared executable location in this report. It is not artifact identity, package-entry-point proof or permission to upgrade identity. No artifact-hash cache exists to reuse stale path hashes.
 
-Creation after the pre-snapshot checkpoint or an image basename differing from its snapshot entry yields `ProcessIdentityChanged`; that row cannot inherit the old snapshot identity. Access denied, exiting processes, unavailable start identity and enumeration failures remain distinct gaps. These conservative checks may also reject a genuine process launched in the capture window; they do not claim perfect snapshot atomicity.
+The pre-snapshot checkpoint uses GetSystemTimePreciseAsFileTime to avoid coarse-clock false races. Creation after that checkpoint or an image basename differing from its snapshot entry yields `ProcessIdentityChanged`; that row cannot inherit the old snapshot identity. Access denied, exiting processes, unavailable start identity and enumeration failures remain distinct gaps. These conservative checks may also reject a genuine process launched in the capture window; they do not claim perfect snapshot atomicity.
 
 Defaults bound enumeration to 4096 rows, findings to 512 and elapsed time to two cooperative seconds. Library hard bounds are 16384 rows, 512 findings and ten seconds. Native snapshot construction and synchronous OS calls are not hard time-limited. Cancellation and limits prevent further queries and remain explicit in execution/coverage status. Linux is unsupported.
 

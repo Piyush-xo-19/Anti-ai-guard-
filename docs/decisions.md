@@ -12,7 +12,7 @@ This log makes project direction understandable without access to private notes.
 | --- | --- | --- |
 | ADR-001: v1 execution environment | Ring 3/user mode; no custom kernel driver in v1 | Use supported OS observations; disclose limits rather than promise kernel-level prevention |
 | ADR-002: Policy A | Inactive installed coding assistants may remain; prohibited execution is restricted during verified events | Separate inventory, execution evidence, eligibility and organizer penalties |
-| Endpoint language | Rust | M2.1 supplies the Rust foundation; M2.3 adds bounded installation collection; process collectors remain planned |
+| Endpoint language | Rust | Rust supplies bounded installation/process candidates and diagnostic reports; strong identity and desktop acceptance remain open |
 | First prototype platforms | Native Windows 10 and Windows 11 | Start Windows work first; Linux remains a later v1 target |
 | Open-source license | MIT | Public contributions follow the repository license |
 | Delivery workflow | Small, reviewable chunks with relevant checks and descriptive commits | Do not build the full product in one unreviewable change |

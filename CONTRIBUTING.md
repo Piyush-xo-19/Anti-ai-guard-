@@ -1,6 +1,6 @@
 # Contributing to Anti-AI Guard
 
-The project is implementing M2 in small chunks; M2.1 provides the CLI foundation and M2.2 adds [shared contracts and diagnostic evaluation](docs/shared-contracts.md), and M2.3 adds [bounded Windows installation inventory](docs/installation-inventory.md). Start with the [README](README.md), [public status](PROJECT_STATUS.md), [decision log](docs/decisions.md), [M2 plan](docs/m2-plan.md), and [development instructions](docs/development.md). Agree on a bounded outcome before implementing a subsystem.
+M2 now includes shared contracts, bounded candidate collectors and [integrated diagnostic reports](docs/diagnostic-reports.md). The [M2.6 validation review](docs/validation/README.md) keeps fixture evidence separate from incomplete desktop/strong-identity acceptance. Start with the [README](README.md), [public status](PROJECT_STATUS.md), [decision log](docs/decisions.md), [M2 plan](docs/m2-plan.md), and [development instructions](docs/development.md). Agree on a bounded outcome before implementing a subsystem.
 
 ## One reviewable chunk at a time
 

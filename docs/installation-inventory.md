@@ -68,9 +68,9 @@ Time/cancellation checks occur between bounded operations. A synchronous OS call
 
 ## Output and remaining scope
 
-`InventoryResult` retains minimized scope labels, per-root coverage/gaps, findings, execution status and probe/byte counts. The CLI prints a small diagnostic listing. Full human/structured report integration remains M2.5. Missing roots, access denied, sharing conflicts, reparse boundaries, invalid metadata, unsupported platforms/drives and exhausted budgets remain visible even if no tools are found.
+`InventoryResult` retains minimized scope labels, per-root coverage/gaps, findings, execution status and probe/byte counts. The CLI now uses the [M2.5 shared text/JSON projection](diagnostic-reports.md). Internal bounded package versions are omitted from public reports. Missing roots, access denied, sharing conflicts, reparse boundaries, invalid metadata, unsupported platforms/drives and exhausted budgets remain visible even if no tools are found.
 
-An inspected root means only its fixed selectors were checked. Renamed executables, nested/version directories, package-manager databases, pnpm/Yarn stores, ephemeral runner caches, WSL/containers and other undeclared layouts are not validated. Linux returns unsupported coverage. Process snapshots remain M2.4; continuous observation remains M3.
+An inspected root means only its fixed selectors were checked. Renamed executables, nested/version directories, package-manager databases, pnpm/Yarn stores, ephemeral runner caches, WSL/containers and other undeclared layouts are not validated. Linux returns unsupported coverage. [M2.4 snapshots](process-snapshots.md) provide current-session native-name candidates; continuous observation remains M3.
 
 ## Verification
 

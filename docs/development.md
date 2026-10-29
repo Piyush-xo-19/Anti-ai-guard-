@@ -1,6 +1,6 @@
-# Building and testing the CLI and shared contracts
+# Building and testing candidate preflight
 
-Updated: 2026-10-29 | Implemented scope: M2.1/M2.2 and bounded M2.3 inventory
+Updated: 2026-10-30 | M2.1-M2.5 implemented; M2.6 validation tooling with open desktop gates
 
 [Public status](../PROJECT_STATUS.md) | [M2 plan](m2-plan.md) | [Contributing](../CONTRIBUTING.md)
 
@@ -45,8 +45,8 @@ Toolchain installation and the first locked dependency fetch need network access
 | No arguments | Print help to stdout | 0 |
 | `--help` or `-h` | Print help to stdout | 0 |
 | `--version` or `-V` | Print `anti-ai-guard 0.1.0-alpha.1` to stdout | 0 |
-| Unsupported option or `scan` | Print a generic usage error to stderr, without echoing the arguments | 2 |
-| More than one argument, including after help/version | Reject the invocation | 2 |
+| Unsupported option or bare `scan` without consent/scope | Print a generic usage error to stderr, without echoing the arguments | 2 |
+| Extra global help/version arguments, duplicate flags or invalid collection scope | Reject before collection | 2 |
 
 Help/version need no consent. Inventory requires `inventory --consent` and explicit `--bin-root PATH`, `--npm-prefix PATH` and/or `--include-path` scope. Missing consent/invalid scope returns 2 before collection; partial/unavailable coverage returns 3; finished selector inspection returns 0. The [inventory guide](installation-inventory.md) explains scope and remaining limits.
 
@@ -59,13 +59,13 @@ cargo build --locked --offline
 cargo test --locked --offline
 ```
 
-Seven binary integration tests cover default help, aliases, version consistency, error status/streams, an unavailable scan command, extra arguments and sensitive-argument redaction. They exercise the compiled executable. These are CLI-contract tests, not scanner acceptance results.
+The suite now has 18 collector/provider unit tests, 12 CLI tests, 19 shared-contract tests, seven report tests, seven Windows filesystem fixtures and one controlled native process test: 64 passing checks in hosted CI. One ignored helper is launched only by that native process test. They are fixture/contract evidence, not completed pinned-tool desktop trials.
 
 Nineteen additional synthetic contract tests cover inventory versus execution, candidate versus supported assessments, rule approval, legitimate runtimes, process correlation, disappearing processes, scope integrity and incomplete coverage. Run them separately with `cargo test --locked --offline --test contracts`.
 
-Run `cargo run --locked --offline --example diagnostic` for the hard-coded example. It prints inventory/review suggestions, incomplete coverage and no issued eligibility. The example never inspects the host and is not the future scan command.
+Run `cargo run --locked --offline --example diagnostic` for the hard-coded example. It prints inventory/review suggestions, incomplete coverage and no issued eligibility. The example never inspects the host. For real explicitly selected scopes, use the implemented scan command described in the [report guide](diagnostic-reports.md).
 
-The GitHub workflow fetches locked dependencies, then runs these commands and the synthetic example on `windows-latest`. [The initial M2.1 feature-commit run passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40752729560). A hosted Windows runner does not establish detection support on Windows 10/11 desktop configurations. Check the actual workflow result for subsequent changes; local success is not a CI pass.
+The GitHub workflow fetches locked dependencies, then runs these commands and the synthetic example through the [validation harness](../scripts/validate-windows.ps1) on `windows-2022` and `windows-2025`. [The initial M2.1 feature-commit run passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40752729560). A hosted Windows runner does not establish detection support on Windows 10/11 desktop configurations. Check the actual workflow result for subsequent changes; local success is not a CI pass.
 
 ## Local tooling and the rustup crash observed during setup
 
@@ -93,7 +93,7 @@ Run it from the repository root, then use the Cargo check commands above. These 
 - Local host reports Windows display version 25H2 and build 26200. Exact OS inspection via CIM was unavailable in the restricted development session; no Windows 10 test run was performed.
 - Debug build, formatting, strict Clippy and all seven binary integration tests passed locally.
 - The hosted Windows workflow for feature commit `72d62a4` completed successfully, including its formatting, lint, build and test steps.
-- Real assistant inventory, process visibility, permission scopes, Windows 10 compatibility and runtime performance remain untested because their collectors are not implemented.
+- Historical M2.1 evidence is not a current support claim. Candidate collectors/reports now exist; full real-tool desktop, strong-identity, privilege and runtime-performance validation remains pending.
 
 ## M2.3 verification and environment notes
 
@@ -108,3 +108,7 @@ M2.2 local verification used the same pinned GNU toolchain: formatting, strict C
 Build/run this chunk before testing future features. For a problem, include the commit, toolchain/target, Windows version/build, redacted invocation, expected versus actual behavior, stdout/stderr and exit code. For the observed rustup dialog, report it as a toolchain-manager issue separately from CLI failures.
 
 Do not attach real credentials, raw participant inventories or personal files. The existing [scanner acceptance plan](acceptance-plan.md) applies when the relevant collectors are implemented; its 33 planned cases remain unexecuted.
+
+## Current commands and validation gates
+
+Use `processes --consent [--json]` or `scan --consent --processes [--bin-root PATH] [--npm-prefix PATH] [--include-path] [--json]`. Choose explicit roots; there is no automatic whole-device scan. See the [report guide](diagnostic-reports.md) and [M2.6 results](validation/results.md). The local environment passed 57 selected tests, with seven installation filesystem cases blocked. Direct .ps1 harness execution is blocked by local script policy; no policy change or bypass is recommended or applied. Hosted server fixtures do not establish Windows 10/11 desktop support.

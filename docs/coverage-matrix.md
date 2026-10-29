@@ -101,7 +101,7 @@ Proposed top-level report fields: schema version, scan ID/time, platform/build/a
 
 Each finding includes category, tool ID or unknown identity, installation versus observed execution, evidence class, rule ID, redacted source explanation and relevant process-instance reference. Do not persist raw command lines, credentials, prompts or unnecessary absolute personal paths.
 
-M2.2 now implements the [in-memory shared contracts and diagnostic evaluator](shared-contracts.md) for supplied observations. Scope uses opaque IDs/minimized labels, and gap/action explanations use typed reasons. M2.3 now adds consent-gated installation collection. Process collection, trusted identity matching and full rendered/serialized reports remain planned; these types do not validate any coverage row above.
+M2.2 now implements the [in-memory shared contracts and diagnostic evaluator](shared-contracts.md) for supplied observations. Scope uses opaque IDs/minimized labels, and gap/action explanations use typed reasons. M2.3 now adds consent-gated installation collection. M2.4/M2.5 now add current-session native-name candidates and minimized text/JSON reports. Trusted strong identity remains unimplemented; fixtures do not validate the real-tool desktop rows above. See the [M2.6 review](validation/README.md).
 
 Keep these concepts separate:
 

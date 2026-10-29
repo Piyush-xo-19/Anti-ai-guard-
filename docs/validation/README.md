@@ -11,7 +11,7 @@ cargo fetch --locked
 powershell -NoProfile -File scripts/validate-windows.ps1 -Consent
 ```
 
-PowerShell 5.1 or newer is supported. The script accepts no inspection scope beyond its controlled tests and the explicitly consented current-session process metadata probe. It runs format, strict Clippy, build, tests, the synthetic examples and public-example agreement. It captures compiler/test output transiently, but its JSON artifact contains only command statuses, aggregate test counts, timings, source revision/dirty state, toolchain and minimized platform metadata. Raw output, fixture paths, process findings, PIDs and arguments are not uploaded.
+The script declares PowerShell 5.1 as its minimum and uses compatible APIs; hosted runs validate it on PowerShell 7. The local 5.1 invocation is policy-blocked, so that runtime has not been validated. The script accepts no inspection scope beyond its controlled tests and the explicitly consented current-session process metadata probe. It runs format, strict Clippy, build, tests, the synthetic examples and public-example agreement. It captures compiler/test output transiently, but its JSON artifact contains only command statuses, aggregate test counts, timings, source revision/dirty state, toolchain and minimized platform metadata. Raw output, fixture paths, process findings, PIDs and arguments are not uploaded.
 
 Artifacts go under ignored `reports/validation/`; `-OutputPath` must remain below this repository's reports directory, without report-directory reparse points. Verification commands have a three-minute timeout; cleanup targets only a harness-owned verification process tree, never a participant process observed by the collector. The scanner itself has no process-control API.
 

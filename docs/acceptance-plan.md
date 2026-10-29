@@ -135,3 +135,7 @@ M2.2 adds nineteen passing local [synthetic contract tests](shared-contracts.md)
 M2.3 adds separate bounded Windows filesystem fixtures described in the [inventory guide](installation-inventory.md). They cover portions of INST/SCOPE/NEG/FAIL/PRIV/SAFE using generated metadata, without real assistant artifacts. They are locally blocked by ancestor-directory access in this restricted session and run in hosted Windows CI. They do not turn the 33 desktop lab rows into PASS results.
 
 This completes preparation of the M1 coverage/test documents, not approval of all architecture proposals or execution of their tests.
+
+## M2.4/M2.5/M2.6 evidence boundary
+
+Candidate process/provider fixtures, minimized text/JSON tests and a controlled self-built native process fixture now run in CI. The [M2.6 review](validation/README.md) and [results](validation/results.md) distinguish these checks from Windows 10/11 real-tool lab trials. The [lab template](validation/windows-lab-template.json) preserves all 33 IDs as NOT RUN for each desktop target. Strong identity, trusted boot identity and exact required variant/lab review remain open; do not mark M2 complete from a green fixture job.

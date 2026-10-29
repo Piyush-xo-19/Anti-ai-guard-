@@ -15,7 +15,7 @@ Updated: 2026-10-30 (Asia/Calcutta)
 - M2.3: explicit consent and bounded bin/npm-prefix/PATH inventory, no-reparse/sharing guards, minimized output, candidate-only identity.
 - M2.4: current-session known native process-name candidates, limited metadata queries, PID/image races and weak same-location installation linkage. Missing boot identity stays a gap.
 - M2.5: explicitly scoped combined scans, one bounded minimized text/JSON projection, cooperative cancellation and synthetic public examples. Eligibility is always NotIssued.
-- M2.6 tooling: Windows fixture harness, sanitized artifacts and a template containing both desktop OS configurations and all 33 NOT RUN scenarios. Hosted server matrix verification follows publication.
+- M2.6 tooling: Windows fixture harness, sanitized artifacts and a template containing both desktop OS configurations and all 33 NOT RUN scenarios. Both hosted Windows Server jobs passed 64 tests each; see [permanent sanitized evidence](docs/validation/fixtures-2026-10-30.json).
 
 No trusted strong identity catalog, continuous runtime monitor, backend, installer or dashboard exists. Installed inventory never proves execution. Native names/writable metadata remain candidates. There is no automatic termination, deletion, uninstall, disqualification or competition verification.
 
@@ -42,6 +42,7 @@ Linux remains a later v1 target. Windows 10/11 are prototype targets; hosted Win
 | M2.3 | [faa7ba2](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/faa7ba252b47c5a36771efbed6fbe8da28dcc668), [CI](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40926226920) | 46 hosted tests passed; seven filesystem cases blocked locally |
 | M2.4 | [9888b70](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/9888b70f4122794b0ee94c86b3ef2746d943494e), [CI](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40929011706) | 55 hosted tests passed, one controlled-child helper ignored |
 | M2.5 | [87772a3](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/87772a3a176e77e08400175d10bb0a8a33b95de9), [CI](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40931370505) | 64 hosted tests passed, one helper ignored |
+| M2.6 fixture automation | [5b07c93](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/5b07c934f24d9f81855fa7acdba5b4868972bf07), fixes through [f4270a2](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/f4270a2f28a64c278622f6c1638dc2cfa0ffa43a), [matrix CI](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40933806067) | Both server jobs PASS: 64 tests each plus harness checks; full M2 desktop gate INCOMPLETE |
 | Local available checks | Windows 11 build 26200, X64 compiled target, StandardUser, Rust 1.99.1 GNU | Format/lint/build and 57 selected tests passed; one helper ignored |
 | Local restrictions | [Validation review](docs/validation/README.md) | Seven installation filesystem cases and direct PowerShell harness invocation blocked; no policy bypass |
 

@@ -4,7 +4,7 @@ Implemented: 2026-10-29 | In-memory library contract, schema version 1
 
 [M2 plan](m2-plan.md) | [Development](development.md) | [Public status](../PROJECT_STATUS.md)
 
-M2.2 supplies platform-independent Rust types and a pure evaluator. These M2.2 modules do not inspect a device. The CLI now separately offers [M2.3 consented installation inventory](installation-inventory.md). Process collection, full report serialization and real strong-identity matching remain later chunks.
+M2.2 supplies platform-independent Rust types and a pure evaluator. These M2.2 modules do not inspect a device. The CLI now separately offers [M2.3 consented installation inventory](installation-inventory.md). M2.4/M2.5 now provide current-session candidate collection and minimized text/JSON output. Real strong-identity matching remains incomplete.
 
 ## Code and responsibilities
 
@@ -89,10 +89,10 @@ Coverage: Incomplete
 Eligibility: NotIssued
 ```
 
-The demonstration uses hard-coded fixture observations, unknown platform metadata and a simulated access-denied gap. It does not report anything about the machine running it. This example is a developer aid; the real CLI/report integration remains M2.5.
+The demonstration uses hard-coded fixture observations, unknown platform metadata and a simulated access-denied gap. It does not report anything about the machine running it. This example is a developer aid; the [M2.5 report integration](diagnostic-reports.md) is implemented separately.
 
 ## Verification and remaining work
 
 Nineteen synthetic contract tests and seven existing CLI integration tests passed locally with Rust 1.99.1 on the existing Windows GNU toolchain. Formatting, strict Clippy, build and the synthetic example also passed. [Hosted Windows CI for the feature commit passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40757983515), including formatting, lint, build, tests and the example. Check subsequent commits independently.
 
-None of the 33 real scanner acceptance scenarios has run. Actual Windows 10/11 inspection, consent enforcement, trusted identity artifacts, privilege coverage and performance remain unvalidated. M2.3 now supplies scoped candidate inventory; M2.4 process snapshots are next after the relevant reviews. M3 has not started.
+None of the 33 real scanner acceptance scenarios has run. Full Windows 10/11 desktop/real-tool acceptance, trusted identity artifacts, privilege coverage and performance remain unvalidated. M2.3/M2.4/M2.5 now supply consented candidate inventory/snapshots and reports; see [validation evidence](validation/README.md). M3 has not started.

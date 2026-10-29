@@ -25,7 +25,7 @@ The maintainer subsequently authorized M2.2 on the same date: shared contracts a
 - [x] Authorize M2.3 bounded installation inventory on 2026-10-29: explicit roots, current token without elevation and candidate-only identity.
 - [x] Authorize M2.4, M2.5 and M2.6 on 2026-10-29, in separate ordered commits; preserve diagnostic-only scope and honest validation gaps.
 
-Help/version and argument errors now work; [development instructions](development.md) document their commands. M2.2 adds shared observation/report types and a pure evaluator; M2.3 now adds consent-gated installation collection. Process collection, serialization and full CLI report integration remain planned.
+Help/version and argument errors now work; [development instructions](development.md) document their commands. M2.2 adds shared observation/report types and a pure evaluator; M2.3 now adds consent-gated installation collection. M2.4/M2.5 add current-session native-name candidates and integrated text/JSON reports; M2.6 desktop/strong-identity exit requirements remain incomplete.
 
 ## Proposed chunks
 
@@ -73,7 +73,7 @@ Acceptance: output paths agree and redact fake secrets in normal and error cases
 
 ### M2.6: Windows integration evidence and milestone review
 
-State: validation harness, minimized evidence artifacts, two hosted Windows Server jobs and the complete 33-case desktop template are implemented. See [validation review](validation/README.md) and [results](validation/results.md). M2.4 and M2.5 hosted checks passed. The new matrix is checked after publication. Full M2.6 is NOT complete: no Windows 10/full Windows 11 pinned-tool lab, trusted strong catalog or boot identity is available. Local script policy and ancestor access restrictions are recorded without bypassing them.
+State: validation harness, minimized evidence artifacts, two hosted Windows Server jobs and the complete 33-case desktop template are implemented. See [validation review](validation/README.md) and [results](validation/results.md). M2.4 and M2.5 hosted checks passed. [Both hosted server jobs passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40933806067) all 64 tests, build/lint/format/examples and the minimized evidence harness. Full M2.6 is NOT complete: no Windows 10/full Windows 11 pinned-tool lab, trusted strong catalog or boot identity is available. Local script policy and ancestor access restrictions are recorded without bypassing them.
 
 Run the implemented contract on the selected Windows 10 and Windows 11 lab configurations. Record exact OS builds, mode, scanner/catalog/tool versions, ground truth and results without publishing private inventories.
 

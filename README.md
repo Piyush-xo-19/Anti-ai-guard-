@@ -2,7 +2,7 @@
 
 **An open-source monitoring system for programming competitions that restrict AI coding assistance.**
 
-![Status: installation inventory](https://img.shields.io/badge/status-installation_inventory-amber)
+![Status: candidate preflight](https://img.shields.io/badge/status-candidate_preflight-amber)
 ![Planned platforms: Windows and Linux](https://img.shields.io/badge/planned_platforms-Windows_%7C_Linux-blue)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -152,7 +152,7 @@ Browser assistance, IDE extension controls, VM/WSL/container coverage, and activ
 
 See [PROJECT_STATUS.md](PROJECT_STATUS.md) for current progress, the [decision log](docs/decisions.md) for agreed choices and pending reviews, and the [M2 plan](docs/m2-plan.md) for the proposed implementation chunks. These are public contributor references; no private maintainer tracker is required.
 
-Each milestone will be split further into reviewable changes. This roadmap describes planned work, not implemented functionality.
+Each milestone will be split further into reviewable changes. The status column distinguishes implemented preflight pieces from pending validation and later planned functionality.
 
 | Milestone | Deliverable | Status |
 | --- | --- | --- |
