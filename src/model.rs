@@ -128,17 +128,34 @@ pub enum Correlation {
 }
 
 impl ProcessInstance {
-    pub fn has_stable_identity(&self) -> bool {
+    fn normalized_boot_id(&self) -> Option<&str> {
         self.boot_id
             .as_deref()
-            .is_some_and(|id| !id.trim().is_empty())
-            && self.start_time.is_some()
+            .map(str::trim)
+            .filter(|id| !id.is_empty())
+    }
+    pub fn has_stable_identity(&self) -> bool {
+        self.normalized_boot_id().is_some() && self.start_time.is_some()
     }
 
     /// PID equality never establishes identity on its own.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use anti_ai_guard::model::{Correlation, ProcessInstance};
+    /// let original = ProcessInstance {
+    ///     boot_id: Some("fixture.boot".into()), pid: 7, start_time: Some(123),
+    /// };
+    /// assert_eq!(original.correlate(&original.clone()), Correlation::SameInstance);
+    /// let reused = ProcessInstance { start_time: Some(124), ..original.clone() };
+    /// assert_eq!(original.correlate(&reused), Correlation::DifferentInstance);
+    /// let incomplete = ProcessInstance { start_time: None, ..original.clone() };
+    /// assert_eq!(original.correlate(&incomplete), Correlation::Indeterminate);
+    /// ```
     pub fn correlate(&self, other: &Self) -> Correlation {
-        let boot = self.boot_id.as_deref().filter(|id| !id.trim().is_empty());
-        let other_boot = other.boot_id.as_deref().filter(|id| !id.trim().is_empty());
+        let boot = self.normalized_boot_id();
+        let other_boot = other.normalized_boot_id();
         if self.pid != other.pid
             || matches!((boot, other_boot), (Some(a), Some(b)) if a != b)
             || matches!((self.start_time, other.start_time), (Some(a), Some(b)) if a != b)

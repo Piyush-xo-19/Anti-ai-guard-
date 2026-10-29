@@ -96,3 +96,19 @@ The demonstration uses hard-coded fixture observations, unknown platform metadat
 Nineteen synthetic contract tests and seven existing CLI integration tests passed locally with Rust 1.99.1 on the existing Windows GNU toolchain. Formatting, strict Clippy, build and the synthetic example also passed. [Hosted Windows CI for the feature commit passed](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40757983515), including formatting, lint, build, tests and the example. Check subsequent commits independently.
 
 None of the 33 real scanner acceptance scenarios has run. Full Windows 10/11 desktop/real-tool acceptance, trusted identity artifacts, privilege coverage and performance remain unvalidated. M2.3/M2.4/M2.5 now supply consented candidate inventory/snapshots and reports; see [validation evidence](validation/README.md). M3 has not started.
+
+## Input validation and concern identity
+
+Boot IDs are opaque and case-sensitive after trimming surrounding Unicode whitespace; internal whitespace remains significant. Both stable-identity checks and correlation use that normalization. Blank boot IDs remain missing.
+
+A blank/whitespace scan ID produces InvalidScanId and incomplete coverage. Internal nonblank fixture IDs remain valid; the public report projection still applies its stricter generated-ID syntax. Timestamp zero is the valid Unix epoch and is allowed for synthetic inputs; it never establishes current event freshness or eligibility.
+
+Coverage concerns are unique by (optional collector/scope target, reason), preserving first occurrence. Duplicate requested targets are checked once and yield one DuplicateRequest plus any other distinct reasons. Requested RuntimeEvents on a current-session scope yields CollectorOutsideMilestone, not a false InvalidScope; unknown/duplicate/wrong-kind scope declarations remain invalid independently. Unrequested records claiming Inspected, Partial or Unavailable produce UnrequestedRecord. NotRequested/OutsideMilestone capability records remain passive information, even for an undeclared target, and do not claim inspection or satisfy a requested collector.
+
+## Exhaustive decision-table checks
+
+The observation test enumerates 8568 finite equivalence classes: 3 installation/process-state choices x 3 sources x 7 optional category/name choices x 4 evidence classes x 17 optional rule approval/completeness patterns x 2 identity strengths. Blank/nonblank strings represent their trim-equivalence classes; separate regressions cover whitespace normalization. Rule/catalog values are synthetic fixture inputs, not production trust entries.
+
+Closure is permitted if and only if the observation is a live process from ProcessSnapshot, the category is CodingAssistant with a nonblank ID, identity is stable, evidence is Corroborated or ConfirmedSupported, and a complete rule reference has diagnostic-closure approval. Installation never becomes execution; outside-scope observations never request closure; eligibility is always NotIssued. The test checks both in-scope and outside-scope evaluation for every case.
+
+A separate 2880-case coverage table varies collectors, request presence/duplication, scope validity, execution status, record state/duplication and gaps. Every concern forces incomplete coverage and no identical target/reason pair repeats. Both tables run offline; the 8568-case table took 47 ms in the observed local debug run, which is test evidence only, not an endpoint performance claim. Runnable rustdoc examples show snapshot construction and all three process-correlation results.

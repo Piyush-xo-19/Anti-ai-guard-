@@ -51,3 +51,16 @@ The ignored local tracker is optional maintainer context. All contributor-facing
 ## Next work
 
 Run independent diagnostics only with explicit consent and selected roots/session. Resolve trusted identity and boot correlation requirements, approve exact lab/variant scope, then execute the required desktop matrix before promoting support or completing M2. Preserve milestone order; M3 has not started.
+
+## Issue maintenance - 2026-10-30
+
+Regression fixes for #1/#3/#4/#5/#6 validate metadata and active coverage claims, distinguish unsupported collectors, normalize boot-ID boundaries and emit each concern once per target/reason. All 24 contract tests passed locally; hosted verification and remaining issue work follow in focused commits. These changes do not complete the outstanding M2 desktop/strong-identity gates.
+
+### CI and report contract follow-up
+
+- Added shared-code Linux CI and strict rustdoc on every CI OS (#7); no Linux collector support claimed.
+- Formalized schema v1 compatibility and retained the existing minimized serde_json boundary (#9).
+- Added a shared synthetic example/golden test; arbitrary free-text minimization stays covered.
+- Windows local checks: 65 selected tests plus two doctests pass; strict Clippy and rustdoc pass.
+- [Maintenance CI for 8bae7e6](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40938599135) passed: 74 tests/doctests on each Windows Server runner (one controlled-child helper ignored), 65 on Ubuntu. Format, strict Clippy/rustdoc, build and synthetic examples passed. These results cover issues #1-#9; see [PR #19](https://github.com/Piyush-xo-19/Anti-ai-guard-/pull/19).
+- M2 desktop/strong-identity exit gates remain incomplete.

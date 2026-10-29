@@ -467,3 +467,394 @@ fn package_metadata_is_not_a_process_observation() {
     );
     assert_eq!(report.coverage, CoverageSummary::Incomplete);
 }
+
+#[test]
+fn repeated_requests_report_each_target_reason_once() {
+    let mut input = snapshot(vec![]);
+    let target = input.requested[0];
+    input.requested.extend([target, target]);
+    input.coverage.retain(|c| c.target != target);
+    let report = evaluate(input);
+    for reason in [
+        CoverageConcernReason::DuplicateRequest,
+        CoverageConcernReason::MissingRecord,
+    ] {
+        assert_eq!(
+            report
+                .coverage_concerns
+                .iter()
+                .filter(|c| c.target == Some(target) && c.reason == reason)
+                .count(),
+            1
+        );
+    }
+}
+
+#[test]
+fn surrounding_boot_whitespace_is_normalized_consistently() {
+    let first = instance();
+    let mut padded = first.clone();
+    padded.boot_id = Some(" \t synthetic-boot \n".into());
+    assert!(padded.has_stable_identity());
+    assert_eq!(first.correlate(&padded), Correlation::SameInstance);
+    assert_eq!(padded.correlate(&first), Correlation::SameInstance);
+    padded.boot_id = Some("synthetic- boot".into());
+    assert_eq!(first.correlate(&padded), Correlation::DifferentInstance);
+}
+
+#[test]
+fn requested_runtime_events_have_a_milestone_concern_not_a_false_scope_error() {
+    let mut input = snapshot(vec![]);
+    let target = CoverageTarget {
+        collector: Collector::RuntimeEvents,
+        scope: ScopeId(2),
+    };
+    input.requested.push(target);
+    input.coverage.push(CollectorCoverage {
+        target,
+        state: CoverageState::OutsideMilestone,
+        gaps: vec![GapReason::Unsupported],
+    });
+    let report = evaluate(input);
+    assert!(report
+        .coverage_concerns
+        .iter()
+        .any(|c| c.target == Some(target)
+            && c.reason == CoverageConcernReason::CollectorOutsideMilestone));
+    assert!(!report
+        .coverage_concerns
+        .iter()
+        .any(|c| c.target == Some(target)
+            && matches!(
+                c.reason,
+                CoverageConcernReason::InvalidScope | CoverageConcernReason::CollectorIncomplete
+            )));
+    assert_eq!(report.coverage, CoverageSummary::Incomplete);
+}
+
+#[test]
+fn unrequested_active_records_are_concerns_but_passive_capability_records_are_allowed() {
+    for state in [
+        CoverageState::Inspected,
+        CoverageState::Partial,
+        CoverageState::Unavailable,
+        CoverageState::NotRequested,
+        CoverageState::OutsideMilestone,
+    ] {
+        let mut input = snapshot(vec![]);
+        let target = CoverageTarget {
+            collector: Collector::InstallationInventory,
+            scope: ScopeId(99),
+        };
+        input.coverage.push(CollectorCoverage {
+            target,
+            state,
+            gaps: vec![],
+        });
+        let report = evaluate(input);
+        let active = matches!(
+            state,
+            CoverageState::Inspected | CoverageState::Partial | CoverageState::Unavailable
+        );
+        assert_eq!(
+            report
+                .coverage_concerns
+                .iter()
+                .any(|c| c.target == Some(target)
+                    && c.reason == CoverageConcernReason::UnrequestedRecord),
+            active
+        );
+        assert_eq!(
+            report.coverage,
+            if active {
+                CoverageSummary::Incomplete
+            } else {
+                CoverageSummary::InspectedRequestedScope
+            }
+        );
+    }
+}
+
+#[test]
+fn blank_scan_identifiers_are_concerns_and_epoch_zero_is_an_allowed_synthetic_timestamp() {
+    for id in ["", " \t\n"] {
+        let mut input = snapshot(vec![]);
+        input.scan_id = id.into();
+        let report = evaluate(input);
+        assert!(report
+            .coverage_concerns
+            .iter()
+            .any(|c| c.target.is_none() && c.reason == CoverageConcernReason::InvalidScanId));
+        assert_eq!(report.coverage, CoverageSummary::Incomplete);
+    }
+    let mut input = snapshot(vec![]);
+    input.observed_at_ms = 0;
+    assert_eq!(
+        evaluate(input).coverage,
+        CoverageSummary::InspectedRequestedScope
+    );
+}
+
+#[test]
+fn exhaustive_observation_decision_table_preserves_policy_invariants() {
+    // Finite equivalence classes, not every possible string: 3 observation/state
+    // choices x 3 sources x 7 optional-category/ID choices x 4 evidence classes
+    // x 17 optional approval/completeness patterns x 2 identity strengths = 8568.
+    // The expected closure predicate comes from the public decision table, never
+    // from calling the implementation's identity/rule helpers. No real catalog.
+    let began = std::time::Instant::now();
+    let mut tools = vec![(None, false)];
+    for category in [
+        ToolCategory::CodingAssistant,
+        ToolCategory::LocalInferenceRuntime,
+        ToolCategory::Other,
+    ] {
+        for named in [false, true] {
+            tools.push((
+                Some(ToolIdentity {
+                    id: if named {
+                        "fixture.tool".into()
+                    } else {
+                        " ".into()
+                    },
+                    category,
+                }),
+                named && category == ToolCategory::CodingAssistant,
+            ));
+        }
+    }
+    let mut rules = vec![(None, false)];
+    for approval in [RuleApproval::Unreviewed, RuleApproval::DiagnosticClosure] {
+        for bits in 0..8 {
+            rules.push((
+                Some(RuleMatch {
+                    catalog_version: if bits & 1 != 0 {
+                        "fixture.catalog".into()
+                    } else {
+                        " ".into()
+                    },
+                    rule_id: if bits & 2 != 0 {
+                        "fixture.rule".into()
+                    } else {
+                        " ".into()
+                    },
+                    rule_version: if bits & 4 != 0 {
+                        "1".into()
+                    } else {
+                        " ".into()
+                    },
+                    approval,
+                }),
+                approval == RuleApproval::DiagnosticClosure && bits == 7,
+            ));
+        }
+    }
+    let mut count = 0;
+    for state in [
+        None,
+        Some(ProcessState::AliveAtSnapshot),
+        Some(ProcessState::ExitedDuringEnrichment),
+    ] {
+        for source in [
+            ObservationSource::PackageMetadata,
+            ObservationSource::ExecutableArtifact,
+            ObservationSource::ProcessSnapshot,
+        ] {
+            for (tool, eligible_tool) in &tools {
+                for class in [
+                    EvidenceClass::InventoryIndicator,
+                    EvidenceClass::Candidate,
+                    EvidenceClass::Corroborated,
+                    EvidenceClass::ConfirmedSupported,
+                ] {
+                    for (rule, approved_complete) in &rules {
+                        for stable in [false, true] {
+                            let observed = Observation {
+                                scope: ScopeId(if state.is_some() { 2 } else { 1 }),
+                                source,
+                                kind: match state {
+                                    None => ObservationKind::Installation,
+                                    Some(state) => ObservationKind::Process {
+                                        instance: ProcessInstance {
+                                            boot_id: stable.then(|| "fixture.boot".into()),
+                                            pid: 7,
+                                            start_time: stable.then_some(123),
+                                        },
+                                        state,
+                                    },
+                                },
+                                identity: IdentityAssessment {
+                                    tool: tool.clone(),
+                                    class,
+                                    rule_match: rule.clone(),
+                                },
+                            };
+                            let expected = state == Some(ProcessState::AliveAtSnapshot)
+                                && source == ObservationSource::ProcessSnapshot
+                                && *eligible_tool
+                                && stable
+                                && matches!(
+                                    class,
+                                    EvidenceClass::Corroborated | EvidenceClass::ConfirmedSupported
+                                )
+                                && *approved_complete;
+                            assert_eq!(
+                                suggest_action(&observed).action
+                                    == SuggestedAction::RequestClosureAndRescan,
+                                expected,
+                                "decision case {count}"
+                            );
+                            if state.is_none() {
+                                assert!(matches!(
+                                    suggest_action(&observed).action,
+                                    SuggestedAction::InventoryOnly | SuggestedAction::RequestReview
+                                ));
+                            }
+                            let inside = evaluate(snapshot(vec![observed.clone()]));
+                            assert_eq!(
+                                inside.suggestions[0].action
+                                    == SuggestedAction::RequestClosureAndRescan,
+                                expected
+                            );
+                            assert_eq!(inside.eligibility, Eligibility::NotIssued);
+                            if !inside.coverage_concerns.is_empty() {
+                                assert_eq!(inside.coverage, CoverageSummary::Incomplete);
+                            }
+                            let outside = evaluate(snapshot(vec![Observation {
+                                scope: ScopeId(99),
+                                ..observed
+                            }]));
+                            assert_ne!(
+                                outside.suggestions[0].action,
+                                SuggestedAction::RequestClosureAndRescan
+                            );
+                            assert_eq!(outside.eligibility, Eligibility::NotIssued);
+                            assert_eq!(outside.coverage, CoverageSummary::Incomplete);
+                            count += 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    assert_eq!(count, 8568);
+    println!(
+        "Evaluated {count} observation classes in {} ms",
+        began.elapsed().as_millis()
+    );
+}
+
+#[test]
+fn coverage_decision_table_keeps_concerns_unique_and_incomplete() {
+    let mut count = 0;
+    for collector in [
+        Collector::InstallationInventory,
+        Collector::ProcessSnapshot,
+        Collector::RuntimeEvents,
+    ] {
+        for requested in [false, true] {
+            for state in [
+                CoverageState::Inspected,
+                CoverageState::Partial,
+                CoverageState::Unavailable,
+                CoverageState::NotRequested,
+                CoverageState::OutsideMilestone,
+            ] {
+                for execution in [
+                    ScanExecution::Finished,
+                    ScanExecution::Partial,
+                    ScanExecution::Failed,
+                    ScanExecution::Cancelled,
+                ] {
+                    for duplicate_request in [false, true] {
+                        for scope_kind in 0..3 {
+                            for duplicate_record in [false, true] {
+                                for gaps in [false, true] {
+                                    let mut input = snapshot(vec![]);
+                                    input.requested.clear();
+                                    input.coverage.clear();
+                                    input.execution = execution;
+                                    let scope =
+                                        ScopeId(if collector == Collector::InstallationInventory {
+                                            1
+                                        } else {
+                                            2
+                                        });
+                                    let target = CoverageTarget { collector, scope };
+                                    if requested {
+                                        input.requested.push(target);
+                                        if duplicate_request {
+                                            input.requested.push(target);
+                                        }
+                                    }
+                                    if scope_kind == 1 {
+                                        input.scopes.retain(|s| s.id != scope);
+                                    }
+                                    if scope_kind == 2 {
+                                        input
+                                            .scopes
+                                            .iter_mut()
+                                            .find(|s| s.id == scope)
+                                            .unwrap()
+                                            .kind = if collector == Collector::InstallationInventory
+                                        {
+                                            ScopeKind::CurrentSessionProcesses
+                                        } else {
+                                            ScopeKind::InstallationRoot
+                                        };
+                                    }
+                                    let record = CollectorCoverage {
+                                        target,
+                                        state,
+                                        gaps: if gaps {
+                                            vec![GapReason::AccessDenied]
+                                        } else {
+                                            vec![]
+                                        },
+                                    };
+                                    input.coverage.push(record.clone());
+                                    if duplicate_record {
+                                        input.coverage.push(record);
+                                    }
+                                    let report = evaluate(input);
+                                    assert_eq!(report.eligibility, Eligibility::NotIssued);
+                                    if !report.coverage_concerns.is_empty() {
+                                        assert_eq!(report.coverage, CoverageSummary::Incomplete);
+                                    }
+                                    for (i, c) in report.coverage_concerns.iter().enumerate() {
+                                        assert!(!report.coverage_concerns[..i].contains(c));
+                                    }
+                                    assert_eq!(
+                                        report
+                                            .coverage_concerns
+                                            .iter()
+                                            .filter(|c| c.reason
+                                                == CoverageConcernReason::DuplicateRequest)
+                                            .count(),
+                                        usize::from(requested && duplicate_request)
+                                    );
+                                    if requested && collector == Collector::RuntimeEvents {
+                                        assert!(report.coverage_concerns.iter().any(|c| c.reason
+                                            == CoverageConcernReason::CollectorOutsideMilestone));
+                                    }
+                                    if !requested
+                                        && !matches!(
+                                            state,
+                                            CoverageState::NotRequested
+                                                | CoverageState::OutsideMilestone
+                                        )
+                                    {
+                                        assert!(report.coverage_concerns.iter().any(|c| c.reason
+                                            == CoverageConcernReason::UnrequestedRecord));
+                                    }
+                                    count += 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    assert_eq!(count, 2880);
+}

@@ -61,3 +61,13 @@ Approval should name the privilege baseline, lab scope, identity expectations an
 For a material choice, record its status, date, concrete decision, rationale, consequences and evidence or review reference. For changes to a trust boundary, privileges, privacy scope or event policy, explain the impact before implementation. Keep earlier decisions discoverable when superseding them.
 
 Update the architecture/coverage document and public status in the same focused documentation change when a decision affects them. Do not copy private handoff notes or personal machine inventories into this log.
+
+## Public report wire contract (accepted 2026-10-30)
+
+The existing M2.5 `serde_json` dependency and minimized `PublicReport` projection
+remain the serialization path. Shared snapshots and arbitrary upstream strings
+are not serialized directly. [Schema v1](report-schema-v1.md) freezes field shapes,
+nulls, enum spellings and compatibility rules. Breaking wire changes require a
+schema-version bump; policy and indicator versions remain separate. A shared
+synthetic fixture must match the committed JSON/text golden files on every CI OS.
+This resolves issue #9 without expanding collection or enforcement scope.

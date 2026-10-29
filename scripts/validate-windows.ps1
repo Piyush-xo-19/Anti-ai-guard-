@@ -42,6 +42,7 @@ function Invoke-ValidationProgram {
     $programInfo.RedirectStandardOutput = $true
     $programInfo.RedirectStandardError = $true
     $programInfo.EnvironmentVariables['CARGO_TARGET_DIR'] = Join-Path $validationRoot 'target'
+    $programInfo.EnvironmentVariables['RUSTDOCFLAGS'] = '-D warnings'
     $program = New-Object Diagnostics.Process
     $program.StartInfo = $programInfo
     try {
@@ -99,6 +100,7 @@ try {
     $validationDirty = $dirty.Code -ne 0 -or -not [string]::IsNullOrWhiteSpace($dirty.Out)
     [void](Invoke-ValidationCheck 'format' $cargoProgram @('fmt', '--all', '--', '--check'))
     [void](Invoke-ValidationCheck 'clippy' $cargoProgram @('clippy', '--locked', '--offline', '--all-targets', '--', '-D', 'warnings'))
+    [void](Invoke-ValidationCheck 'documentation' $cargoProgram @('doc', '--no-deps', '--locked', '--offline'))
     [void](Invoke-ValidationCheck 'build' $cargoProgram @('build', '--locked', '--offline'))
     [void](Invoke-ValidationCheck 'tests' $cargoProgram @('test', '--locked', '--offline'))
     [void](Invoke-ValidationCheck 'm22-synthetic-example' $cargoProgram @('run', '--locked', '--offline', '--example', 'diagnostic'))

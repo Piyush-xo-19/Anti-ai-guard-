@@ -39,6 +39,12 @@ cargo run --locked --offline --example report_fixture
 cargo run --locked --offline --example report_fixture -- --json
 ```
 
-See [synthetic text](examples/diagnostic.synthetic.txt) and [synthetic JSON](examples/diagnostic.synthetic.json). They are generated examples, not evidence of real assistants or platform support. Seven report tests cover text/JSON agreement, free-text/secret minimization, partial/failure/cancelled states, bounded truncation, invalid combined scope before process access, pre-cancellation and explicit PATH opt-in. Native/CLI and desktop evidence remain separately recorded in the validation review.
+See [synthetic text](examples/diagnostic.synthetic.txt) and [synthetic JSON](examples/diagnostic.synthetic.json). They are generated examples, not evidence of real assistants or platform support. Eight report tests cover text/JSON agreement, free-text/secret minimization, partial/failure/cancelled states, bounded truncation, invalid combined scope before process access, pre-cancellation explicit PATH opt-in and published golden-file agreement. Native/CLI and desktop evidence remain separately recorded in the validation review.
 
 M2.4 limitations still apply: no trusted strong-identity catalog, no trusted boot ID, generic script hosts/renamed/custom agents outside native-name selection, and no continuous observation. Full Windows 10/11/pinned-artifact acceptance remains the M2.6 exit gate.
+
+## Wire compatibility
+
+See [public JSON schema v1](report-schema-v1.md) for required fields, null handling,
+stable names and version rules. The example and golden-file test share the same
+synthetic input. CI checks both JSON and text, plus fake-secret minimization.
