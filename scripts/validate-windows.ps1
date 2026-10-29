@@ -116,7 +116,7 @@ try {
     $runtimeValid = $runtime.Code -in @(0, 3)
     if ($runtimeValid) {
         $runtimeReport = $runtime.Out | ConvertFrom-Json
-        $runtimeValid = $runtimeReport.schema_version -eq 1 -and $runtimeReport.eligibility -eq 'NotIssued'
+        $runtimeValid = $runtimeReport.schema_version -eq 2 -and $runtimeReport.eligibility -eq 'NotIssued'
         # Only minimized platform metadata is retained; findings/PIDs/counts are discarded.
         $validationPlatform = $runtimeReport.platform
     }

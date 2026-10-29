@@ -73,7 +73,7 @@ pub fn fixture() -> ScanResult {
                         instance: ProcessInstance {
                             boot_id: None,
                             pid: 42,
-                            start_time: Some(100),
+                            start_time: Some(133000000000000001),
                         },
                         state: ProcessState::AliveAtSnapshot,
                     },

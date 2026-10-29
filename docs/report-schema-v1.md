@@ -1,8 +1,8 @@
 # Public diagnostic JSON schema v1
 
-Status: accepted maintenance contract, 2026-10-30 (issue #9). This formalizes
+Status: historical contract; superseded by [schema v2](report-schema-v2.md). Accepted maintenance contract, 2026-10-30 (issue #9). This formalizes
 the M2.5 projection already implemented with `serde_json`; it adds no dependency.
-The canonical example is [diagnostic.synthetic.json](examples/diagnostic.synthetic.json).
+The canonical example is [diagnostic.synthetic.json](https://github.com/Piyush-xo-19/Anti-ai-guard-/blob/714d603ad13b6a18cce6250b53defa83b631c009/docs/examples/diagnostic.synthetic.json).
 `report::project` is the serialization boundary. Raw shared models are not wire DTOs.
 
 ## Required structure

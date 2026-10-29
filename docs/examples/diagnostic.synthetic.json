@@ -58,7 +58,7 @@
       "kind": "Process",
       "process": {
         "boot_identity_available": false,
-        "creation_filetime": 100,
+        "creation_filetime": "133000000000000001",
         "pid": 42,
         "state": "AliveAtSnapshot"
       },
@@ -89,6 +89,7 @@
     "process_queries": 0
   },
   "observed_at_ms": 1234,
+  "operational_gaps": true,
   "platform": {
     "architecture": "Unknown",
     "architecture_basis": "compiled-target",
@@ -109,7 +110,7 @@
     }
   ],
   "scan_id": "scan-1234-0",
-  "schema_version": 1,
+  "schema_version": 2,
   "scopes": [
     {
       "id": 1,

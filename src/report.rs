@@ -53,7 +53,7 @@ struct ConcernData {
 #[derive(Serialize)]
 struct ProcessData {
     pid: u32,
-    creation_filetime: Option<u64>,
+    creation_filetime: Option<String>,
     state: State,
     boot_identity_available: bool,
 }
@@ -96,6 +96,7 @@ struct ReportData {
     coverage: Coverage,
     eligibility: &'static str,
     report_truncated: bool,
+    operational_gaps: bool,
     indicator_catalog_version: &'static str,
     scopes: Vec<ScopeData>,
     requested: Vec<TargetData>,
@@ -138,6 +139,70 @@ fn scan_id(value: &str) -> &str {
         "redacted-scan-id"
     }
 }
+// This describes collection/validation health only, never eligibility or identity.
+// MissingBootIdentity is the sole accepted non-operational gap in this prototype.
+fn operational_gaps(result: &ScanResult, truncated: bool) -> bool {
+    let report = &result.diagnostic;
+    let snapshot = &report.snapshot;
+    let boot_only = |c: &CollectorCoverage| {
+        c.target.collector == Collector::ProcessSnapshot
+            && c.state == CoverageState::Partial
+            && !c.gaps.is_empty()
+            && c.gaps.iter().all(|g| *g == GapReason::MissingBootIdentity)
+    };
+    let has_known_limit = snapshot.coverage.iter().any(boot_only);
+    if truncated
+        || matches!(
+            snapshot.execution,
+            ScanExecution::Failed | ScanExecution::Cancelled
+        )
+        || (snapshot.execution == ScanExecution::Partial && !has_known_limit)
+        || snapshot.coverage.iter().any(|c| {
+            !boot_only(c)
+                && !(c.gaps.is_empty()
+                    && matches!(
+                        c.state,
+                        CoverageState::Inspected
+                            | CoverageState::NotRequested
+                            | CoverageState::OutsideMilestone
+                    ))
+        })
+    {
+        return true;
+    }
+    report.coverage_concerns.iter().any(|c| match c.reason {
+        CoverageConcernReason::ScanNotFinished => {
+            !(snapshot.execution == ScanExecution::Partial && has_known_limit)
+        }
+        CoverageConcernReason::CollectorIncomplete => !c.target.is_some_and(|target| {
+            let records: Vec<_> = snapshot
+                .coverage
+                .iter()
+                .filter(|entry| entry.target == target)
+                .collect();
+            records.len() == 1 && boot_only(records[0])
+        }),
+        CoverageConcernReason::MissingProcessIdentity => {
+            let observations: Vec<_> = snapshot
+                .observations
+                .iter()
+                .filter(|o| {
+                    c.target.is_some_and(|t| {
+                        t.collector == Collector::ProcessSnapshot && t.scope == o.scope
+                    }) && matches!(o.kind, ObservationKind::Process { .. })
+                })
+                .collect();
+            observations.is_empty()
+                || observations.iter().any(|o| match &o.kind {
+                    ObservationKind::Process { instance, .. } => {
+                        instance.pid == 0 || !instance.start_time.is_some_and(|v| v > 0)
+                    }
+                    _ => true,
+                })
+        }
+        _ => true,
+    })
+}
 pub fn project(result: &ScanResult) -> PublicReport {
     let report = &result.diagnostic;
     let snapshot = &report.snapshot;
@@ -166,7 +231,7 @@ pub fn project(result: &ScanResult) -> PublicReport {
                     FindingKind::Process,
                     Some(ProcessData {
                         pid: instance.pid,
-                        creation_filetime: instance.start_time,
+                        creation_filetime: instance.start_time.map(|value| value.to_string()),
                         state: (*state).into(),
                         boot_identity_available: instance.boot_id.is_some(),
                     }),
@@ -204,7 +269,7 @@ pub fn project(result: &ScanResult) -> PublicReport {
         })
         .collect::<Vec<_>>();
     let data = ReportData {
-        schema_version: 1,
+        schema_version: 2,
         policy_version: POLICY_VERSION,
         scan_id: scan_id(&snapshot.scan_id).into(),
         observed_at_ms: snapshot.observed_at_ms,
@@ -224,6 +289,7 @@ pub fn project(result: &ScanResult) -> PublicReport {
         coverage: coverage.into(),
         eligibility: "NotIssued",
         report_truncated: truncated,
+        operational_gaps: operational_gaps(result, truncated),
         indicator_catalog_version: "windows-name-and-package-indicators-v1",
         scopes: snapshot
             .scopes
@@ -339,6 +405,7 @@ impl PublicReport {
             v.platform.architecture,
             v.platform.inspection_mode
         ));
+        out.push_str(&format!("Operational gaps: {}\n", v.operational_gaps));
         for finding in &v.findings {
             out.push_str(&format!(
                 "Finding {} scope {}: {} | {} | {} ({})",
@@ -353,7 +420,7 @@ impl PublicReport {
                 out.push_str(&format!(
                     " PID {} creation={} state={} boot_identity={}",
                     process.pid,
-                    serde_json::to_value(process.creation_filetime).expect("integer serializes"),
+                    process.creation_filetime.as_deref().unwrap_or("null"),
                     process.state,
                     process.boot_identity_available
                 ));

@@ -79,7 +79,7 @@ fn json_process_report_is_parseable_and_contains_no_raw_arguments() {
     assert!(matches!(output.status.code(), Some(0 | 3)));
     assert!(output.stderr.is_empty());
     let value: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-    assert_eq!(value["schema_version"], 1);
+    assert_eq!(value["schema_version"], 2);
     assert_eq!(value["eligibility"], "NotIssued");
     assert!(value.get("collectors").is_some());
     assert!(value.get("limitations").is_some());
