@@ -139,6 +139,20 @@ impl ProcessInstance {
     }
 
     /// PID equality never establishes identity on its own.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use anti_ai_guard::model::{Correlation, ProcessInstance};
+    /// let original = ProcessInstance {
+    ///     boot_id: Some("fixture.boot".into()), pid: 7, start_time: Some(123),
+    /// };
+    /// assert_eq!(original.correlate(&original.clone()), Correlation::SameInstance);
+    /// let reused = ProcessInstance { start_time: Some(124), ..original.clone() };
+    /// assert_eq!(original.correlate(&reused), Correlation::DifferentInstance);
+    /// let incomplete = ProcessInstance { start_time: None, ..original.clone() };
+    /// assert_eq!(original.correlate(&incomplete), Correlation::Indeterminate);
+    /// ```
     pub fn correlate(&self, other: &Self) -> Correlation {
         let boot = self.normalized_boot_id();
         let other_boot = other.normalized_boot_id();

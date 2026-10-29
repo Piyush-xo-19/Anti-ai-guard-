@@ -179,6 +179,30 @@ fn observation_target(observation: &Observation) -> CoverageTarget {
 }
 
 /// In-memory evaluation only: no rendering, serialization, collection or storage.
+///
+/// # Examples
+///
+/// Constructing a synthetic snapshot does not inspect the host or grant eligibility.
+/// Epoch zero is permitted for fixtures; it is not a freshness assertion.
+///
+/// ```
+/// use anti_ai_guard::{model::*, policy::{evaluate, CoverageSummary, Eligibility}};
+/// let scope = ScopeId(1);
+/// let target = CoverageTarget { collector: Collector::InstallationInventory, scope };
+/// let snapshot = Snapshot {
+///     scan_id: "fixture.scan".into(), observed_at_ms: 0,
+///     platform: Platform { os: OperatingSystem::Unknown, build: None,
+///         architecture: Architecture::Unknown, inspection_mode: InspectionMode::Unknown },
+///     scopes: vec![DeclaredScope { id: scope, kind: ScopeKind::InstallationRoot,
+///         label: "fixture.root".into() }],
+///     requested: vec![target], execution: ScanExecution::Finished,
+///     coverage: vec![CollectorCoverage { target, state: CoverageState::Inspected, gaps: vec![] }],
+///     observations: vec![],
+/// };
+/// let report = evaluate(snapshot);
+/// assert_eq!(report.coverage, CoverageSummary::InspectedRequestedScope);
+/// assert_eq!(report.eligibility, Eligibility::NotIssued);
+/// ```
 pub fn evaluate(snapshot: Snapshot) -> DiagnosticReport {
     let mut concerns = Vec::new();
     if snapshot.scan_id.trim().is_empty() {
