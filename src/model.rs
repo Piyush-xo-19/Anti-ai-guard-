@@ -8,6 +8,7 @@
 pub enum OperatingSystem {
     Windows10,
     Windows11,
+    WindowsServer,
     Linux,
     Unknown,
 }

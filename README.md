@@ -21,6 +21,7 @@ The design combines a pre-event software inventory, runtime observation of recog
 - [Shared contracts and synthetic diagnostic example](docs/shared-contracts.md)
 - [Bounded Windows installation inventory](docs/installation-inventory.md)
 - [Current-session process snapshots](docs/process-snapshots.md)
+- [Combined scans and text/JSON reports](docs/diagnostic-reports.md)
 - [Competition policy](#competition-policy)
 - [How it is intended to work](#how-it-is-intended-to-work)
 - [Proposed architecture](#proposed-architecture)
@@ -187,7 +188,7 @@ cargo build --locked --offline
 .\target\debug\anti-ai-guard.exe --version
 ```
 
-See [development instructions](docs/development.md) for prerequisites, checks and known environment limitations. `scan` remains unavailable. For installation candidates, run `anti-ai-guard.exe inventory --consent --npm-prefix "C:\approved\npm-prefix"` with a root you choose. See the [inventory scope and limits](docs/installation-inventory.md); installation is never proof of execution.
+See [development instructions](docs/development.md) for prerequisites, checks and known environment limitations. `scan --consent` now combines explicitly selected roots and/or `--processes`; add `--json` for structured output. For installation candidates, run `anti-ai-guard.exe inventory --consent --npm-prefix "C:\approved\npm-prefix"` with a root you choose. See the [inventory scope and limits](docs/installation-inventory.md); installation is never proof of execution.
 
 To exercise M2.2 with hard-coded synthetic data and no device inspection, run `cargo run --locked --offline --example diagnostic`. See the [shared-contract guide](docs/shared-contracts.md) for its output and identity/coverage boundaries.
 

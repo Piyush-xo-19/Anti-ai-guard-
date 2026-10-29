@@ -6,7 +6,7 @@ Updated: 2026-10-29 | Implemented scope: M2.1/M2.2 and bounded M2.3 inventory
 
 ## What runs today
 
-The CLI provides help/version and consent-gated `inventory` for exact installation selectors in approved Windows roots. `serde_json` parses bounded manifests, with dependencies pinned in Cargo.lock. No process collector, generic scan command or competition verification exists. See the [inventory guide](installation-inventory.md).
+The CLI provides help/version and consent-gated `inventory` for exact installation selectors in approved Windows roots. `serde_json` parses bounded manifests, with dependencies pinned in Cargo.lock. M2.4 supplies current-session candidate snapshots; M2.5 adds explicitly scoped combined scans and text/JSON output. Competition verification remains outside M2. See the [inventory guide](installation-inventory.md).
 
 Help/version inspect no installations. Inventory reads only disclosed root/ancestor metadata and selected manifests after consent. It does not enumerate processes or collect telemetry. Invalid-argument errors deliberately do not echo raw argument values, which might contain accidentally pasted private data.
 

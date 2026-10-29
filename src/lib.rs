@@ -1,59 +1,71 @@
-//! CLI, shared observations and diagnostic Policy A contracts.
-//!
-//! Installation inventory requires explicit consent and bounded roots. There is
-//! no competition verification. Inventory alone is not execution.
-
+//! Consented, bounded diagnostic preflight. No competition verification.
+pub mod cancellation;
 pub mod inventory;
 pub mod model;
+pub mod platform;
 pub mod policy;
 pub mod processes;
-
-use std::ffi::OsString;
+pub mod report;
+pub mod scan;
+use std::ffi::{OsStr, OsString};
 use std::fmt;
-
-/// Version from the same package manifest used to build the binary.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
-
-/// Help for the commands implemented in this milestone chunk.
-pub const HELP: &str = "Anti-AI Guard
+pub const HELP:&str="Anti-AI Guard
 Read-only competition preflight tooling (early development).
 
 Usage: anti-ai-guard [OPTION]
-       anti-ai-guard inventory --consent [--bin-root PATH] [--npm-prefix PATH] [--include-path]
-       anti-ai-guard processes --consent
+       anti-ai-guard inventory --consent [--bin-root PATH] [--npm-prefix PATH] [--include-path] [--json]
+       anti-ai-guard processes --consent [--json]
+       anti-ai-guard scan --consent [--bin-root PATH] [--npm-prefix PATH] [--include-path] [--processes] [--json]
 
 Options:
   -h, --help       Show this help
   -V, --version    Show the program version
 
-Inventory inspects only known executable names and npm manifests in approved roots.
+Inventory checks fixed executable names and npm manifests in approved roots.
+Processes checks current-session known native name indicators. Names alone require review.
+Scan combines only the scopes explicitly selected; no default disk/PATH/process inspection.
 --include-path opts into PATH directories; relative/empty/network roots are rejected.
-No tool is executed. Findings are installation candidates, never execution violations.
+No tool is executed, no command lines or memory are read, and no eligibility is issued.
 Help/version do not inspect installations, processes, or files.
-Processes checks known native name indicators in the current Windows session.
-No command lines or process memory are read. Names alone require review.
+JSON and text derive from the same minimized, bounded diagnostic report.
 ";
-
-/// Implemented CLI actions; process scanning remains a later chunk.
 #[derive(Debug, PartialEq, Eq)]
 pub enum Command {
     Help,
     Version,
-    Inventory(InventoryOptions),
-    Processes,
+    Collect(ScanOptions),
 }
-
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum OutputFormat {
+    Text,
+    Json,
+}
+#[derive(Debug, PartialEq, Eq)]
+pub struct ScanOptions {
+    pub roots: Vec<inventory::InventoryRoot>,
+    pub include_path: bool,
+    pub processes: bool,
+    pub format: OutputFormat,
+    pub(crate) consent: bool,
+}
 #[derive(Debug, PartialEq, Eq)]
 pub struct InventoryOptions {
     pub roots: Vec<inventory::InventoryRoot>,
     pub include_path: bool,
 }
-
-/// Expands PATH only after the CLI consent flag has been validated. No filesystem
-/// access occurs here. Missing/empty/relative PATH entries fail closed.
+#[derive(Debug, PartialEq, Eq)]
+pub struct ArgumentError;
+impl fmt::Display for ArgumentError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("unsupported arguments; run anti-ai-guard --help for usage")
+    }
+}
+impl std::error::Error for ArgumentError {}
+/// Expand only explicitly opted-in PATH. No filesystem access occurs here.
 pub fn inventory_request(
     options: InventoryOptions,
-    path: Option<&std::ffi::OsStr>,
+    path: Option<&OsStr>,
 ) -> Result<inventory::InventoryRequest, ArgumentError> {
     let mut roots = options.roots;
     if options.include_path {
@@ -70,64 +82,37 @@ pub fn inventory_request(
     inventory::InventoryRequest::new(true, roots, inventory::Limits::default())
         .map_err(|_| ArgumentError)
 }
-
-/// Invalid CLI input. Deliberately excludes raw argument values, which may
-/// contain private data accidentally pasted into the terminal.
-#[derive(Debug, PartialEq, Eq)]
-pub struct ArgumentError;
-
-impl fmt::Display for ArgumentError {
-    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        formatter.write_str("unsupported arguments; run anti-ai-guard --help for usage")
-    }
-}
-
-impl std::error::Error for ArgumentError {}
-
-/// Parse arguments excluding the executable name.
-///
-/// No arguments show help. Global help/version accept no extra arguments.
-/// Inventory requires explicit consent and bounded scope flags.
-/// Operating-system strings avoid panicking on non-Unicode arguments.
+/// Bounded argument parsing; raw input never enters error messages.
 pub fn parse_args(args: impl IntoIterator<Item = OsString>) -> Result<Command, ArgumentError> {
-    let mut args = args.into_iter();
+    let bounded: Vec<_> = args.into_iter().take(132).collect();
+    if bounded.len() > 131 {
+        return Err(ArgumentError);
+    }
+    let mut args = bounded.into_iter();
     let Some(first) = args.next() else {
         return Ok(Command::Help);
     };
-
-    if first == "processes" {
-        let option = args.next().ok_or(ArgumentError)?;
-        if args.next().is_some() {
-            return Err(ArgumentError);
-        }
-        if option == "--help" {
+    if first == "inventory" || first == "processes" || first == "scan" {
+        let rest: Vec<_> = args.collect();
+        if rest.len() == 1 && rest[0] == "--help" {
             return Ok(Command::Help);
         }
-        return if option == "--consent" {
-            Ok(Command::Processes)
-        } else {
-            Err(ArgumentError)
-        };
-    }
-
-    if first == "inventory" {
+        let mut args = rest.into_iter();
         let mut consent = false;
         let mut include_path = false;
-        let mut roots = Vec::new();
-        let mut count = 0;
+        let mut processes = first == "processes";
+        let mut format = OutputFormat::Text;
+        let mut roots = vec![];
         while let Some(option) = args.next() {
-            count += 1;
-            if count > 66 {
-                return Err(ArgumentError);
-            }
-            if option == "--help" && count == 1 && args.next().is_none() {
-                return Ok(Command::Help);
-            }
             if option == "--consent" && !consent {
                 consent = true;
-            } else if option == "--include-path" && !include_path {
+            } else if option == "--json" && format == OutputFormat::Text {
+                format = OutputFormat::Json;
+            } else if option == "--processes" && first == "scan" && !processes {
+                processes = true;
+            } else if option == "--include-path" && first != "processes" && !include_path {
                 include_path = true;
-            } else if option == "--bin-root" || option == "--npm-prefix" {
+            } else if first != "processes" && (option == "--bin-root" || option == "--npm-prefix") {
                 let path = args.next().filter(|p| !p.is_empty()).ok_or(ArgumentError)?;
                 roots.push(inventory::InventoryRoot {
                     path: path.into(),
@@ -144,19 +129,20 @@ pub fn parse_args(args: impl IntoIterator<Item = OsString>) -> Result<Command, A
                 return Err(ArgumentError);
             }
         }
-        if !consent || (roots.is_empty() && !include_path) {
+        if !consent || (roots.is_empty() && !include_path && !processes) {
             return Err(ArgumentError);
         }
-        return Ok(Command::Inventory(InventoryOptions {
+        return Ok(Command::Collect(ScanOptions {
             roots,
             include_path,
+            processes,
+            format,
+            consent,
         }));
     }
-
     if args.next().is_some() {
         return Err(ArgumentError);
     }
-
     if first == "--help" || first == "-h" {
         Ok(Command::Help)
     } else if first == "--version" || first == "-V" {

@@ -2,7 +2,7 @@
 
 Updated: 2026-10-29
 
-**Current phase: M2.4 candidate-only process snapshots implemented. M2.5 report integration is next; strong-identity and desktop validation gates remain open.**
+**Current phase: M2.4/M2.5 candidate snapshots and integrated reports implemented. M2.6 validation review is next; strong-identity, boot correlation and desktop gates remain open.**
 
 This is the public progress summary for contributors. No private maintainer notes or earlier chat history are needed to understand the project direction.
 
@@ -27,6 +27,8 @@ A bounded Windows installation collector and consent-gated inventory command are
 - [x] Implement M2.3: explicit consent/root selection, bounded candidate inventory, reparse/sharing guards, minimized output and Windows filesystem fixtures.
 
 - [x] Implement M2.4 current-session name candidates, creation/image/exit queries, PID-race checks and weak installation linkage. Boot-scoped/strong identity remains incomplete.
+
+- [x] Implement M2.5 consented combined scans, shared minimized text/JSON projection, bounded output and synthetic examples.
 
 ## Milestones
 

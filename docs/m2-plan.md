@@ -65,6 +65,8 @@ Acceptance: applicable RUN/ID/FAIL cases have outcomes supported by actual evide
 
 ### M2.5: Diagnostic report integration
 
+State: implemented. [Integrated reports](diagnostic-reports.md) combine only consented roots/PATH/current-session selectors into one diagnostic result and a shared bounded text/JSON projection. Cancellation, partial coverage, output truncation, minimized identifiers, versioned candidate rules and synthetic examples are explicit. No report persistence, trusted strong matcher, boot identity or competition eligibility is added. Local report, CLI, collector and native process fixtures passed; hosted checks follow publication.
+
 Connect consent/scope selection, collectors and identity classification to readable and structured reports. Distinguish scan completion, coverage, evidence quality and suggested actions. Add documented example reports built from synthetic fixtures.
 
 Acceptance: output paths agree and redact fake secrets in normal and error cases. Empty findings do not imply a clean entire device. Cancellation and partial failure remain visible. No complete command-line dump or unbounded report storage.

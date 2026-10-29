@@ -1,0 +1,125 @@
+{
+  "collection_execution": "Partial",
+  "collectors": [
+    {
+      "collector": "InstallationInventory",
+      "gaps": [],
+      "scope_id": 1,
+      "state": "Inspected"
+    },
+    {
+      "collector": "ProcessSnapshot",
+      "gaps": [
+        "AccessDenied",
+        "MissingBootIdentity"
+      ],
+      "scope_id": 2,
+      "state": "Partial"
+    }
+  ],
+  "coverage": "Incomplete",
+  "coverage_concerns": [
+    {
+      "collector": null,
+      "reason": "ScanNotFinished",
+      "scope_id": null
+    },
+    {
+      "collector": "ProcessSnapshot",
+      "reason": "CollectorIncomplete",
+      "scope_id": 2
+    },
+    {
+      "collector": "ProcessSnapshot",
+      "reason": "MissingProcessIdentity",
+      "scope_id": 2
+    }
+  ],
+  "eligibility": "NotIssued",
+  "findings": [
+    {
+      "action": "InventoryOnly",
+      "evidence_class": "Candidate",
+      "index": 0,
+      "indicator_rule_id": "npm-package-name-indicators-v1",
+      "kind": "Installation",
+      "process": null,
+      "reason": "InstallationIsNotExecution",
+      "scope_id": 1,
+      "source": "PackageMetadata",
+      "tool_id": "codex-cli",
+      "upstream_rule_reference_omitted": false
+    },
+    {
+      "action": "RequestReview",
+      "evidence_class": "Candidate",
+      "index": 1,
+      "indicator_rule_id": "process-basename-indicators-v1",
+      "kind": "Process",
+      "process": {
+        "boot_identity_available": false,
+        "creation_filetime": 100,
+        "pid": 42,
+        "state": "AliveAtSnapshot"
+      },
+      "reason": "MissingProcessIdentity",
+      "scope_id": 2,
+      "source": "ProcessSnapshot",
+      "tool_id": "codex-cli",
+      "upstream_rule_reference_omitted": false
+    }
+  ],
+  "indicator_catalog_version": "windows-name-and-package-indicators-v1",
+  "limitations": [
+    "only-explicit-installation-roots-and-known-native-name-selectors",
+    "no-trusted-strong-identity-catalog",
+    "missing-boot-identity-limits-process-correlation",
+    "generic-interpreters-renamed-custom-and-guest-agents-not-identified",
+    "snapshot-not-continuous-monitoring",
+    "empty-findings-never-prove-clean-device",
+    "this-report-does-not-establish-desktop-platform-support",
+    "no-eligibility-or-automatic-process-control"
+  ],
+  "location_links": [],
+  "metrics": {
+    "collection_elapsed_ms": 0,
+    "inventory_probes": 0,
+    "metadata_bytes": 0,
+    "process_entries": 0,
+    "process_queries": 0
+  },
+  "observed_at_ms": 1234,
+  "platform": {
+    "architecture": "Unknown",
+    "architecture_basis": "compiled-target",
+    "build": null,
+    "inspection_mode": "Unknown",
+    "os": "Unknown"
+  },
+  "policy_version": "policy-a-diagnostic-v1",
+  "report_truncated": false,
+  "requested": [
+    {
+      "collector": "InstallationInventory",
+      "scope_id": 1
+    },
+    {
+      "collector": "ProcessSnapshot",
+      "scope_id": 2
+    }
+  ],
+  "scan_id": "scan-1234-0",
+  "schema_version": 1,
+  "scopes": [
+    {
+      "id": 1,
+      "kind": "InstallationRoot",
+      "label": "installation-root-1"
+    },
+    {
+      "id": 2,
+      "kind": "CurrentSessionProcesses",
+      "label": "current-session-known-native-name-selectors"
+    }
+  ]
+}

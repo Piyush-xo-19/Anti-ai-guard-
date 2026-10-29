@@ -52,10 +52,37 @@ fn unknown_option_has_exit_code_two_and_stderr_only() {
 }
 
 #[test]
-fn generic_scan_command_remains_unavailable() {
+fn scan_requires_explicit_consent_and_scope() {
     let output = run(&["scan"]);
     assert_eq!(output.status.code(), Some(2));
     assert!(output.stdout.is_empty());
+}
+
+#[test]
+fn scan_rejects_missing_consent_empty_scope_and_ambiguous_options() {
+    for args in [
+        vec!["scan", "--consent"],
+        vec!["scan", "--processes"],
+        vec!["scan", "--consent", "--processes", "--json", "--json"],
+        vec!["processes", "--consent", "--bin-root", "fake-private-token"],
+    ] {
+        let output = run(&args);
+        assert_eq!(output.status.code(), Some(2));
+        assert!(output.stdout.is_empty());
+        assert!(!String::from_utf8_lossy(&output.stderr).contains("fake-private-token"));
+    }
+}
+
+#[test]
+fn json_process_report_is_parseable_and_contains_no_raw_arguments() {
+    let output = run(&["processes", "--consent", "--json"]);
+    assert!(matches!(output.status.code(), Some(0 | 3)));
+    assert!(output.stderr.is_empty());
+    let value: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(value["schema_version"], 1);
+    assert_eq!(value["eligibility"], "NotIssued");
+    assert!(value.get("collectors").is_some());
+    assert!(value.get("limitations").is_some());
 }
 
 #[test]

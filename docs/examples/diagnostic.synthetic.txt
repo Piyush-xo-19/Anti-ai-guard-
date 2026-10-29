@@ -1,0 +1,20 @@
+Anti-AI Guard diagnostic scan-1234-0
+Execution: Partial; coverage: Incomplete; eligibility: NotIssued
+Platform: Unknown build unknown architecture Unknown (compiled target), mode Unknown
+Finding 0 scope 1: codex-cli | Candidate | InventoryOnly (InstallationIsNotExecution) source=PackageMetadata indicator_rule=npm-package-name-indicators-v1
+Finding 1 scope 2: codex-cli | Candidate | RequestReview (MissingProcessIdentity) PID 42 creation=100 state=AliveAtSnapshot boot_identity=false source=ProcessSnapshot indicator_rule=process-basename-indicators-v1
+Scope 1 InstallationInventory: Inspected []
+Scope 2 ProcessSnapshot: Partial ["AccessDenied","MissingBootIdentity"]
+Coverage concern scope null: ScanNotFinished
+Coverage concern scope 2: CollectorIncomplete
+Coverage concern scope 2: MissingProcessIdentity
+Metrics: {"collection_elapsed_ms":0,"inventory_probes":0,"metadata_bytes":0,"process_entries":0,"process_queries":0}
+Scope is limited to documented selectors; an empty inventory does not mean a clean device.
+Limit: only-explicit-installation-roots-and-known-native-name-selectors
+Limit: no-trusted-strong-identity-catalog
+Limit: missing-boot-identity-limits-process-correlation
+Limit: generic-interpreters-renamed-custom-and-guest-agents-not-identified
+Limit: snapshot-not-continuous-monitoring
+Limit: empty-findings-never-prove-clean-device
+Limit: this-report-does-not-establish-desktop-platform-support
+Limit: no-eligibility-or-automatic-process-control
