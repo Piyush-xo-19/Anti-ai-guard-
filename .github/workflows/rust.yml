@@ -16,6 +16,8 @@ jobs:
       - name: Install pinned Rust toolchain
         shell: pwsh
         run: rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy
+      - name: Fetch locked dependencies
+        run: cargo fetch --locked
       - name: Check formatting
         run: cargo fmt --all -- --check
       - name: Lint

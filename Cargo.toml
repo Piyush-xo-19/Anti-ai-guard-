@@ -9,3 +9,5 @@ repository = "https://github.com/Piyush-xo-19/Anti-ai-guard-"
 publish = false
 
 [dependencies]
+serde_json = "1.0"
+

@@ -14,8 +14,8 @@ fn no_arguments_show_help_without_scanning() {
     assert!(output.stderr.is_empty());
     let text = String::from_utf8(output.stdout).unwrap();
     assert!(text.contains("Usage: anti-ai-guard [OPTION]"));
-    assert!(text.contains("Scanning is not implemented."));
-    assert!(text.contains("does not inspect installations, processes, or files"));
+    assert!(text.contains("Process scanning is not implemented."));
+    assert!(text.contains("Help/version do not inspect installations, processes, or files"));
 }
 
 #[test]
@@ -52,10 +52,33 @@ fn unknown_option_has_exit_code_two_and_stderr_only() {
 }
 
 #[test]
-fn scan_command_is_rejected_until_it_is_implemented() {
+fn generic_scan_command_remains_unavailable() {
     let output = run(&["scan"]);
     assert_eq!(output.status.code(), Some(2));
     assert!(output.stdout.is_empty());
+}
+
+#[test]
+fn inventory_requires_consent_and_explicit_scope() {
+    for args in [
+        vec!["inventory"],
+        vec!["inventory", "--consent"],
+        vec!["inventory", "--bin-root", "C:\\fixture-secret"],
+        vec!["inventory", "--consent", "--bin-root"],
+        vec!["inventory", "--consent", "--bin-root", "relative"],
+    ] {
+        let output = run(&args);
+        assert_eq!(output.status.code(), Some(2));
+        assert!(output.stdout.is_empty());
+        assert!(!String::from_utf8_lossy(&output.stderr).contains("fixture-secret"));
+    }
+}
+
+#[test]
+fn inventory_help_does_not_require_consent_or_inspect() {
+    let output = run(&["inventory", "--help"]);
+    assert!(output.status.success());
+    assert_eq!(output.stdout, run(&["--help"]).stdout);
 }
 
 #[test]

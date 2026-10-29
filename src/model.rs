@@ -87,6 +87,10 @@ pub enum GapReason {
     Cancelled,
     CollectorFailed,
     Unsupported,
+    InvalidMetadata,
+    MissingRoot,
+    InvalidScope,
+    SharingConflict,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
