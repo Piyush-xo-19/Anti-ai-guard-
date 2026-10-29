@@ -124,7 +124,12 @@ mod native {
     }
 
     impl RootReader for ProtectedRoot {
-        fn probe(&mut self, selector: &Selector, max_bytes: usize) -> Result<Probe, GapReason> {
+        fn probe(
+            &mut self,
+            selector: &Selector,
+            max_bytes: usize,
+            bytes_read: &mut usize,
+        ) -> Result<Probe, GapReason> {
             let relative = Path::new(selector.relative);
             let mut current = self.path.clone();
             let mut guards = vec![];
@@ -151,9 +156,11 @@ mod native {
                     return Err(GapReason::BudgetExceeded);
                 }
                 let mut bytes = Vec::new();
-                file.take(max_bytes as u64)
-                    .read_to_end(&mut bytes)
-                    .map_err(io_gap)?;
+                let read_result = file.take(max_bytes as u64).read_to_end(&mut bytes);
+                // Failed reads may still consume bytes. Charge them before
+                // propagating errors so later files cannot reuse that budget.
+                *bytes_read += bytes.len();
+                read_result.map_err(io_gap)?;
                 return Ok(Probe::Manifest(bytes));
             }
             Err(GapReason::InvalidMetadata)

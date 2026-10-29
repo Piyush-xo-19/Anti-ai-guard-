@@ -39,7 +39,12 @@ struct FakeRoot {
     malformed: bool,
 }
 impl RootReader for FakeRoot {
-    fn probe(&mut self, selector: &Selector, max_bytes: usize) -> Result<Probe, GapReason> {
+    fn probe(
+        &mut self,
+        selector: &Selector,
+        max_bytes: usize,
+        bytes_read: &mut usize,
+    ) -> Result<Probe, GapReason> {
         self.calls.borrow_mut().push(selector.relative);
         if let Some(package) = selector.package {
             let bytes = if self.malformed {
@@ -50,6 +55,7 @@ impl RootReader for FakeRoot {
             if bytes.len() > max_bytes {
                 return Err(GapReason::BudgetExceeded);
             }
+            *bytes_read += bytes.len();
             Ok(Probe::Manifest(bytes))
         } else if selector.relative == "codex.exe" || selector.relative == "opencode.exe" {
             Ok(Probe::Indicator)
@@ -230,6 +236,45 @@ fn duplicate_roots_are_deduplicated_without_expanding_scope() {
     assert_eq!(request.roots.len(), 1);
     let result = collect_with(&request, &AtomicBool::new(false), &mut fake());
     assert_eq!(result.scopes.len(), 1);
+}
+
+#[test]
+fn partial_read_errors_still_consume_the_total_byte_budget() {
+    struct ReadFailure;
+    impl InventoryFs for ReadFailure {
+        fn open_root(&mut self, _: &Path) -> Result<Box<dyn RootReader>, GapReason> {
+            Ok(Box::new(ReadFailure))
+        }
+    }
+    impl RootReader for ReadFailure {
+        fn probe(
+            &mut self,
+            selector: &Selector,
+            limit: usize,
+            bytes_read: &mut usize,
+        ) -> Result<Probe, GapReason> {
+            if selector.package.is_none() {
+                return Ok(Probe::Absent);
+            }
+            *bytes_read += limit.min(4);
+            Err(GapReason::CollectorFailed)
+        }
+    }
+    let result = collect_with(
+        &request(Limits {
+            max_manifest_bytes: 4,
+            max_total_bytes: 8,
+            ..Limits::default()
+        }),
+        &AtomicBool::new(false),
+        &mut ReadFailure,
+    );
+    assert_eq!(result.bytes_read, 8);
+    assert_eq!(result.probes, 11);
+    assert!(result.coverage[0]
+        .gaps
+        .contains(&GapReason::CollectorFailed));
+    assert!(result.coverage[0].gaps.contains(&GapReason::BudgetExceeded));
 }
 
 #[cfg(windows)]

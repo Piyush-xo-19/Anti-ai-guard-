@@ -195,7 +195,12 @@ enum Probe {
     Manifest(Vec<u8>),
 }
 trait RootReader {
-    fn probe(&mut self, selector: &Selector, max_bytes: usize) -> Result<Probe, GapReason>;
+    fn probe(
+        &mut self,
+        selector: &Selector,
+        max_bytes: usize,
+        bytes_read: &mut usize,
+    ) -> Result<Probe, GapReason>;
 }
 trait InventoryFs {
     fn open_root(&mut self, path: &Path) -> Result<Box<dyn RootReader>, GapReason>;
@@ -305,7 +310,7 @@ fn collect_with(
                 break;
             }
             result.probes += 1;
-            let probe = match reader.probe(selector, byte_limit) {
+            let probe = match reader.probe(selector, byte_limit, &mut result.bytes_read) {
                 Ok(probe) => probe,
                 Err(reason) => {
                     gap(&mut coverage, reason);
@@ -316,7 +321,6 @@ fn collect_with(
                 Probe::Absent => continue,
                 Probe::Indicator => None,
                 Probe::Manifest(bytes) => {
-                    result.bytes_read += bytes.len();
                     if bytes.len() > byte_limit {
                         gap(&mut coverage, GapReason::BudgetExceeded);
                         continue;
