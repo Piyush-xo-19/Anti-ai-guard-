@@ -1,8 +1,9 @@
 Anti-AI Guard diagnostic scan-1234-0
 Execution: Partial; coverage: Incomplete; eligibility: NotIssued
 Platform: Unknown build unknown architecture Unknown (compiled target), mode Unknown
+Operational gaps: true
 Finding 0 scope 1: codex-cli | Candidate | InventoryOnly (InstallationIsNotExecution) source=PackageMetadata indicator_rule=npm-package-name-indicators-v1
-Finding 1 scope 2: codex-cli | Candidate | RequestReview (MissingProcessIdentity) PID 42 creation=100 state=AliveAtSnapshot boot_identity=false source=ProcessSnapshot indicator_rule=process-basename-indicators-v1
+Finding 1 scope 2: codex-cli | Candidate | RequestReview (MissingProcessIdentity) PID 42 creation=133000000000000001 state=AliveAtSnapshot boot_identity=false source=ProcessSnapshot indicator_rule=process-basename-indicators-v1
 Scope 1 InstallationInventory: Inspected []
 Scope 2 ProcessSnapshot: Partial ["AccessDenied","MissingBootIdentity"]
 Coverage concern scope null: ScanNotFinished

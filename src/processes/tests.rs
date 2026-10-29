@@ -230,7 +230,7 @@ fn bounded_enumeration_discloses_truncation() {
 #[test]
 fn installation_location_link_never_upgrades_process_identity() {
     let path = if cfg!(windows) {
-        PathBuf::from(r"C:\fixture")
+        PathBuf::from("C:/fixture/")
     } else {
         PathBuf::from("/fixture")
     };
@@ -282,4 +282,60 @@ fn installation_location_link_never_upgrades_process_identity() {
         EvidenceClass::Candidate
     );
     assert!(result.findings[0].observation.identity.rule_match.is_none());
+}
+
+#[test]
+fn exact_entry_and_candidate_limits_do_not_claim_truncation() {
+    for max_candidates in [1, 2] {
+        for extra in [false, true] {
+            let mut fake = Fake::new();
+            fake.rows = VecDeque::from([Row {
+                pid: 1,
+                basename: "codex.exe".into(),
+            }]);
+            if extra {
+                fake.rows.push_back(Row {
+                    pid: 3,
+                    basename: "node.exe".into(),
+                });
+            }
+            let result = collect_with(
+                &request(Limits {
+                    max_entries: 1,
+                    max_candidates,
+                    ..Limits::default()
+                }),
+                &AtomicBool::new(false),
+                None,
+                &mut fake,
+            );
+            assert_eq!(
+                result.coverage.gaps.contains(&GapReason::BudgetExceeded),
+                extra
+            );
+            assert_eq!(result.enumerated, 1);
+            assert_eq!(result.queried, 1);
+        }
+    }
+    let mut fake = Fake::new();
+    fake.rows = VecDeque::from([Row {
+        pid: 1,
+        basename: "codex.exe".into(),
+    }]);
+    let result = collect_with(
+        &request(Limits {
+            max_entries: 10,
+            max_candidates: 1,
+            ..Limits::default()
+        }),
+        &AtomicBool::new(false),
+        None,
+        &mut fake,
+    );
+    assert!(!result.coverage.gaps.contains(&GapReason::BudgetExceeded));
+    assert_eq!(result.findings.len(), 1);
+    assert!(result
+        .coverage
+        .gaps
+        .contains(&GapReason::MissingBootIdentity));
 }

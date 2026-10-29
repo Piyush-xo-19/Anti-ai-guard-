@@ -64,3 +64,13 @@ Regression fixes for #1/#3/#4/#5/#6 validate metadata and active coverage claims
 - Windows local checks: 65 selected tests plus two doctests pass; strict Clippy and rustdoc pass.
 - [Maintenance CI for 8bae7e6](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40938599135) passed: 74 tests/doctests on each Windows Server runner (one controlled-child helper ignored), 65 on Ubuntu. Format, strict Clippy/rustdoc, build and synthetic examples passed. These results cover issues #1-#9; see [PR #19](https://github.com/Piyush-xo-19/Anti-ai-guard-/pull/19).
 - M2 desktop/strong-identity exit gates remain incomplete.
+
+## Issue follow-up #10-#18
+
+Scope/help errors, root normalization/location matching, broken-pipe status,
+cancellation documentation and exact-budget handling are corrected. The report
+uses typed serde DTOs with explicit wire names. The refactor preserved v1 goldens;
+[subsequent schema v2](docs/report-schema-v2.md) changes FILETIME to a decimal
+string and adds `operational_gaps` without weakening incomplete coverage or
+eligibility rules. Local: 73 selected tests and two doctests pass, with strict
+Clippy/rustdoc/formatting. [Hosted v2 CI](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40940449420) passed on source 4a68d19: 82 tests/doctests on each Windows Server runner (one controlled-child helper ignored), 72 on Ubuntu. All format/lint/build/rustdoc/example and Windows harness checks passed. See [PR #20](https://github.com/Piyush-xo-19/Anti-ai-guard-/pull/20). M2 desktop gates remain open.

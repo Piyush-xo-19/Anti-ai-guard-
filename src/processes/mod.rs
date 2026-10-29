@@ -167,7 +167,7 @@ fn collect_with(
                 result.coverage.gaps.push(reason);
             }
             Ok(context) => loop {
-                if let Some(reason) = stop(result.enumerated, result.findings.len()) {
+                if let Some(reason) = stop(0, 0) {
                     add_gap(&mut result, reason);
                     break;
                 }
@@ -179,6 +179,14 @@ fn collect_with(
                         break;
                     }
                 };
+                // One bounded lookahead distinguishes exhaustion at the limit
+                // from truncation. Never query/enrich the extra row.
+                if result.enumerated >= request.limits.max_entries
+                    || result.findings.len() >= request.limits.max_candidates
+                {
+                    add_gap(&mut result, GapReason::BudgetExceeded);
+                    break;
+                }
                 result.enumerated += 1;
                 let Some(id) = tool_id(&row.basename) else {
                     continue;

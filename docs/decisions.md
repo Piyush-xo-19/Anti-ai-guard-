@@ -71,3 +71,27 @@ nulls, enum spellings and compatibility rules. Breaking wire changes require a
 schema-version bump; policy and indicator versions remain separate. A shared
 synthetic fixture must match the committed JSON/text golden files on every CI OS.
 This resolves issue #9 without expanding collection or enforcement scope.
+
+## Typed public DTOs (accepted 2026-10-30, issue #15)
+
+Use direct `serde` with its `derive` feature for private public-output DTOs only.
+This enables the already locked serde/proc-macro packages; it adds no new package
+versions. Explicit serde renames decouple wire enum names from Debug. Text renders
+from the typed minimized DTO, and `value()` remains a compatibility view built
+from that DTO. Shared raw snapshot types do not derive serialization. The v1
+JSON/text golden files must remain byte-identical in this refactor.
+
+## Report schema v2 (accepted 2026-10-30, issues #14/#16)
+
+Emit `creation_filetime` as a decimal string or null to preserve process identity
+through JSON parsers that use doubles. This is a breaking type change and bumps
+the public wire schema to 2. Internal shared-model schema version 1 is separate.
+Add a required `operational_gaps` boolean: expected MissingBootIdentity limitations
+alone do not indicate operational failure, but coverage remains incomplete and
+exit 3. Errors, cancellation, invalid contracts and truncation are operational.
+Unknown diagnostic reasons default to operational. No new clean/eligible status,
+automatic control or collection scope follows. See [schema v2](report-schema-v2.md).
+
+The #15 refactor commit preserves v1 goldens exactly; the subsequent v2 migration
+intentionally updates goldens and the harness contract check. Validation evidence
+artifact schemas remain version 1 because their formats did not change.

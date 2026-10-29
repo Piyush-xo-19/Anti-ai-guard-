@@ -39,12 +39,14 @@ cargo run --locked --offline --example report_fixture
 cargo run --locked --offline --example report_fixture -- --json
 ```
 
-See [synthetic text](examples/diagnostic.synthetic.txt) and [synthetic JSON](examples/diagnostic.synthetic.json). They are generated examples, not evidence of real assistants or platform support. Eight report tests cover text/JSON agreement, free-text/secret minimization, partial/failure/cancelled states, bounded truncation, invalid combined scope before process access, pre-cancellation explicit PATH opt-in and published golden-file agreement. Native/CLI and desktop evidence remain separately recorded in the validation review.
+See [synthetic text](examples/diagnostic.synthetic.txt) and [synthetic JSON](examples/diagnostic.synthetic.json). They are generated examples, not evidence of real assistants or platform support. Ten report tests cover text/JSON agreement, free-text/secret minimization, partial/failure/cancelled states, bounded truncation, invalid combined scope before process access, pre-cancellation explicit PATH opt-in and published golden-file agreement. Native/CLI and desktop evidence remain separately recorded in the validation review.
 
 M2.4 limitations still apply: no trusted strong-identity catalog, no trusted boot ID, generic script hosts/renamed/custom agents outside native-name selection, and no continuous observation. Full Windows 10/11/pinned-artifact acceptance remains the M2.6 exit gate.
 
 ## Wire compatibility
 
-See [public JSON schema v1](report-schema-v1.md) for required fields, null handling,
+See [public JSON schema v2](report-schema-v2.md) for required fields, null handling,
 stable names and version rules. The example and golden-file test share the same
 synthetic input. CI checks both JSON and text, plus fake-secret minimization.
+
+Schema v2 changes process creation_filetime to a decimal string (or null), avoiding identity rounding in JavaScript JSON.parse. It adds operational_gaps: false for expected boot-identity limitations alone, true for collection/validation errors, failure, cancellation or truncation. Coverage remains incomplete and exit 3 for boot-limited candidate findings. This signal never issues eligibility or upgrades candidate identity. Scripts must parse JSON to distinguish these cases; the exit-code contract is unchanged. See the schema migration notes.

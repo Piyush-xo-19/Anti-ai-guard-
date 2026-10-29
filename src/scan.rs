@@ -41,7 +41,7 @@ pub fn run(
     cancelled: &AtomicBool,
 ) -> Result<ScanResult, ArgumentError> {
     if !options.consent {
-        return Err(ArgumentError);
+        return Err(ArgumentError::Unsupported);
     }
     // Validate all filesystem scope before even probing platform/process metadata.
     let request = if !options.roots.is_empty() || options.include_path {
@@ -56,7 +56,7 @@ pub fn run(
         None
     };
     if request.is_none() && !options.processes {
-        return Err(ArgumentError);
+        return Err(ArgumentError::Unsupported);
     }
     let began = std::time::Instant::now();
     let observed_at_ms = std::time::SystemTime::now()
@@ -109,7 +109,7 @@ pub fn run(
         let scope = ScopeId(snapshot.scopes.len() as u32 + 1);
         let process_request =
             processes::ProcessRequest::new(true, scope, processes::Limits::default())
-                .map_err(|_| ArgumentError)?;
+                .map_err(|_| ArgumentError::Unsupported)?;
         let link = request
             .as_ref()
             .zip(inventory_result.as_ref())

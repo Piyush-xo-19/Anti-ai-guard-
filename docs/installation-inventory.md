@@ -64,7 +64,7 @@ Ancestor attributes are inspected, never ancestor directory contents. Guard hand
 | Elapsed time | Cooperative 2 seconds; library maximum 10 seconds |
 | Recursive traversal | None; fixed selectors only |
 
-Time/cancellation checks occur between bounded operations. A synchronous OS call can exceed the elapsed budget; this is not a hard I/O timeout or runtime latency promise. Oversized files are skipped before reading. Bytes returned before an I/O failure still count against the total read budget. Limits/cancellation produce explicit partial/cancelled results. The library accepts an `AtomicBool` cancellation flag; the CLI has no interactive cancellation/report-recovery flow yet. Terminal interruption stops the process.
+Time/cancellation checks occur between bounded operations. A synchronous OS call can exceed the elapsed budget; this is not a hard I/O timeout or runtime latency promise. Oversized files are skipped before reading. Bytes returned before an I/O failure still count against the total read budget. Limits/cancellation produce explicit partial/cancelled results. The library accepts an `AtomicBool` cancellation flag; the CLI registers a best-effort Windows Ctrl+C/Break handler. It requests cooperative cancellation and a final partial/cancelled report when the console supports it. See [cancellation and timing](diagnostic-reports.md#cancellation-and-timing) for limits.
 
 ## Output and remaining scope
 
@@ -79,3 +79,5 @@ Local Windows GNU format, strict Clippy and build passed. Eleven collector unit 
 The seven filesystem tests are **locally blocked** by the restricted development session denying ancestor attributes with Windows error 5. The collector reports `Unavailable [AccessDenied]`; these are not local passes. [Hosted Windows CI passed all 46 tests](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40925592116) for source commit 5a8f937, including these seven filesystem fixtures. Fixtures use only ignored `target/inventory-fixtures`; no installed assistant or personal root was scanned during development.
 
 Fixture results cover portions of INST/SCOPE/NEG/PRIV/FAIL/SAFE requirements, not pinned real-tool installs across both desktop labs. All 33 original scanner acceptance rows remain NOT RUN as end-to-end lab scenarios. Check public status for the exact hosted CI result/commit.
+
+PATH scope validation fails before any collection. Errors name a missing/oversized PATH, a one-based invalid entry index, or the 32 distinct root/selector limit without echoing entries. Empty entries (including a trailing semicolon), unresolved variables, relative/network/device/drive-root paths are rejected. Select explicit roots for long or mixed PATHs; no entries are silently skipped. Equivalent lexical separators/trailing separators are deduplicated before counting the limit, without resolving links.

@@ -54,6 +54,17 @@ pub struct InventoryRequest {
     limits: Limits,
 }
 
+pub(crate) fn valid_root(path: &Path) -> bool {
+    windows::valid_root(path)
+}
+
+fn same_location(a: &Path, b: &Path) -> bool {
+    a.components().count() == b.components().count()
+        && a.components()
+            .zip(b.components())
+            .all(|(a, b)| a.as_os_str().eq_ignore_ascii_case(b.as_os_str()))
+}
+
 impl InventoryRequest {
     /// Weak same-location linkage only. Never upgrades a candidate or reuses a
     /// cached artifact hash. Paths are compared transiently and not returned.
@@ -66,11 +77,7 @@ impl InventoryRequest {
                 return false;
             };
             finding.observation.source == ObservationSource::ExecutableArtifact
-                && root
-                    .path
-                    .join(finding.selector)
-                    .as_os_str()
-                    .eq_ignore_ascii_case(path.as_os_str())
+                && same_location(&root.path.join(finding.selector), path)
         })
     }
 
@@ -82,10 +89,7 @@ impl InventoryRequest {
         if !consent {
             return Err(RequestError::ConsentRequired);
         }
-        if roots.is_empty()
-            || roots.len() > 32
-            || roots.iter().any(|r| !windows::valid_root(&r.path))
-        {
+        if roots.is_empty() || roots.iter().any(|r| !windows::valid_root(&r.path)) {
             return Err(RequestError::InvalidScope);
         }
         if limits.max_probes > 512
@@ -97,15 +101,19 @@ impl InventoryRequest {
         }
         // Never silently drop a different selector scope for the same root.
         let mut unique: Vec<InventoryRoot> = Vec::new();
-        for root in roots {
-            if !unique.iter().any(|r| {
-                r.kind == root.kind
-                    && r.path
-                        .as_os_str()
-                        .eq_ignore_ascii_case(root.path.as_os_str())
-            }) {
+        for mut root in roots {
+            // Rebuild lexical components only, after rejecting traversal/device paths.
+            // Never canonicalize or follow links while validating scope.
+            root.path = root.path.components().collect();
+            if !unique
+                .iter()
+                .any(|r| r.kind == root.kind && same_location(&r.path, &root.path))
+            {
                 unique.push(root);
             }
+        }
+        if unique.len() > 32 {
+            return Err(RequestError::InvalidScope);
         }
         Ok(Self {
             roots: unique,

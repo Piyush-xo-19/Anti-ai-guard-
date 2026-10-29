@@ -122,3 +122,13 @@ Clippy, build, synthetic examples and rustdoc with warnings denied. Linux remain
 shared-code validation only. Local selected suites passed 65 tests and two
 doctests; the seven filesystem fixtures and direct script restrictions described
 above remain local limitations. Shared golden-file tests now run on every OS.
+
+## Schema v2 maintenance validation
+
+[Source 4a68d19 CI](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40940449420)
+passed: 82 tests/doctests per Windows Server runner, one controlled-child helper
+ignored; 72 on Ubuntu. Local selected checks passed 73 tests and two doctests.
+The v1 DTO-only refactor preserved both goldens exactly in 714d603. The separate
+v2 commit intentionally updates FILETIME encoding and adds operational_gaps.
+The CLI requires schema-aware consumers; validation-artifact schemas are unchanged.
+Desktop acceptance and trusted strong identity remain separate incomplete gates.

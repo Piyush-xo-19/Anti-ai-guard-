@@ -195,9 +195,9 @@ fn bad_path_environment_is_ignored_without_opt_in_and_rejected_with_it() {
 mod published_synthetic;
 
 #[test]
-fn published_schema_v1_fixture_matches_json_and_text_golden_files() {
+fn published_schema_v2_fixture_matches_json_and_text_golden_files() {
     let public = report::project(&published_synthetic::fixture());
-    assert_eq!(public.value()["schema_version"], 1);
+    assert_eq!(public.value()["schema_version"], 2);
     assert_eq!(
         public.json(),
         include_str!("../docs/examples/diagnostic.synthetic.json").replace("\r\n", "\n")
@@ -207,4 +207,82 @@ fn published_schema_v1_fixture_matches_json_and_text_golden_files() {
         include_str!("../docs/examples/diagnostic.synthetic.txt").replace("\r\n", "\n")
     );
     assert_eq!(public.exit_code(), 3);
+}
+
+#[test]
+fn filetime_identity_survives_standard_json_consumers_without_rounding() {
+    for time in [133000000000000001_u64, 133000000000000002, u64::MAX] {
+        let mut result = published_synthetic::fixture();
+        let ObservationKind::Process { instance, .. } =
+            &mut result.diagnostic.snapshot.observations[1].kind
+        else {
+            panic!("process fixture")
+        };
+        instance.start_time = Some(time);
+        let parsed: serde_json::Value =
+            serde_json::from_str(&report::project(&result).json()).unwrap();
+        let wire_time = parsed["findings"][1]["process"]["creation_filetime"]
+            .as_str()
+            .unwrap();
+        assert_eq!(wire_time.parse::<u64>().unwrap(), time);
+        assert_eq!(wire_time, time.to_string());
+    }
+}
+
+#[test]
+fn known_identity_limit_is_distinct_from_operational_gaps_without_weakening_coverage() {
+    fn boot_only() -> ScanResult {
+        let mut result = published_synthetic::fixture();
+        result.diagnostic.snapshot.coverage[1].gaps = vec![GapReason::MissingBootIdentity];
+        result.diagnostic = policy::evaluate(result.diagnostic.snapshot);
+        result
+    }
+    let healthy = report::project(&boot_only());
+    assert_eq!(healthy.value()["operational_gaps"], false);
+    assert_eq!(healthy.value()["coverage"], "Incomplete");
+    assert_eq!(healthy.value()["collection_execution"], "Partial");
+    assert_eq!(healthy.value()["eligibility"], "NotIssued");
+    assert_eq!(healthy.exit_code(), 3);
+    for gap in [
+        GapReason::AccessDenied,
+        GapReason::ProcessExited,
+        GapReason::MissingStartIdentity,
+        GapReason::ScopeBoundary,
+        GapReason::BudgetExceeded,
+        GapReason::Cancelled,
+        GapReason::CollectorFailed,
+        GapReason::Unsupported,
+        GapReason::InvalidMetadata,
+        GapReason::MissingRoot,
+        GapReason::InvalidScope,
+        GapReason::SharingConflict,
+        GapReason::ProcessIdentityChanged,
+    ] {
+        let mut result = boot_only();
+        result.diagnostic.snapshot.coverage[1].gaps.push(gap);
+        result.diagnostic = policy::evaluate(result.diagnostic.snapshot);
+        assert_eq!(
+            report::project(&result).value()["operational_gaps"],
+            true,
+            "{gap:?}"
+        );
+    }
+    for execution in [ScanExecution::Failed, ScanExecution::Cancelled] {
+        let mut result = boot_only();
+        result.diagnostic.snapshot.execution = execution;
+        result.diagnostic = policy::evaluate(result.diagnostic.snapshot);
+        assert_eq!(report::project(&result).value()["operational_gaps"], true);
+    }
+    let mut result = boot_only();
+    let ObservationKind::Process { instance, .. } =
+        &mut result.diagnostic.snapshot.observations[1].kind
+    else {
+        panic!("process fixture")
+    };
+    instance.start_time = None;
+    result.diagnostic = policy::evaluate(result.diagnostic.snapshot);
+    assert_eq!(report::project(&result).value()["operational_gaps"], true);
+    let complete = report::project(&fixture());
+    assert_eq!(complete.value()["operational_gaps"], false);
+    assert_eq!(complete.exit_code(), 0);
 }

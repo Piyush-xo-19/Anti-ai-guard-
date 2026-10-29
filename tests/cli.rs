@@ -79,7 +79,7 @@ fn json_process_report_is_parseable_and_contains_no_raw_arguments() {
     assert!(matches!(output.status.code(), Some(0 | 3)));
     assert!(output.stderr.is_empty());
     let value: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-    assert_eq!(value["schema_version"], 1);
+    assert_eq!(value["schema_version"], 2);
     assert_eq!(value["eligibility"], "NotIssued");
     assert!(value.get("collectors").is_some());
     assert!(value.get("limitations").is_some());
@@ -143,4 +143,45 @@ fn errors_do_not_echo_potentially_sensitive_arguments() {
     assert_eq!(output.status.code(), Some(2));
     assert!(output.stdout.is_empty());
     assert!(!String::from_utf8(output.stderr).unwrap().contains(secret));
+}
+
+#[test]
+fn help_explains_required_scope_options() {
+    let text = String::from_utf8(run(&["--help"]).stdout).unwrap();
+    assert!(text
+        .contains("Inventory requires at least one of --bin-root, --npm-prefix or --include-path"));
+    assert!(text.contains("Scan requires at least one of those scope options or --processes"));
+}
+
+#[test]
+fn opted_in_path_errors_are_specific_and_never_echo_entries() {
+    let separator = if cfg!(windows) { ';' } else { ':' };
+    let root = if cfg!(windows) {
+        r"C:\fixture"
+    } else {
+        "/fixture"
+    };
+    for (value, message) in [
+        (format!("{root}{separator}"), "invalid entry 2"),
+        ("fake-secret-relative-entry".into(), "invalid entry 1"),
+        (
+            (0..33)
+                .map(|i| format!("{root}{i}"))
+                .collect::<Vec<_>>()
+                .join(&separator.to_string()),
+            "more than 32 distinct",
+        ),
+    ] {
+        let output = Command::new(env!("CARGO_BIN_EXE_anti-ai-guard"))
+            .args(["scan", "--consent", "--include-path"])
+            .env("PATH", value)
+            .output()
+            .unwrap();
+        assert_eq!(output.status.code(), Some(2));
+        let error = String::from_utf8(output.stderr).unwrap();
+        assert!(error.contains("PATH scope rejected"));
+        assert!(error.contains(message), "{error}");
+        assert!(!error.contains("fake-secret"));
+        assert!(output.stdout.is_empty());
+    }
 }
