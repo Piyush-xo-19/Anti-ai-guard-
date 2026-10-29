@@ -28,6 +28,7 @@ $validationDirty = $true
 $validationRust = $null
 $validationCargo = $null
 $validationFatal = $false
+$validationPhase = 'setup'
 
 function Invoke-ValidationProgram {
     param([string]$Executable, [string[]]$ProgramArguments)
@@ -68,6 +69,7 @@ function Invoke-ValidationProgram {
 
 function Invoke-ValidationCheck {
     param([string]$Name, [string]$Executable, [string[]]$ProgramArguments)
+    $script:validationPhase = $Name
     $checkWatch = [Diagnostics.Stopwatch]::StartNew()
     $checkResult = Invoke-ValidationProgram $Executable $ProgramArguments
     $summaries = [regex]::Matches(($checkResult.Out + "`n" + $checkResult.Err), 'test result: \w+\. (\d+) passed; (\d+) failed; (\d+) ignored;')
@@ -81,13 +83,14 @@ function Invoke-ValidationCheck {
 }
 
 try {
-    $cargoProgram = (Get-Command cargo -CommandType Application -ErrorAction Stop).Source
-    $rustProgram = (Get-Command rustc -CommandType Application -ErrorAction Stop).Source
-    $gitProgram = (Get-Command git -CommandType Application -ErrorAction Stop).Source
+    $cargoProgram = (Get-Command cargo -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
+    $rustProgram = (Get-Command rustc -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
+    $gitProgram = (Get-Command git -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
     $rustResult = Invoke-ValidationProgram $rustProgram @('--version')
     $cargoResult = Invoke-ValidationProgram $cargoProgram @('--version')
     if ($rustResult.Out.Trim() -match '^rustc [0-9.]+ \([a-f0-9]+ [0-9-]+\)$') { $validationRust = $rustResult.Out.Trim() }
     if ($cargoResult.Out.Trim() -match '^cargo [0-9.]+ \([a-f0-9]+ [0-9-]+\)$') { $validationCargo = $cargoResult.Out.Trim() }
+    $validationPhase = 'source-git-head'
     $revision = Invoke-ValidationProgram $gitProgram @('rev-parse', 'HEAD')
     if ($revision.Out.Trim() -match '^[a-f0-9]{40}$') { $validationRevision = $revision.Out.Trim() }
     $dirty = Invoke-ValidationProgram $gitProgram @('status', '--porcelain', '--untracked-files=normal')
@@ -117,7 +120,8 @@ try {
 } catch {
     $validationFatal = $true
     $validationChecks.Add([pscustomobject]@{ name = 'harness-setup-or-execution'; status = 'FAIL'; exit_code = 1 })
-    Write-Host ('Validation setup/execution failed (' + $_.Exception.GetType().FullName + '); raw error details omitted.')
+    $innerType = if ($_.Exception.InnerException) { $_.Exception.InnerException.GetType().FullName } else { 'none' }
+    Write-Host ('Validation failed in ' + $validationPhase + ' at script line ' + $_.InvocationInfo.ScriptLineNumber + ' (' + $_.Exception.GetType().FullName + ', inner ' + $innerType + '); raw error details omitted.')
 }
 
 $validationPassed = -not $validationFatal -and @($validationChecks | Where-Object { $_.status -ne 'PASS' }).Count -eq 0
