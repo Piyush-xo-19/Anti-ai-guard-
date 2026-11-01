@@ -16,7 +16,7 @@ The pre-snapshot checkpoint uses GetSystemTimePreciseAsFileTime to avoid coarse-
 
 Defaults bound enumeration to 4096 rows, findings to 512 and elapsed time to two cooperative seconds. Library hard bounds are 16384 rows, 512 findings and ten seconds. Native snapshot construction and synchronous OS calls are not hard time-limited. Cancellation and limits prevent further queries and remain explicit in execution/coverage status. Linux is unsupported.
 
-**Identity limitations:** names alone stay candidates. No production hash/publisher catalog or strong artifact matcher is supplied. Renamed/custom assistants and script-hosted agents hidden behind a generic interpreter name remain outside this native-name selector. No command-line substring inference is added to fill that gap.
+**Identity limitations:** names alone stay candidates. Strong identity is limited to the single reviewed native artifact pin in the [artifact identity pilot](artifact-identity.md); all other variants remain candidates. Renamed/custom assistants and script-hosted agents hidden behind a generic interpreter name remain outside this native-name selector. No command-line substring inference is added to fill that gap.
 
 **Boot/correlation:** the [guarded self-header adapter](boot-identity.md) supplies a device-local OS token only when its checks succeed; no token is fabricated from uptime or wall-clock estimates. Unavailable identity retains `MissingBootIdentity` and incomplete coverage; restart/restore/Windows 10 validation is pending. PID reuse with differing known start times is rejected; cross-scan same-instance correlation remains conservative. This is an open M2 validation gate, not verified monitoring.
 

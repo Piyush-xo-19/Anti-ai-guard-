@@ -177,8 +177,14 @@ mod native {
             // terminate, suspend, injection or write rights are ever requested.
             // QUERY_INFORMATION enables the native image-file binding check;
             // denied access falls back to the existing limited-query path.
-            let mut handle = unsafe { OpenProcess(0x1400 | 0x100000, 0, pid) };
-            if handle.is_null() {
+            let pinned_selector = crate::catalog::get().is_ok_and(|c| {
+                c.artifacts
+                    .iter()
+                    .any(|p| crate::catalog::selector_matches(budget.selected_tool_id, &p.tool_id))
+            });
+            let access = (if pinned_selector { 0x1400 } else { 0x1000 }) | 0x100000;
+            let mut handle = unsafe { OpenProcess(access, 0, pid) };
+            if handle.is_null() && pinned_selector {
                 handle = unsafe { OpenProcess(0x1000 | 0x100000, 0, pid) };
             }
             if handle.is_null() {
@@ -233,6 +239,7 @@ mod native {
                     match crate::artifact::inspect(
                         handle.0,
                         path,
+                        budget.selected_tool_id,
                         budget.cancelled,
                         budget.deadline,
                         budget.remaining_artifact_bytes,

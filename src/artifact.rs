@@ -146,6 +146,7 @@ fn mapped(query: Query, process: Handle, file: Handle) -> Result<bool, GapReason
 pub(crate) fn inspect(
     process: Handle,
     path: &Path,
+    selected_tool_id: &str,
     cancelled: &AtomicBool,
     deadline: Instant,
     remaining: &mut u64,
@@ -161,6 +162,10 @@ pub(crate) fn inspect(
     };
     stop()?;
     let catalog = catalog::get()?;
+    let eligible = |pin: &&catalog::Pin| catalog::selector_matches(selected_tool_id, &pin.tool_id);
+    if !catalog.artifacts.iter().filter(eligible).any(|_| true) {
+        return Ok(None);
+    }
     if !cfg!(target_arch = "x86_64") {
         return Ok(None);
     }
@@ -171,7 +176,12 @@ pub(crate) fn inspect(
         .map_err(|_| GapReason::CollectorFailed)?
         .len();
     // Avoid reading any content when no reviewed pin has this exact size.
-    if !catalog.artifacts.iter().any(|p| p.bytes == bytes) {
+    if !catalog
+        .artifacts
+        .iter()
+        .filter(eligible)
+        .any(|p| p.bytes == bytes)
+    {
         return Ok(None);
     }
     if bytes > *remaining {
@@ -222,6 +232,7 @@ pub(crate) fn inspect(
     Ok(catalog
         .artifacts
         .iter()
+        .filter(eligible)
         .find(|p| p.bytes == bytes && p.sha256 == digest)
         .map(|p| catalog::assessment(p, catalog)))
 }
@@ -236,6 +247,7 @@ mod tests {
             inspect(
                 std::ptr::null_mut(),
                 path,
+                "codex-cli",
                 &AtomicBool::new(true),
                 Instant::now() + std::time::Duration::from_secs(1),
                 &mut remaining
@@ -247,6 +259,7 @@ mod tests {
             inspect(
                 std::ptr::null_mut(),
                 path,
+                "codex-cli",
                 &AtomicBool::new(false),
                 Instant::now(),
                 &mut remaining
@@ -254,6 +267,21 @@ mod tests {
             .unwrap_err(),
             GapReason::BudgetExceeded
         );
+        assert_eq!(remaining, 1024);
+    }
+    #[test]
+    fn an_unpinned_selector_never_opens_its_image_path() {
+        let mut remaining = 1024;
+        assert!(inspect(
+            std::ptr::null_mut(),
+            Path::new("not-an-approved-or-existing-path"),
+            "fixture-unpinned-tool",
+            &AtomicBool::new(false),
+            Instant::now() + std::time::Duration::from_secs(1),
+            &mut remaining
+        )
+        .unwrap()
+        .is_none());
         assert_eq!(remaining, 1024);
     }
     #[test]

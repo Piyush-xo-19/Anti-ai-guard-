@@ -86,6 +86,7 @@ struct Context {
 struct EnrichmentBudget<'a> {
     cancelled: &'a AtomicBool,
     deadline: Instant,
+    selected_tool_id: &'static str,
     remaining_artifact_bytes: &'a mut u64,
 }
 struct Metadata {
@@ -222,6 +223,7 @@ fn collect_with(
                     &mut EnrichmentBudget {
                         cancelled,
                         deadline: began + request.limits.max_elapsed,
+                        selected_tool_id: id,
                         remaining_artifact_bytes: &mut remaining_artifact_bytes,
                     },
                 ) {

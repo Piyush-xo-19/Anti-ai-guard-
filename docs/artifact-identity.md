@@ -24,7 +24,7 @@ pin yet and remain candidates. Do not treat this pilot as completion of that mat
 
 1. Consent, current-session filtering and known native-name selection still happen
    before enrichment. Unknown/generic interpreters are not opened for hashing.
-2. Request QUERY_INFORMATION in addition to limited query/synchronize, with a
+2. First check the selected tool family has a reviewed pin; unpinned selectors skip all image file I/O. Catalog errors remain visible. Only pinned families request QUERY_INFORMATION in addition to limited query/synchronize, with a
    limited-query fallback if denied. No VM read, write, inject, suspend or terminate
    right is requested by the scanner. Ring 3 and the current token are retained.
 3. Open the selected image on a fixed local drive without following reparse points.

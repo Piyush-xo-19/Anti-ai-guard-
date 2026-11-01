@@ -10,7 +10,7 @@ Authorized: 2026-10-29 | Public JSON schema version 2 | Diagnostic only
 
 Choose real roots you approve; the paths above are placeholders. `scan` combines only selected installation roots/PATH and/or `--processes`. It never silently enables another scope. Missing consent, empty scope, duplicate/unknown flags and invalid roots return 2 before collection. All roots are validated before platform/process metadata queries. Help/version remain non-inspecting.
 
-`scan.rs` collects once, keeps installation/process observations separate, combines execution and per-scope coverage, and applies the pure M2.2 Policy A evaluator. A process-to-installation link refers only to an installation indicator at the same declared executable location; it never upgrades identity. No cache or trusted catalog is fabricated. Current collectors emit candidates, so no execution violation, process action, disqualification or competition verification is issued.
+`scan.rs` collects once, keeps installation/process observations separate, combines execution and per-scope coverage, and applies the pure M2.2 Policy A evaluator. A process-to-installation link refers only to an installation indicator at the same declared executable location; it never upgrades identity. There is no artifact-hash cache. Strong identity is limited to reviewed native artifact pins; matching live instances can receive diagnostic closure-and-rescan suggestions. Unpinned candidates still require review. No automatic process action, disqualification or competition verification is issued.
 
 ## One minimized projection
 
@@ -41,7 +41,7 @@ cargo run --locked --offline --example report_fixture -- --json
 
 See [synthetic text](examples/diagnostic.synthetic.txt) and [synthetic JSON](examples/diagnostic.synthetic.json). They are generated examples, not evidence of real assistants or platform support. Twelve report tests cover text/JSON agreement, free-text/secret minimization, partial/failure/cancelled states, bounded truncation, invalid combined scope before process access, pre-cancellation explicit PATH opt-in, normalized boot-availability consistency and published golden-file agreement. Native/CLI and desktop evidence remain separately recorded in the validation review.
 
-M2.4 limitations still apply: no trusted strong-identity catalog, no trusted boot ID, generic script hosts/renamed/custom agents outside native-name selection, and no continuous observation. Full Windows 10/11/pinned-artifact acceptance remains the M2.6 exit gate.
+Identity remains limited to reviewed native artifact pins and a guarded device-local boot adapter, with restart/restore validation pending. Generic script hosts, arbitrary renamed/custom agents and continuous observation remain outside current coverage. Full Windows 10/11/pinned-artifact acceptance remains the M2.6 exit gate.
 
 ## Wire compatibility
 

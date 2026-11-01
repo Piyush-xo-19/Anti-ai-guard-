@@ -100,6 +100,13 @@ pub(crate) fn assessment(pin: &Pin, catalog: &Catalog) -> IdentityAssessment {
         }),
     }
 }
+#[cfg(windows)]
+pub(crate) fn selector_matches(selected: &str, pin_tool: &str) -> bool {
+    selected == pin_tool
+        || (selected == "opencode-unknown-generation"
+            && matches!(pin_tool, "opencode-v1" | "opencode-v2"))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
