@@ -26,7 +26,7 @@ Use a short imperative subject with a prefix:
 | `test:` | Meaningful acceptance or regression coverage |
 | `chore:` | Repository or build maintenance |
 
-Make a commit when a coherent chunk has passed its relevant checks. Push completed work and explain any remaining gaps. Never claim that an untested collector supports an operating-system configuration.
+Make a commit when a coherent chunk has passed its relevant checks. Push completed work and explain any remaining gaps. Before merging a PR, wait for CI and CodeRabbit to finish and address applicable findings. A cancelled or skipped CodeRabbit review is not approval; report and resolve the reason rather than merging early. Never claim that an untested collector supports an operating-system configuration.
 
 ## Policy and privacy are part of correctness
 

@@ -1,10 +1,10 @@
 # Project status and milestone plan
 
-Updated: 2026-10-30 (Asia/Calcutta)
+Updated: 2026-11-01 (Asia/Calcutta)
 
 **M2.4 process candidates and M2.5 integrated reports are implemented. M2.6 validation tooling is implemented; full desktop acceptance and full M2 completion remain INCOMPLETE.**
 
-[README](README.md) | [Decisions](docs/decisions.md) | [M2 plan](docs/m2-plan.md) | [Validation evidence](docs/validation/README.md) | [Results](docs/validation/results.md)
+[README](README.md) | [Decisions](docs/decisions.md) | [M2 plan](docs/m2-plan.md) | [M2 closure checklist](docs/m2-completion.md) | [M3 plan](docs/m3-plan.md) | [Validation evidence](docs/validation/README.md) | [Results](docs/validation/results.md)
 
 ## Implemented and checked
 
@@ -26,7 +26,7 @@ No trusted strong identity catalog, continuous runtime monitor, backend, install
 | M0: public foundation | Complete | Maintain documentation |
 | M1: coverage/design | Documents prepared; relevant reviews open | Review exact lab/privilege/variant and strong-identity requirements |
 | M2: read-only preflight | Candidate-only implementation available; NOT complete | Trusted identity/boot requirements and required Windows 10/11 real-tool/privacy/failure lab outcomes |
-| M3: runtime observation | Not started | Supported event source, reconciliation, continuity and health evidence |
+| M3: runtime observation | Eight chunks planned; implementation not started | Supported event source, reconciliation, continuity and health evidence |
 | M4: sessions/audit | Not started | Durable policy transitions, outbox and recovery |
 | M5: organizer workflow | Proposed; not started | Enrollment, leases/heartbeats, review and interfaces |
 | M6: controlled validation | Not started | Broader release/platform/performance evidence |
@@ -44,13 +44,13 @@ Linux remains a later v1 target. Windows 10/11 are prototype targets; hosted Win
 | M2.5 | [87772a3](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/87772a3a176e77e08400175d10bb0a8a33b95de9), [CI](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40931370505) | 64 hosted tests passed, one helper ignored |
 | M2.6 fixture automation | [5b07c93](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/5b07c934f24d9f81855fa7acdba5b4868972bf07), fixes through [f4270a2](https://github.com/Piyush-xo-19/Anti-ai-guard-/commit/f4270a2f28a64c278622f6c1638dc2cfa0ffa43a), [matrix CI](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40933806067) | Both server jobs PASS: 64 tests each plus harness checks; full M2 desktop gate INCOMPLETE |
 | Local available checks | Windows 11 build 26200, X64 compiled target, StandardUser, Rust 1.99.1 GNU | Format/lint/build and 57 selected tests passed; one helper ignored |
-| Local restrictions | [Validation review](docs/validation/README.md) | Seven installation filesystem cases and direct PowerShell harness invocation blocked; no policy bypass |
+| Historical local restrictions (2026-10-30) | [Validation review](docs/validation/README.md) | Restricted filesystem checks and direct harness invocation blocked then; see the 2026-11-01 fixture rerun below |
 
 The ignored local tracker is optional maintainer context. All contributor-facing decisions, plans, commands and remaining gates are public. All 33 original pinned-tool desktop scenarios remain NOT RUN; synthetic fixtures do not replace them. No recall/false-positive/runtime-latency target has been achieved.
 
 ## Next work
 
-Run independent diagnostics only with explicit consent and selected roots/session. Resolve trusted identity and boot correlation requirements, approve exact lab/variant scope, then execute the required desktop matrix before promoting support or completing M2. Preserve milestone order; M3 has not started.
+Run independent diagnostics only with explicit consent and selected roots/session. Resolve trusted identity and boot correlation requirements, approve exact lab/variant scope, then execute the required desktop matrix before promoting support or completing M2. Follow the [M2 completion checklist](docs/m2-completion.md). Only the current Windows 11 machine is available; Windows 10 requires a separate lab. Preserve milestone order; the [eight-chunk M3 plan](docs/m3-plan.md) is public planning only and M3 code has not started.
 
 ## Issue maintenance - 2026-10-30
 
@@ -74,3 +74,9 @@ uses typed serde DTOs with explicit wire names. The refactor preserved v1 golden
 string and adds `operational_gaps` without weakening incomplete coverage or
 eligibility rules. Local: 73 selected tests and two doctests pass, with strict
 Clippy/rustdoc/formatting. [Hosted v2 CI](https://github.com/Piyush-xo-19/Anti-ai-guard-/actions/runs/40940449420) passed on source 4a68d19: 82 tests/doctests on each Windows Server runner (one controlled-child helper ignored), 72 on Ubuntu. All format/lint/build/rustdoc/example and Windows harness checks passed. See [PR #20](https://github.com/Piyush-xo-19/Anti-ai-guard-/pull/20). M2 desktop gates remain open.
+
+## M2 closure review - 2026-11-01
+
+The maintainer requested M2 completion before M3 implementation and confirmed only the current Windows 11 desktop is available. [M2 completion work](docs/m2-completion.md) records six ordered closure steps; [M3 planning](docs/m3-plan.md) describes eight queued chunks, not implemented features.
+
+The complete existing fixture suite now passes locally with normal directory access: 80 tests plus two doctests (82 total), zero failures and one intentionally ignored controlled-child helper. The seven filesystem cases still fail in the restricted sandbox but pass outside that restriction; no directory guard, ACL or script policy was changed. Format, strict Clippy and strict rustdoc pass. Host: Windows 11 25H2 build 26200.9711; native test output reported StandardUser. These are controlled synthetic fixtures, not pinned real-tool desktop acceptance. Strong identity, trusted boot correlation and the required real-tool/Windows 10 lab gates remain open. M2 is INCOMPLETE and M3 code has not started.

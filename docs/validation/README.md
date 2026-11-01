@@ -34,3 +34,7 @@ Follow [acceptance-plan.md](../acceptance-plan.md) and [coverage-matrix.md](../c
 - Exact lab/privilege/variant requirements still need review before any support claim.
 
 See [results.md](results.md) for exact available checks and commits. No 95% recall, 2% false-positive or five-second runtime target is claimed. M3 continuous observation has not started. Do not mark M2 complete until the declared baseline's real-tool/OS/privacy/failure gates have recorded outcomes and the unresolved identity/coverage requirements are settled.
+
+## Current closure work - 2026-11-01
+
+Follow the [M2 completion checklist](../m2-completion.md) before starting [M3 implementation](../m3-plan.md). Only Windows 11 is currently available. A normal-access local rerun passed the complete synthetic suite (80 tests and two doctests), including all seven filesystem fixtures. The same filesystem suite still fails under restricted ancestor-directory access; no guard or policy was bypassed. The direct PowerShell harness was not rerun. See the dated results entry for the distinction. Real-tool trials, trusted identity/boot requirements and Windows 10 desktop acceptance remain outstanding.
