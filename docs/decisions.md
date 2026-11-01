@@ -101,3 +101,14 @@ artifact schemas remain version 1 because their formats did not change.
 The maintainer requested completing remaining M2 work before M3 implementation and confirmed only the current Windows 11 desktop is available. Publish the [M2 closure checklist](m2-completion.md) and [eight proposed M3 chunks](m3-plan.md), retaining all existing identity/boot and two-desktop acceptance requirements. Documentation planning does not waive a gate or choose a runtime source. M3 implementation is not authorized to proceed past this condition while M2 is incomplete.
 
 The maintainer also requires CI and CodeRabbit to finish before merging, with applicable findings addressed. A cancelled or skipped review is not an approval; report and resolve the reason before merging.
+
+## M2 boot identity implementation (2026-11-01)
+
+The maintainer authorized the remaining identity work and available Windows 11
+validation. Use a fixed self-process telemetry header for device-local OS boot
+metadata; dynamically resolve the native query and accept only the validated
+header-only capability. Do not request variable telemetry payload or foreign
+argv. Unsupported layouts/statuses leave an explicit gap. The known overflow
+header behavior is experimental per tested build, not a universal API guarantee.
+[Boot identity design and limits](boot-identity.md) records the source and tests.
+Restart/restore/Windows 10 evidence remains pending; this does not close M2.
