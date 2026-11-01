@@ -80,3 +80,18 @@ Clippy/rustdoc/formatting. [Hosted v2 CI](https://github.com/Piyush-xo-19/Anti-a
 The maintainer requested M2 completion before M3 implementation and confirmed only the current Windows 11 desktop is available. [M2 completion work](docs/m2-completion.md) records six ordered closure steps; [M3 planning](docs/m3-plan.md) describes eight queued chunks, not implemented features.
 
 The complete existing fixture suite now passes locally with normal directory access: 80 tests plus two doctests (82 total), zero failures and one intentionally ignored controlled-child helper. The seven filesystem cases still fail in the restricted sandbox but pass outside that restriction; no directory guard, ACL or script policy was changed. Format, strict Clippy and strict rustdoc pass. Host: Windows 11 25H2 build 26200.9711; native test output reported StandardUser. These are controlled synthetic fixtures, not pinned real-tool desktop acceptance. Strong identity, trusted boot correlation and the required real-tool/Windows 10 lab gates remain open. M2 is INCOMPLETE and M3 code has not started.
+
+## M2 robustness follow-up - 2026-11-01
+
+[PR #25](https://github.com/Piyush-xo-19/Anti-ai-guard-/pull/25) fixes empty PATH
+segments without adding current-directory scope, preserves original invalid-entry
+indices, and makes reported boot availability agree with normalized model identity.
+Review follow-ups allow an empty PATH when explicit valid roots remain and reject
+unexpanded Windows percent-variable expressions in PATH entries, as documented.
+The schema-heading correction is merged in PR #24 (#23). No trusted boot source
+or strong identity matcher is introduced by these consistency fixes.
+
+Local full suite: 84 tests plus two doctests (86 total), zero failures, one
+intentionally ignored controlled-child helper; format and strict Clippy pass.
+Hosted checks and CodeRabbit for the updated PR must complete before merge.
+M2 closure still requires the remaining identity/boot and two-desktop lab work.

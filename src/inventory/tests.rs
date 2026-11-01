@@ -334,3 +334,72 @@ fn equivalent_root_spellings_deduplicate_and_link_without_filesystem_access() {
         Path::new(r"C:\fixture-other\codex.exe")
     ));
 }
+
+#[test]
+fn empty_path_segments_never_add_current_directory_to_inventory_roots() {
+    use crate::{inventory_request, InventoryOptions};
+    use std::ffi::OsStr;
+    let separator = if cfg!(windows) { ';' } else { ':' };
+    let expected = InventoryRoot {
+        path: if cfg!(windows) {
+            r"C:\fixture".into()
+        } else {
+            "/fixture".into()
+        },
+        kind: RootKind::WindowsNpmPrefix,
+    };
+    let path = format!(
+        "{separator}{}{separator}{separator}{}{separator}",
+        expected.path.display(),
+        expected.path.display()
+    );
+    let request = inventory_request(
+        InventoryOptions {
+            roots: vec![],
+            include_path: true,
+        },
+        Some(OsStr::new(&path)),
+    )
+    .unwrap();
+    assert_eq!(request.roots, vec![expected.clone()]);
+    for empty in [String::new(), separator.to_string().repeat(3)] {
+        let request = inventory_request(
+            InventoryOptions {
+                roots: vec![expected.clone()],
+                include_path: true,
+            },
+            Some(OsStr::new(&empty)),
+        )
+        .unwrap();
+        assert_eq!(request.roots, vec![expected.clone()]);
+        assert!(inventory_request(
+            InventoryOptions {
+                roots: vec![],
+                include_path: true
+            },
+            Some(OsStr::new(&empty))
+        )
+        .is_err());
+    }
+}
+
+#[cfg(windows)]
+#[test]
+fn absolute_path_variable_expressions_are_rejected_at_the_original_entry_index() {
+    use crate::{inventory_request, InventoryOptions};
+    use std::ffi::OsStr;
+    for variable in [r"C:\fixture\%UNEXPANDED%", r"C:\%UNEXPANDED%\bin"] {
+        let path = format!(r"C:\fixture;;{variable}");
+        let error = inventory_request(
+            InventoryOptions {
+                roots: vec![],
+                include_path: true,
+            },
+            Some(OsStr::new(&path)),
+        )
+        .unwrap_err()
+        .to_string();
+        assert!(error.contains("invalid entry 3"));
+        assert!(!error.contains("UNEXPANDED"));
+    }
+}
