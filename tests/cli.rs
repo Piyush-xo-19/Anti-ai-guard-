@@ -162,7 +162,10 @@ fn opted_in_path_errors_are_specific_and_never_echo_entries() {
         "/fixture"
     };
     for (value, message) in [
-        (format!("{root}{separator}"), "invalid entry 2"),
+        (
+            format!("{root}{separator}{separator}fake-secret-relative-entry"),
+            "invalid entry 3",
+        ),
         ("fake-secret-relative-entry".into(), "invalid entry 1"),
         (
             (0..33)
@@ -184,4 +187,38 @@ fn opted_in_path_errors_are_specific_and_never_echo_entries() {
         assert!(!error.contains("fake-secret"));
         assert!(output.stdout.is_empty());
     }
+}
+
+#[test]
+fn opted_in_path_ignores_empty_segments_without_treating_them_as_current_directory() {
+    use anti_ai_guard::{inventory_request, InventoryOptions};
+    use std::ffi::OsStr;
+    let separator = if cfg!(windows) { ';' } else { ':' };
+    let root = if cfg!(windows) {
+        r"C:\fixture"
+    } else {
+        "/fixture"
+    };
+    for value in [
+        format!("{root}{separator}"),
+        format!("{separator}{root}{separator}{separator}{root}{separator}"),
+    ] {
+        assert!(inventory_request(
+            InventoryOptions {
+                roots: vec![],
+                include_path: true
+            },
+            Some(OsStr::new(&value))
+        )
+        .is_ok());
+    }
+    let empty_only = separator.to_string().repeat(3);
+    assert!(inventory_request(
+        InventoryOptions {
+            roots: vec![],
+            include_path: true
+        },
+        Some(OsStr::new(&empty_only))
+    )
+    .is_err());
 }

@@ -27,7 +27,7 @@ Scan requires at least one of those scope options or --processes.
 Inventory checks fixed executable names and npm manifests in approved roots.
 Processes checks current-session known native name indicators. Names alone require review.
 Scan combines only the scopes explicitly selected; no default disk/PATH/process inspection.
---include-path opts into PATH directories; relative/empty/network roots are rejected.
+--include-path opts into PATH directories; empty segments are ignored, relative/network roots are rejected.
 No tool is executed, no command lines or memory are read, and no eligibility is issued.
 Help/version do not inspect installations, processes, or files.
 JSON and text derive from the same minimized, bounded diagnostic report.
@@ -88,6 +88,11 @@ pub fn inventory_request(
             .filter(|p| !p.is_empty() && p.len() <= 32768)
             .ok_or(ArgumentError::PathUnavailable)?;
         for (index, path) in std::env::split_paths(path).enumerate() {
+            // Empty PATH segments do not declare a directory or opt into cwd.
+            // Keep the original index for errors in later nonempty segments.
+            if path.as_os_str().is_empty() {
+                continue;
+            }
             if !inventory::valid_root(&path) {
                 return Err(ArgumentError::InvalidPathEntry(index + 1));
             }
@@ -95,6 +100,9 @@ pub fn inventory_request(
                 path,
                 kind: inventory::RootKind::WindowsNpmPrefix,
             });
+        }
+        if roots.is_empty() {
+            return Err(ArgumentError::PathUnavailable);
         }
         return inventory::InventoryRequest::new(true, roots, inventory::Limits::default())
             .map_err(|_| ArgumentError::TooManyPathRoots);
