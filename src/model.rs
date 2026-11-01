@@ -134,8 +134,12 @@ impl ProcessInstance {
             .map(str::trim)
             .filter(|id| !id.is_empty())
     }
+    /// Whether a nonblank boot token is present; not a claim of authenticity.
+    pub fn has_boot_identity(&self) -> bool {
+        self.normalized_boot_id().is_some()
+    }
     pub fn has_stable_identity(&self) -> bool {
-        self.normalized_boot_id().is_some() && self.start_time.is_some()
+        self.has_boot_identity() && self.start_time.is_some()
     }
 
     /// PID equality never establishes identity on its own.

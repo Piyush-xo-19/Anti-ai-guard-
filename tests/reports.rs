@@ -286,3 +286,38 @@ fn known_identity_limit_is_distinct_from_operational_gaps_without_weakening_cove
     assert_eq!(complete.value()["operational_gaps"], false);
     assert_eq!(complete.exit_code(), 0);
 }
+
+#[test]
+fn reported_boot_availability_agrees_with_normalized_identity() {
+    for (boot, expected) in [
+        (None, false),
+        (Some(""), false),
+        (Some(" \t\r\n"), false),
+        (Some("\u{2003}"), false),
+        (Some(" fixture.boot "), true),
+    ] {
+        let mut result = published_synthetic::fixture();
+        let ObservationKind::Process { instance, .. } =
+            &mut result.diagnostic.snapshot.observations[1].kind
+        else {
+            panic!("process fixture")
+        };
+        instance.boot_id = boot.map(str::to_owned);
+        assert_eq!(instance.has_boot_identity(), expected);
+        assert_eq!(instance.has_stable_identity(), expected);
+        result.diagnostic = policy::evaluate(result.diagnostic.snapshot);
+        let public = report::project(&result);
+        assert_eq!(
+            public.value()["findings"][1]["process"]["boot_identity_available"],
+            expected
+        );
+        if !expected {
+            assert_eq!(
+                public.value()["findings"][1]["reason"],
+                "MissingProcessIdentity"
+            );
+            assert_eq!(public.value()["findings"][1]["action"], "RequestReview");
+        }
+        assert!(!public.json().contains("fixture.boot"));
+    }
+}

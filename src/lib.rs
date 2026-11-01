@@ -27,7 +27,7 @@ Scan requires at least one of those scope options or --processes.
 Inventory checks fixed executable names and npm manifests in approved roots.
 Processes checks current-session known native name indicators. Names alone require review.
 Scan combines only the scopes explicitly selected; no default disk/PATH/process inspection.
---include-path opts into PATH directories; relative/empty/network roots are rejected.
+--include-path opts into PATH directories; empty segments are ignored, relative/network roots are rejected.
 No tool is executed, no command lines or memory are read, and no eligibility is issued.
 Help/version do not inspect installations, processes, or files.
 JSON and text derive from the same minimized, bounded diagnostic report.
@@ -67,13 +67,25 @@ impl fmt::Display for ArgumentError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Unsupported => f.write_str("unsupported arguments; run anti-ai-guard --help for usage"),
-            Self::PathUnavailable => f.write_str("PATH scope rejected: missing, empty or over 32768 characters; use explicit roots"),
+            Self::PathUnavailable => f.write_str("PATH scope rejected: missing, over size limit, or no directory scope; use explicit roots"),
             Self::InvalidPathEntry(index) => write!(f, "PATH scope rejected: invalid entry {index}; use absolute local directory entries or explicit roots"),
             Self::TooManyPathRoots => f.write_str("PATH scope rejected: more than 32 distinct root/selector pairs; use explicit roots"),
         }
     }
 }
 impl std::error::Error for ArgumentError {}
+#[cfg(windows)]
+fn has_unexpanded_windows_variable(path: &std::path::Path) -> bool {
+    let text = path.as_os_str().to_string_lossy();
+    let mut previous = None;
+    for (index, _) in text.match_indices('%') {
+        if previous.is_some_and(|start| index > start + 1) {
+            return true;
+        }
+        previous = Some(index);
+    }
+    false
+}
 /// Expand only explicitly opted-in PATH. No filesystem access occurs here.
 pub fn inventory_request(
     options: InventoryOptions,
@@ -85,9 +97,18 @@ pub fn inventory_request(
     }
     if options.include_path {
         let path = path
-            .filter(|p| !p.is_empty() && p.len() <= 32768)
+            .filter(|p| p.len() <= 32768)
             .ok_or(ArgumentError::PathUnavailable)?;
         for (index, path) in std::env::split_paths(path).enumerate() {
+            // Empty PATH segments do not declare a directory or opt into cwd.
+            // Keep the original index for errors in later nonempty segments.
+            if path.as_os_str().is_empty() {
+                continue;
+            }
+            #[cfg(windows)]
+            if has_unexpanded_windows_variable(&path) {
+                return Err(ArgumentError::InvalidPathEntry(index + 1));
+            }
             if !inventory::valid_root(&path) {
                 return Err(ArgumentError::InvalidPathEntry(index + 1));
             }
@@ -95,6 +116,9 @@ pub fn inventory_request(
                 path,
                 kind: inventory::RootKind::WindowsNpmPrefix,
             });
+        }
+        if roots.is_empty() {
+            return Err(ArgumentError::PathUnavailable);
         }
         return inventory::InventoryRequest::new(true, roots, inventory::Limits::default())
             .map_err(|_| ArgumentError::TooManyPathRoots);

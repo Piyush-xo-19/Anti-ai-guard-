@@ -233,7 +233,7 @@ pub fn project(result: &ScanResult) -> PublicReport {
                         pid: instance.pid,
                         creation_filetime: instance.start_time.map(|value| value.to_string()),
                         state: (*state).into(),
-                        boot_identity_available: instance.boot_id.is_some(),
+                        boot_identity_available: instance.has_boot_identity(),
                     }),
                 ),
             };

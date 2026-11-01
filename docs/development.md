@@ -132,3 +132,13 @@ The v1 DTO-only refactor preserved both goldens exactly in 714d603. The separate
 v2 commit intentionally updates FILETIME encoding and adds operational_gaps.
 The CLI requires schema-aware consumers; validation-artifact schemas are unchanged.
 Desktop acceptance and trusted strong identity remain separate incomplete gates.
+
+### M2 PATH and boot availability maintenance (2026-11-01)
+
+The full normal-access local suite after the review follow-ups passed 84 tests
+and two doctests (86 total), zero failures and one intentionally ignored child
+helper. Formatting, strict Clippy and strict rustdoc pass. Regression tests cover
+empty segments without accidental cwd scope, empty PATH with explicit roots,
+original invalid-entry positions, absolute unexpanded Windows variables and
+missing/blank boot tokens. Public synthetic JSON/text goldens remain unchanged.
+These tests do not provide a trusted boot source or real-tool acceptance.
