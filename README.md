@@ -12,16 +12,21 @@ The design combines a pre-event software inventory, runtime observation of recog
 
 > **Current stage: M2.4/M2.5 candidate-only preflight and reports.** Consented bounded installation inventory and current-session process-name candidates work with text/JSON output. M2.6 validation tooling is available, but the full Windows 10/11 desktop exit gate remains incomplete. No trusted strong-identity catalog, continuous monitor, installer or dashboard is implemented.
 
+The implemented reports use [JSON schema v2](docs/report-schema-v2.md), preserving FILETIME identity as a decimal string and distinguishing operational gaps from expected identity limitations. The [2026-11-01 local fixture rerun](docs/validation/results.md#local-fixture-rerun---2026-11-01) passed 80 tests and two doctests; this does not replace pinned-tool desktop acceptance. [Finish M2 first](docs/m2-completion.md); the [eight M3 chunks](docs/m3-plan.md) are planning only.
+
 ## Explore the project
 
 - [Current status and milestone plan](PROJECT_STATUS.md)
 - [Accepted decisions and open proposals](docs/decisions.md)
 - [M2 implementation plan](docs/m2-plan.md)
+- [Remaining M2 completion work](docs/m2-completion.md)
+- [M3 runtime plan: eight queued chunks](docs/m3-plan.md)
 - [Build, run and test the CLI](docs/development.md)
 - [Shared contracts and synthetic diagnostic example](docs/shared-contracts.md)
 - [Bounded Windows installation inventory](docs/installation-inventory.md)
 - [Current-session process snapshots](docs/process-snapshots.md)
 - [Combined scans and text/JSON reports](docs/diagnostic-reports.md)
+- [Public JSON schema v2 and compatibility](docs/report-schema-v2.md)
 - [Validation evidence and remaining M2 gates](docs/validation/README.md)
 - [Competition policy](#competition-policy)
 - [How it is intended to work](#how-it-is-intended-to-work)
@@ -152,6 +157,8 @@ Browser assistance, IDE extension controls, VM/WSL/container coverage, and activ
 
 See [PROJECT_STATUS.md](PROJECT_STATUS.md) for current progress, the [decision log](docs/decisions.md) for agreed choices and pending reviews, and the [M2 plan](docs/m2-plan.md) for the proposed implementation chunks. These are public contributor references; no private maintainer tracker is required.
 
+M2 must pass its [remaining completion gates](docs/m2-completion.md) before M3 code starts. The public [M3 plan](docs/m3-plan.md) proposes eight chunks, M3.1-M3.8; these are implementation steps, not product versions. Only the current Windows 11 machine is available for desktop work, so the Windows 10 gate remains open.
+
 Each milestone will be split further into reviewable changes. The status column distinguishes implemented preflight pieces from pending validation and later planned functionality.
 
 | Milestone | Deliverable | Status |
@@ -159,7 +166,7 @@ Each milestone will be split further into reviewable changes. The status column 
 | **M0 — Public foundation** | README, MIT license, contribution workflow, and architecture draft | Complete |
 | **M1 — Coverage and design** | Windows 10/11 target matrix, proposed privilege scope, evidence rules and acceptance plan | Documents ready for review; tests not run |
 | **M2 — Read-only preflight** | Rust structure, detection interfaces, installation/process inventory, reports, and tests | Candidate-only collectors and reports implemented; trusted identity/boot and desktop acceptance gates incomplete |
-| **M3 — Runtime observation** | Process-event collectors, reconciliation, health checks, and failure reporting | Planned |
+| **M3 — Runtime observation** | Process-event collectors, reconciliation, health checks, and failure reporting | Eight chunks planned; implementation queued behind M2 completion |
 | **M4 — Session and audit** | Policy transitions, bounded local persistence, notifications, and synchronization contract | Planned |
 | **M5 — Organizer workflow** | Enrollment, heartbeats, evidence review, and participant/organizer interfaces | Proposed scope |
 | **M6 — Controlled validation** | Windows/Linux acceptance results, measured performance, privacy checks, and release documentation | Planned |
@@ -176,7 +183,7 @@ We will build this project incrementally:
 2. Make a focused change with an understandable diff.
 3. Run checks appropriate to that change and report what remains untested.
 4. Review the result, update the roadmap or decisions, and make a descriptive commit.
-5. Push the completed chunk before starting the next agreed piece of work.
+5. Push a focused PR, wait for CI and CodeRabbit to finish, address applicable findings, then merge before the next agreed chunk.
 
 Use short-lived branches and pull requests as collaboration grows. Commit messages should explain the change, for example `docs: define process evidence rules` or `feat: add read-only package inventory`. Working features will be documented only after they exist and are validated.
 

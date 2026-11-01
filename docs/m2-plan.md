@@ -1,8 +1,12 @@
 # M2 plan: read-only Windows preflight prototype
 
-Updated: 2026-10-30 | M2.4/M2.5 implemented; M2.6 validation automation ready, desktop exit gate incomplete
+Updated: 2026-11-01 | M2.4/M2.5 implemented; M2.6 validation automation ready, desktop exit gate incomplete
 
 [Public status](../PROJECT_STATUS.md) | [Decisions](decisions.md) | [Coverage contract](coverage-matrix.md) | [Acceptance plan](acceptance-plan.md)
+
+## Completion work before M3
+
+The maintainer requested finishing M2 first on 2026-11-01. Follow the [ordered completion checklist](m2-completion.md) for scope/ground truth, strong identity, boot correlation, Windows 11/10 desktop trials and final review. Only the current Windows 11 machine is available; Windows 10 is not validated by server CI. [M3.1-M3.8](m3-plan.md) remain queued planning, not implemented work.
 
 ## Outcome
 
