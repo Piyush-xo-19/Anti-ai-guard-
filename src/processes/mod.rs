@@ -78,6 +78,7 @@ struct Row {
 }
 struct Context {
     checkpoint: u64,
+    boot_id: Option<String>,
     session: u32,
 }
 struct Metadata {
@@ -246,7 +247,9 @@ fn collect_with(
                 }
                 // Do not fabricate a boot ID from wall-clock/uptime estimates.
                 // Boot-scoped cross-scan identity remains explicitly incomplete.
-                add_gap(&mut result, GapReason::MissingBootIdentity);
+                if context.boot_id.is_none() {
+                    add_gap(&mut result, GapReason::MissingBootIdentity);
+                }
                 let installation_indicator = inventory.as_ref().and_then(|link| {
                     metadata
                         .image
@@ -259,7 +262,7 @@ fn collect_with(
                         source: ObservationSource::ProcessSnapshot,
                         kind: ObservationKind::Process {
                             instance: ProcessInstance {
-                                boot_id: None,
+                                boot_id: context.boot_id.clone(),
                                 pid: row.pid,
                                 start_time: metadata.start,
                             },

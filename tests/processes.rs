@@ -90,8 +90,14 @@ fn controlled_candidate_is_observed_without_retaining_paths_or_arguments() {
     let minimized = format!("{result:?}");
     assert!(!minimized.contains(secret));
     assert!(!minimized.contains(&fixture.path.to_string_lossy().to_string()));
-    assert!(result
-        .coverage
-        .gaps
-        .contains(&GapReason::MissingBootIdentity));
+    let ObservationKind::Process { instance, .. } = &finding.observation.kind else {
+        panic!("process fixture")
+    };
+    assert_eq!(
+        result
+            .coverage
+            .gaps
+            .contains(&GapReason::MissingBootIdentity),
+        !instance.has_boot_identity()
+    );
 }

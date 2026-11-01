@@ -95,3 +95,7 @@ Local full suite: 84 tests plus two doctests (86 total), zero failures, one
 intentionally ignored controlled-child helper; format and strict Clippy pass.
 Hosted checks and CodeRabbit for the updated PR must complete before merge.
 M2 closure still requires the remaining identity/boot and two-desktop lab work.
+
+## M2 boot adapter - 2026-11-01
+
+A [fixed self-header boot adapter](docs/boot-identity.md) now supplies device-local OS boot metadata when its strict capability checks succeed. It requests no variable payload or foreign process data and retains MissingBootIdentity on failure. Windows 11 same-boot controlled checks pass; actual restart/restore and Windows 10 trials remain pending. Trusted artifact/image identity is the next separate chunk. M2 is still incomplete and M3 has not started.

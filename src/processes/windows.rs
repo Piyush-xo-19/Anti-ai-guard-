@@ -127,6 +127,7 @@ mod native {
             self.session = Some(current);
             Ok(Context {
                 checkpoint: checkpoint.value(),
+                boot_id: crate::boot::current().ok(),
                 session: current,
             })
         }

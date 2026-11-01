@@ -10,6 +10,7 @@ struct Fake {
     start: Option<u64>,
     image: Option<PathBuf>,
     exited: bool,
+    boot_id: Option<String>,
 }
 impl Fake {
     fn new() -> Self {
@@ -39,6 +40,7 @@ impl Fake {
                 "/fixture/codex.exe"
             })),
             exited: false,
+            boot_id: None,
         }
     }
 }
@@ -50,6 +52,7 @@ impl Provider for Fake {
         } else {
             Ok(Context {
                 checkpoint: 1000,
+                boot_id: self.boot_id.clone(),
                 session: 7,
             })
         }
@@ -335,6 +338,27 @@ fn exact_entry_and_candidate_limits_do_not_claim_truncation() {
     assert!(!result.coverage.gaps.contains(&GapReason::BudgetExceeded));
     assert_eq!(result.findings.len(), 1);
     assert!(result
+        .coverage
+        .gaps
+        .contains(&GapReason::MissingBootIdentity));
+}
+
+#[test]
+fn available_boot_identity_is_attached_without_fabricating_a_fallback() {
+    let mut fake = Fake::new();
+    fake.boot_id = Some("fixture.boot-1".into());
+    let result = run(&mut fake);
+    assert!(!result
+        .coverage
+        .gaps
+        .contains(&GapReason::MissingBootIdentity));
+    let ObservationKind::Process { instance, .. } = &result.findings[0].observation.kind else {
+        panic!("process fixture")
+    };
+    assert_eq!(instance.boot_id.as_deref(), Some("fixture.boot-1"));
+    assert!(instance.has_stable_identity());
+    let fallback = run(&mut Fake::new());
+    assert!(fallback
         .coverage
         .gaps
         .contains(&GapReason::MissingBootIdentity));
