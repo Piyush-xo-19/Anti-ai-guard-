@@ -17,7 +17,7 @@ Updated: 2026-11-01 (Asia/Calcutta)
 - M2.5: explicitly scoped combined scans, one bounded minimized text/JSON projection, cooperative cancellation and synthetic public examples. Eligibility is always NotIssued.
 - M2.6 tooling: Windows fixture harness, sanitized artifacts and a template containing both desktop OS configurations and all 33 NOT RUN scenarios. Both hosted Windows Server jobs passed 64 tests each; see [permanent sanitized evidence](docs/validation/fixtures-2026-10-30.json).
 
-No trusted strong identity catalog, continuous runtime monitor, backend, installer or dashboard exists. Installed inventory never proves execution. Native names/writable metadata remain candidates. There is no automatic termination, deletion, uninstall, disqualification or competition verification.
+A single reviewed native artifact pin and guarded device-local boot adapter now exist. Other variants remain candidates; no continuous runtime monitor, backend, installer or dashboard exists. Installed inventory never proves execution. Native names/writable metadata remain candidates. There is no automatic termination, deletion, uninstall, disqualification or competition verification.
 
 ## Milestones
 
@@ -99,3 +99,13 @@ M2 closure still requires the remaining identity/boot and two-desktop lab work.
 ## M2 boot adapter - 2026-11-01
 
 A [fixed self-header boot adapter](docs/boot-identity.md) now supplies device-local OS boot metadata when its strict capability checks succeed. It requests no variable payload or foreign process data and retains MissingBootIdentity on failure. Windows 11 same-boot controlled checks pass; actual restart/restore and Windows 10 trials remain pending. Trusted artifact/image identity is the next separate chunk. M2 is still incomplete and M3 has not started.
+
+## M2 pinned artifact pilot - 2026-11-01
+
+A compiled [single-artifact catalog](catalog/windows-artifacts.json) and
+[guarded native matcher](docs/artifact-identity.md) now support Codex CLI0.166.0
+Windows x64 under strict capability/digest/file-binding/lifetime checks. Unpinned
+variants remain candidates. The boot adapter merged in PR#26 after all seven
+checks including CodeRabbit passed. One controlled suspended-image Windows11
+real-artifact trial passed; broader real-tool, reboot/restore and Windows10 trials
+remain pending. M2 and M3 status are unchanged: M2 incomplete, M3 not started.

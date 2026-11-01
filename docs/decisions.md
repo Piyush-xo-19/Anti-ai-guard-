@@ -112,3 +112,18 @@ argv. Unsupported layouts/statuses leave an explicit gap. The known overflow
 header behavior is experimental per tested build, not a universal API guarantee.
 [Boot identity design and limits](boot-identity.md) records the source and tests.
 Restart/restore/Windows 10 evidence remains pending; this does not close M2.
+
+## M2 pinned native identity pilot (2026-11-01)
+
+Use reviewed compile-time SHA-256/size pins from official release provenance, with
+Windows CNG hashing, retained no-reparse/no-write-sharing file guards, native image
+file binding and live instance rechecks. Initial rule: Codex CLI0.166.0 x64 only.
+No external catalog, runtime updater, broad hash scan or extra dependency is added.
+Read-only QUERY_INFORMATION is attempted for the binding capability, with limited
+query fallback; no process memory/control right is requested by the collector.
+Native information class44 is experimental and empirically validated, not an
+advertised public Win32 contract. Positive target and negative scanner controls
+must pass; unsupported/denied behavior cannot promote identity. See [design](artifact-identity.md).
+Add optional allowlisted artifact rule/catalog fields within schema v2; replace
+the obsolete no-catalog limitation in goldens. Eligibility/actions remain diagnostic.
+This does not certify injection resistance, unpinned variants or desktop completion.

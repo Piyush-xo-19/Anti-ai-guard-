@@ -1,6 +1,8 @@
 //! Consented, bounded installation indicators. No execution or strong identity
 //! claims, recursive discovery, discovered-tool launches or writes.
 mod windows;
+#[cfg(windows)]
+pub(crate) use windows::native::open_image;
 
 use crate::model::*;
 use std::path::{Path, PathBuf};

@@ -5,7 +5,7 @@ Updated: 2026-11-01 (Asia/Calcutta)
 [Status](../PROJECT_STATUS.md) | [M2 plan](m2-plan.md) | [Coverage](coverage-matrix.md) | [Acceptance](acceptance-plan.md) | [Queued M3 plan](m3-plan.md)
 
 **M2 is not complete.** Candidate-only collectors, schema v2 reports and fixture
-checks exist. They do not supply trusted tool identity, boot identity, or Windows
+checks exist. The [artifact pilot](artifact-identity.md) and [boot adapter](boot-identity.md) cover narrow implementations; they do not complete the required artifact matrix, reboot validation, or Windows
 10/11 real-tool acceptance. The maintainer requested closing these gaps before
 M3 implementation on 2026-11-01. No milestone gate is waived by this document.
 
@@ -26,7 +26,7 @@ supplied. A synthetic process named codex.exe remains a fixture, not a real tool
 | Step | Deliverable | Evidence required before closing | Current state |
 | --- | --- | --- | --- |
 | 1. Freeze the lab scope and ground truth | Reviewed required versus exploratory variants, OS/build/token matrix, pinned artifact manifest | Exact official acquisition URL, version, architecture, digest/provenance, rule predicates and expected classification per artifact | Pending; Windows 11 host identified, Windows 10 unavailable |
-| 2. Finish strong identity in the M2.4 boundary | Reviewed trusted artifact predicates and bounded read-only matching bound to the observed process instance | Positive known-artifact, benign same-name, changed/replaced artifact, stale-cache and exit/race results; no basename/package-only promotion | Not implemented; existing output remains candidate-only |
+| 2. Finish strong identity in the M2.4 boundary | Reviewed trusted artifact predicates and bounded read-only matching bound to the observed process instance | Positive known-artifact, benign same-name, changed/replaced artifact, stale-cache and exit/race results; no basename/package-only promotion | Pinned Codex native pilot implemented with SHA-256 and guarded image binding; remaining variants and broader failure/desktop evidence pending |
 | 3. Settle boot-scoped correlation | Reviewed OS-backed boot identity approach, or an explicit maintainer decision about the outstanding requirement | Same-boot stability, restart distinction, denied/unavailable behavior and privacy checks; no clock/uptime estimates represented as trusted identity | Fixed self-header adapter implemented; same-boot Windows 11 fixture passed; restart/restore and Windows 10 checks pending, with gap fallback |
 | 4. Execute the Windows 11 desktop subset | Complete trials on the actual declared build/mode with pinned tools | Required acceptance subcases, before/after no-mutation checks, redacted reports and ground-truth references | Not run; passing synthetic fixtures do not close this step |
 | 5. Execute the Windows 10 desktop subset | Independent Windows 10 configuration and the same declared required subset | Its own exact build/mode/artifacts and required outcomes | Blocked by unavailable Windows 10 lab |
@@ -87,3 +87,5 @@ under the current instruction until M2 has its completion evidence.
 The full existing local suite passed with normal directory access: 80 tests and two doctests, zero failures, one intentionally ignored child helper. Format, strict Clippy and strict rustdoc passed. Source: 6568037; Rust 1.99.1 GNU; Windows 11 25H2 build 26200.9711, StandardUser fixture report. Restricted execution still denies ancestor access in the installation suite. No code/ACL/guard/script-policy change was used. This closes the local fixture-execution obstacle only; it does not close any real-tool, strong-identity, boot or Windows 10 requirement above. See [dated evidence](validation/results.md#local-fixture-rerun---2026-11-01).
 
 The [boot adapter](boot-identity.md) is a partial closure of step 3, not completed reboot/restore validation. Known fixed-header behavior is empirically guarded and unsupported queries retain the gap. Artifact identity and real-tool desktop results remain separate requirements.
+
+The [native artifact pilot](artifact-identity.md) partially implements step 2. It does not silently remove Claude/OpenCode/package variants from the required matrix. One suspended-image Codex trial is not completion of all Windows 11 cases, and no restart or Windows 10 result is fabricated.

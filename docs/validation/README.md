@@ -38,3 +38,7 @@ See [results.md](results.md) for exact available checks and commits. No 95% reca
 ## Current closure work - 2026-11-01
 
 Follow the [M2 completion checklist](../m2-completion.md) before starting [M3 implementation](../m3-plan.md). Only Windows 11 is currently available. A normal-access local rerun passed the complete synthetic suite (80 tests and two doctests), including all seven filesystem fixtures. The same filesystem suite still fails under restricted ancestor-directory access; no guard or policy was bypassed. The direct PowerShell harness was not rerun. See the dated results entry for the distinction. Real-tool trials, trusted identity/boot requirements and Windows 10 desktop acceptance remain outstanding.
+
+See the [partial native identity pilot](identity-pilot-2026-11-01.json) for the
+first pinned Codex Windows11 subcases. It records its own source/scope and leaves
+M2 incomplete. It does not replace the original unexecuted two-desktop template.

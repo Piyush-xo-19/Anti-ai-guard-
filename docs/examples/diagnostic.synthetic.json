@@ -72,7 +72,7 @@
   "indicator_catalog_version": "windows-name-and-package-indicators-v1",
   "limitations": [
     "only-explicit-installation-roots-and-known-native-name-selectors",
-    "no-trusted-strong-identity-catalog",
+    "strong-identity-limited-to-reviewed-native-artifact-pins",
     "missing-boot-identity-limits-process-correlation",
     "generic-interpreters-renamed-custom-and-guest-agents-not-identified",
     "snapshot-not-continuous-monitoring",

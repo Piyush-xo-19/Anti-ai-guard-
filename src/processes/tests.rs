@@ -63,12 +63,17 @@ impl Provider for Fake {
     fn session(&mut self, pid: u32) -> Result<u32, GapReason> {
         Ok(if pid == 2 { 8 } else { 7 })
     }
-    fn metadata(&mut self, _: u32) -> Result<Metadata, GapReason> {
+    fn metadata(
+        &mut self,
+        _: u32,
+        _budget: &mut EnrichmentBudget<'_>,
+    ) -> Result<Metadata, GapReason> {
         self.queries += 1;
         if let Some(reason) = self.metadata_failure {
             return Err(reason);
         }
         Ok(Metadata {
+            identity: None,
             start: self.start,
             image: self.image.clone(),
             state: if self.exited {

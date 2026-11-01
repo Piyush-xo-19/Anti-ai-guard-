@@ -27,7 +27,7 @@ impl InventoryFs for WindowsFs {
 }
 
 #[cfg(windows)]
-mod native {
+pub(super) mod native {
     use super::*;
     use std::fs::{File, OpenOptions};
     use std::io::{self, Read};
@@ -65,11 +65,22 @@ mod native {
     // to the final component; holding all previously checked ancestors keeps
     // intermediate components from being replaced while this path is used.
     fn open(path: &Path, directory: bool, content: bool) -> Result<Option<File>, GapReason> {
+        open_with_execute(path, directory, content, false)
+    }
+    fn open_with_execute(
+        path: &Path,
+        directory: bool,
+        content: bool,
+        execute: bool,
+    ) -> Result<Option<File>, GapReason> {
         let mut options = OpenOptions::new();
         options
             .share_mode(FILE_SHARE_READ)
             .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT | FILE_FLAG_BACKUP_SEMANTICS);
-        if content {
+        if execute {
+            // READ_DATA | EXECUTE | READ_ATTRIBUTES | SYNCHRONIZE; never writes.
+            options.access_mode(0x001000a1);
+        } else if content {
             options.read(true);
         } else {
             // FILE_READ_ATTRIBUTES alone bypasses normal sharing checks on
@@ -94,6 +105,42 @@ mod native {
         Ok(Some(file))
     }
 
+    pub(crate) struct GuardedImage {
+        pub file: File,
+        _guards: Vec<File>,
+    }
+    pub(crate) fn open_image(path: &Path) -> Result<GuardedImage, GapReason> {
+        if !valid_root(path) {
+            return Err(GapReason::InvalidScope);
+        }
+        let components: Vec<_> = path.components().collect();
+        let mut current = PathBuf::new();
+        let mut guards = vec![];
+        for (index, component) in components.iter().enumerate() {
+            current.push(component);
+            if !current.is_absolute() {
+                continue;
+            }
+            if guards.is_empty() {
+                let drive: Vec<u16> = current.as_os_str().encode_wide().chain(Some(0)).collect();
+                // SAFETY: NUL-terminated drive path remains alive for the call.
+                if unsafe { GetDriveTypeW(drive.as_ptr()) } != DRIVE_FIXED {
+                    return Err(GapReason::Unsupported);
+                }
+            }
+            let final_file = index + 1 == components.len();
+            let file = open_with_execute(&current, !final_file, final_file, final_file)?
+                .ok_or(GapReason::MissingRoot)?;
+            if final_file {
+                return Ok(GuardedImage {
+                    file,
+                    _guards: guards,
+                });
+            }
+            guards.push(file);
+        }
+        Err(GapReason::InvalidScope)
+    }
     impl InventoryFs for WindowsFs {
         fn open_root(&mut self, path: &Path) -> Result<Box<dyn RootReader>, GapReason> {
             if !valid_root(path) {

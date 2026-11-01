@@ -30,3 +30,21 @@ The matrix exposed a validation-tool executable-resolution issue and a native fi
 Source 6568037, Rust 1.99.1 GNU, Windows 11 25H2 build 26200.9711; controlled native fixtures reported StandardUser. The restricted full run reproduced AccessDenied in the first installation fixture, followed by poisoned-lock failures in the remaining six cases. Running those seven existing tests with normal directory access passed all seven. The complete suite then passed with the same access: 80 tests plus two doctests, zero failures and one intentionally ignored child helper. Formatting, strict Clippy and rustdoc with warnings denied also passed. No code, ACL, no-reparse guard or script-execution policy was changed to obtain this result.
 
 This supersedes the older claim that the filesystem fixtures could not be exercised locally: the restriction belongs to the sandboxed execution context, not to all local test runs. The direct PowerShell harness was not rerun, so its historical script-policy block is not cleared by this evidence. No pinned real assistant or Windows 10 trial ran. [The M2 closure checklist](../m2-completion.md) remains incomplete.
+
+## Native identity pilot - 2026-11-01
+
+[Sanitized partial evidence](identity-pilot-2026-11-01.json) records exact source
+35fd1ad with a clean checkout for the opt-in Codex0.166.0 x64 trial. On Windows11
+25H2 build26200.9711, non-elevated context, inactive inventory remained InventoryOnly.
+The owned suspended-image trial produced Corroborated evidence, a diagnostic
+RequestClosureAndRescan suggestion, approved rule metadata and NotIssued eligibility.
+The downloaded artifact's SHA-256 still matched its official pin after both trials.
+
+The default suite passed 95 tests/doctests with zero failures, two deliberately
+ignored helpers/labs; the separately opted-in real-artifact test passed once.
+Same-name/same-size benign and distinct-identical-file negatives remain fixtures.
+This is a partial Codex native subcase, not completion of an acceptance row across
+all variants. The process was deliberately paused for deterministic image identity;
+interactive coding, package-runner/background behavior and runtime recall were
+not tested. Boot restart/restore, other catalogs/variants and Windows10 still need
+separate results. Full M2 remains INCOMPLETE; M3 has not started.

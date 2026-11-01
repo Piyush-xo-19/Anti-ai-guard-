@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "catalog_version": "windows-artifact-pins-2026-11-01-v1",
+  "artifacts": [
+    {
+      "tool_id": "codex-cli",
+      "tool_version": "0.166.0",
+      "rule_id": "codex-win-x64-0.166.0-sha256-v1",
+      "rule_version": "1",
+      "architecture": "x64",
+      "bytes": 371735856,
+      "sha256": "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb42",
+      "acquisition_url": "https://github.com/openai/codex/releases/download/rust-v0.166.0/codex-x86_64-pc-windows-msvc.exe",
+      "release_url": "https://github.com/openai/codex/releases/tag/rust-v0.166.0",
+      "approval": "diagnostic-closure"
+    }
+  ]
+}

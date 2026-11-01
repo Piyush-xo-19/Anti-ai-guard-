@@ -16,7 +16,11 @@ impl Provider for NativeProvider {
     fn session(&mut self, _: u32) -> Result<u32, GapReason> {
         Err(GapReason::Unsupported)
     }
-    fn metadata(&mut self, _: u32) -> Result<Metadata, GapReason> {
+    fn metadata(
+        &mut self,
+        _: u32,
+        _budget: &mut EnrichmentBudget<'_>,
+    ) -> Result<Metadata, GapReason> {
         Err(GapReason::Unsupported)
     }
 }
@@ -164,10 +168,25 @@ mod native {
         fn session(&mut self, pid: u32) -> Result<u32, GapReason> {
             session(pid)
         }
-        fn metadata(&mut self, pid: u32) -> Result<Metadata, GapReason> {
-            // PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE. No VM-read,
+        fn metadata(
+            &mut self,
+            pid: u32,
+            budget: &mut EnrichmentBudget<'_>,
+        ) -> Result<Metadata, GapReason> {
+            // Read-only query information (with limited-query fallback) and synchronize. No VM-read,
             // terminate, suspend, injection or write rights are ever requested.
-            let handle = unsafe { OpenProcess(0x1000 | 0x100000, 0, pid) };
+            // QUERY_INFORMATION enables the native image-file binding check;
+            // denied access falls back to the existing limited-query path.
+            let pinned_selector = crate::catalog::get().is_ok_and(|c| {
+                c.artifacts
+                    .iter()
+                    .any(|p| crate::catalog::selector_matches(budget.selected_tool_id, &p.tool_id))
+            });
+            let access = (if pinned_selector { 0x1400 } else { 0x1000 }) | 0x100000;
+            let mut handle = unsafe { OpenProcess(access, 0, pid) };
+            if handle.is_null() && pinned_selector {
+                handle = unsafe { OpenProcess(0x1000 | 0x100000, 0, pid) };
+            }
             if handle.is_null() {
                 return Err(error());
             }
@@ -215,7 +234,37 @@ mod native {
                     ProcessState::AliveAtSnapshot
                 }
             };
+            let identity = if state == ProcessState::AliveAtSnapshot && start.is_some() {
+                if let Some(path) = &image {
+                    match crate::artifact::inspect(
+                        handle.0,
+                        path,
+                        budget.selected_tool_id,
+                        budget.cancelled,
+                        budget.deadline,
+                        budget.remaining_artifact_bytes,
+                    ) {
+                        Ok(identity) => identity,
+                        Err(reason) => {
+                            gaps.push(reason);
+                            None
+                        }
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            };
+            // Recheck liveness after bounded hashing; never turn an exited
+            // process into a live closure suggestion.
+            let state = if unsafe { WaitForSingleObject(handle.0, 0) } == 0 {
+                ProcessState::ExitedDuringEnrichment
+            } else {
+                state
+            };
             Ok(Metadata {
+                identity,
                 start,
                 image,
                 state,
