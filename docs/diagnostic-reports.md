@@ -1,6 +1,6 @@
 # M2.5: integrated diagnostic scans and reports
 
-Authorized: 2026-10-29 | Public JSON schema version 1 | Diagnostic only
+Authorized: 2026-10-29 | Public JSON schema version 2 | Diagnostic only
 
 ```powershell
 .\target\debug\anti-ai-guard.exe inventory --consent --npm-prefix "C:\approved\npm-prefix" --json
@@ -44,6 +44,8 @@ See [synthetic text](examples/diagnostic.synthetic.txt) and [synthetic JSON](exa
 M2.4 limitations still apply: no trusted strong-identity catalog, no trusted boot ID, generic script hosts/renamed/custom agents outside native-name selection, and no continuous observation. Full Windows 10/11/pinned-artifact acceptance remains the M2.6 exit gate.
 
 ## Wire compatibility
+
+[Schema v1](report-schema-v1.md) is a historical reference; current CLI output uses v2 only.
 
 See [public JSON schema v2](report-schema-v2.md) for required fields, null handling,
 stable names and version rules. The example and golden-file test share the same
