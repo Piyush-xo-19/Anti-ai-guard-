@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "record_kind": "partial M2 identity pilot; not full desktop acceptance",
+  "recorded_on": "2026-11-01",
+  "timezone": "Asia/Calcutta",
+  "source_revision": "35fd1ad8b3d992705e72ed83fa84d96a5d0e86cd",
+  "working_tree_dirty": false,
+  "platform": {
+    "os": "Windows11",
+    "release": "25H2",
+    "build": "26200.9711",
+    "compiled_architecture": "X64",
+    "inspection_mode": "StandardUser"
+  },
+  "toolchain": "Rust 1.99.1 x86_64-pc-windows-gnu",
+  "catalog_version": "windows-artifact-pins-2026-11-01-v1",
+  "artifact": {
+    "tool_id": "codex-cli",
+    "tool_version": "0.166.0",
+    "architecture": "x64",
+    "bytes": 371735856,
+    "sha256": "9d563ee4e0441ff9d59d612013e0460ddf8e5709735c2d9f6b98b7ef8ca4eb42",
+    "acquisition_url": "https://github.com/openai/codex/releases/download/rust-v0.166.0/codex-x86_64-pc-windows-msvc.exe"
+  },
+  "cases": [
+    {
+      "id": "INST-01/codex-0.166.0/native-x64",
+      "status": "PASS",
+      "setup": "official pinned artifact inactive in a declared bin root",
+      "actual": "Installation; InventoryOnly; eligibility NotIssued",
+      "full_parent_row_complete": false
+    },
+    {
+      "id": "RUN-01/codex-0.166.0/suspended-image-x64",
+      "status": "PASS",
+      "setup": "explicit opt-in test creates only its verified artifact suspended with a fixed --version command",
+      "actual": "Corroborated; RequestClosureAndRescan; approved artifact rule shown; eligibility NotIssued",
+      "collector_limit_seconds": 10,
+      "qualifier": "image-presence/identity trial, not interactive assistant use or launch-event recall",
+      "full_parent_row_complete": false
+    },
+    {
+      "id": "ID-04/same-name-same-size-benign-fixture",
+      "status": "PASS",
+      "setup": "self-built test executable padded with zeros to the official artifact size",
+      "actual": "Candidate; no approved rule match; fake argument/path omitted",
+      "evidence_type": "default controlled fixture"
+    },
+    {
+      "id": "ID-03/distinct-identical-file-binding",
+      "status": "PASS",
+      "setup": "self-built image and byte-identical copy",
+      "actual": "native binding accepts actual mapped file and rejects distinct copy",
+      "evidence_type": "default native unit fixture"
+    },
+    {
+      "id": "BOOT/same-boot-self-header",
+      "status": "PASS",
+      "actual": "adjacent self-only fixed-header queries correlate; payload offsets zero; raw boot token omitted",
+      "evidence_type": "default native unit fixture"
+    }
+  ],
+  "artifact_sha256_unchanged_after_trials": true,
+  "default_fixture_suite": {
+    "passed_including_doctests": 95,
+    "failed": 0,
+    "ignored": 2,
+    "ignored_reasons": [
+      "controlled child helper",
+      "explicit real-artifact lab test"
+    ]
+  },
+  "explicit_real_artifact_lab": {
+    "passed": 1,
+    "failed": 0
+  },
+  "m2_exit_gate": "INCOMPLETE",
+  "not_run": [
+    "Windows10 desktop matrix",
+    "boot restart/Fast Startup/restore trials",
+    "Claude and both OpenCode generation artifact rules/trials",
+    "required package-install/runner/background and full privacy/failure matrix",
+    "performance/recall/false-positive targets"
+  ],
+  "limitations": [
+    "only one native artifact/version/architecture is pinned",
+    "native class44 binding is experimental and capability-checked, not an official Win32 identity guarantee",
+    "no process-memory/injection attestation",
+    "the scanner performs no downloads or tool launches; the explicit owned lab setup is separate",
+    "no raw paths/PIDs/boot IDs/arguments or participant inventory in this record"
+  ]
+}
