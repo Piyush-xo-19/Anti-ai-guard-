@@ -67,6 +67,10 @@ struct FindingData {
     evidence_class: Evidence,
     indicator_rule_id: Option<&'static str>,
     upstream_rule_reference_omitted: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    artifact_rule_id: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    artifact_catalog_version: Option<&'static str>,
     action: ActionWire,
     reason: Reason,
     process: Option<ProcessData>,
@@ -258,6 +262,9 @@ pub fn project(result: &ScanResult) -> PublicReport {
                     _ => None,
                 },
                 upstream_rule_reference_omitted: o.identity.rule_match.is_some(),
+                artifact_rule_id: crate::catalog::public_match(&o.identity).map(|(rule, _)| rule),
+                artifact_catalog_version: crate::catalog::public_match(&o.identity)
+                    .map(|(_, catalog)| catalog),
                 action: suggestion
                     .map(|s| s.action.into())
                     .unwrap_or(ActionWire::RequestReview),
@@ -360,7 +367,7 @@ pub fn project(result: &ScanResult) -> PublicReport {
         },
         limitations: vec![
             "only-explicit-installation-roots-and-known-native-name-selectors",
-            "no-trusted-strong-identity-catalog",
+            "strong-identity-limited-to-reviewed-native-artifact-pins",
             "missing-boot-identity-limits-process-correlation",
             "generic-interpreters-renamed-custom-and-guest-agents-not-identified",
             "snapshot-not-continuous-monitoring",
@@ -430,6 +437,16 @@ impl PublicReport {
                 finding.source,
                 finding.indicator_rule_id.unwrap_or("unknown")
             ));
+        }
+        for finding in &v.findings {
+            if let (Some(rule), Some(catalog)) =
+                (finding.artifact_rule_id, finding.artifact_catalog_version)
+            {
+                out.push_str(&format!(
+                    "Artifact identity finding {}: rule={} catalog={}\n",
+                    finding.index, rule, catalog
+                ));
+            }
         }
         for collector in &v.collectors {
             out.push_str(&format!(

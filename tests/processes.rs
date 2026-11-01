@@ -37,12 +37,38 @@ impl Drop for Fixture {
 
 #[test]
 fn controlled_candidate_is_observed_without_retaining_paths_or_arguments() {
+    controlled_candidate(false);
+}
+
+#[test]
+fn a_same_name_same_size_benign_image_never_matches_the_artifact_pin() {
+    controlled_candidate(true);
+}
+
+fn controlled_candidate(padded: bool) {
     let path = Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("target/process-fixtures")
-        .join(std::process::id().to_string());
+        .join(format!(
+            "{}-{}",
+            std::process::id(),
+            if padded { "padded" } else { "normal" }
+        ));
     fs::create_dir_all(&path).unwrap();
     let binary = path.join("codex.exe");
     fs::copy(std::env::current_exe().unwrap(), &binary).unwrap();
+    if padded {
+        let catalog: serde_json::Value =
+            serde_json::from_str(include_str!("../catalog/windows-artifacts.json")).unwrap();
+        let length = catalog["artifacts"][0]["bytes"].as_u64().unwrap();
+        // Preserve the self-built fixture code; a zero-filled PE overlay makes
+        // its file size equal the pin without executing any third-party code.
+        fs::OpenOptions::new()
+            .write(true)
+            .open(&binary)
+            .unwrap()
+            .set_len(length)
+            .unwrap();
+    }
     let secret = "fixture-private-token-7c6";
     let child = Command::new(&binary)
         .args([

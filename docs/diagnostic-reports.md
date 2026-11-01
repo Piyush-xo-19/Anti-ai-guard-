@@ -39,7 +39,7 @@ cargo run --locked --offline --example report_fixture
 cargo run --locked --offline --example report_fixture -- --json
 ```
 
-See [synthetic text](examples/diagnostic.synthetic.txt) and [synthetic JSON](examples/diagnostic.synthetic.json). They are generated examples, not evidence of real assistants or platform support. Eleven report tests cover text/JSON agreement, free-text/secret minimization, partial/failure/cancelled states, bounded truncation, invalid combined scope before process access, pre-cancellation explicit PATH opt-in, normalized boot-availability consistency and published golden-file agreement. Native/CLI and desktop evidence remain separately recorded in the validation review.
+See [synthetic text](examples/diagnostic.synthetic.txt) and [synthetic JSON](examples/diagnostic.synthetic.json). They are generated examples, not evidence of real assistants or platform support. Twelve report tests cover text/JSON agreement, free-text/secret minimization, partial/failure/cancelled states, bounded truncation, invalid combined scope before process access, pre-cancellation explicit PATH opt-in, normalized boot-availability consistency and published golden-file agreement. Native/CLI and desktop evidence remain separately recorded in the validation review.
 
 M2.4 limitations still apply: no trusted strong-identity catalog, no trusted boot ID, generic script hosts/renamed/custom agents outside native-name selection, and no continuous observation. Full Windows 10/11/pinned-artifact acceptance remains the M2.6 exit gate.
 
@@ -52,3 +52,5 @@ stable names and version rules. The example and golden-file test share the same
 synthetic input. CI checks both JSON and text, plus fake-secret minimization.
 
 Schema v2 changes process creation_filetime to a decimal string (or null), avoiding identity rounding in JavaScript JSON.parse. It adds operational_gaps: false for expected boot-identity limitations alone, true for collection/validation errors, failure, cancellation or truncation. Coverage remains incomplete and exit 3 for boot-limited candidate findings. This signal never issues eligibility or upgrades candidate identity. Scripts must parse JSON to distinguish these cases; the exit-code contract is unchanged. See the schema migration notes.
+
+The [pinned native identity pilot](artifact-identity.md) can now corroborate its single reviewed artifact when digest, protected file/image binding, process lifetime and boot identity permit. Optional artifact rule/catalog IDs are static allowlisted references shared by text/JSON; unpinned variants remain candidates. This does not grant eligibility or complete desktop acceptance.

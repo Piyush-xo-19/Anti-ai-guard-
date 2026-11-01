@@ -12,7 +12,7 @@ Coverage concern scope 2: MissingProcessIdentity
 Metrics: {"collection_elapsed_ms":0,"inventory_probes":0,"metadata_bytes":0,"process_entries":0,"process_queries":0}
 Scope is limited to documented selectors; an empty inventory does not mean a clean device.
 Limit: only-explicit-installation-roots-and-known-native-name-selectors
-Limit: no-trusted-strong-identity-catalog
+Limit: strong-identity-limited-to-reviewed-native-artifact-pins
 Limit: missing-boot-identity-limits-process-correlation
 Limit: generic-interpreters-renamed-custom-and-guest-agents-not-identified
 Limit: snapshot-not-continuous-monitoring

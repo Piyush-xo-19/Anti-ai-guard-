@@ -1,4 +1,4 @@
-//! Bounded current-session process-name candidates. Never reads command lines,
+//! Bounded current-session native selectors with a reviewed artifact identity pilot. Never reads command lines,
 //! environment, memory, modules or terminal contents; never controls processes.
 mod windows;
 
@@ -81,17 +81,29 @@ struct Context {
     boot_id: Option<String>,
     session: u32,
 }
+// Artifact enrichment is currently implemented only by the Windows adapter.
+#[cfg_attr(not(windows), allow(dead_code))]
+struct EnrichmentBudget<'a> {
+    cancelled: &'a AtomicBool,
+    deadline: Instant,
+    remaining_artifact_bytes: &'a mut u64,
+}
 struct Metadata {
     start: Option<u64>,
     image: Option<PathBuf>,
     state: ProcessState,
     gaps: Vec<GapReason>,
+    identity: Option<IdentityAssessment>,
 }
 trait Provider {
     fn capture(&mut self) -> Result<Context, GapReason>;
     fn next(&mut self) -> Result<Option<Row>, GapReason>;
     fn session(&mut self, pid: u32) -> Result<u32, GapReason>;
-    fn metadata(&mut self, pid: u32) -> Result<Metadata, GapReason>;
+    fn metadata(
+        &mut self,
+        pid: u32,
+        budget: &mut EnrichmentBudget<'_>,
+    ) -> Result<Metadata, GapReason>;
 }
 
 fn tool_id(name: &std::ffi::OsStr) -> Option<&'static str> {
@@ -147,6 +159,7 @@ fn collect_with(
         skipped_other_sessions: 0,
     };
     let began = Instant::now();
+    let mut remaining_artifact_bytes = 1024_u64 * 1024 * 1024;
     let stop = |entries: usize, candidates: usize| {
         if cancelled.load(Ordering::Relaxed) {
             Some(GapReason::Cancelled)
@@ -204,7 +217,14 @@ fn collect_with(
                     }
                 }
                 result.queried += 1;
-                let metadata = match provider.metadata(row.pid) {
+                let metadata = match provider.metadata(
+                    row.pid,
+                    &mut EnrichmentBudget {
+                        cancelled,
+                        deadline: began + request.limits.max_elapsed,
+                        remaining_artifact_bytes: &mut remaining_artifact_bytes,
+                    },
+                ) {
                     Ok(metadata) => metadata,
                     Err(
                         reason @ (GapReason::ProcessExited | GapReason::ProcessIdentityChanged),
@@ -219,6 +239,7 @@ fn collect_with(
                             image: None,
                             state: ProcessState::AliveAtSnapshot,
                             gaps: vec![],
+                            identity: None,
                         }
                     }
                 };
@@ -246,7 +267,7 @@ fn collect_with(
                     add_gap(&mut result, GapReason::ProcessExited);
                 }
                 // Do not fabricate a boot ID from wall-clock/uptime estimates.
-                // Boot-scoped cross-scan identity remains explicitly incomplete.
+                // Missing OS boot metadata keeps correlation explicitly incomplete.
                 if context.boot_id.is_none() {
                     add_gap(&mut result, GapReason::MissingBootIdentity);
                 }
@@ -268,14 +289,14 @@ fn collect_with(
                             },
                             state: metadata.state,
                         },
-                        identity: IdentityAssessment {
+                        identity: metadata.identity.unwrap_or_else(|| IdentityAssessment {
                             tool: Some(ToolIdentity {
                                 id: id.into(),
                                 category: ToolCategory::CodingAssistant,
                             }),
                             class: EvidenceClass::Candidate,
                             rule_match: None,
-                        },
+                        }),
                     },
                     installation_indicator,
                 });

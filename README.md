@@ -10,7 +10,7 @@ Anti-AI Guard aims to let participants use documentation, the internet, terminal
 
 The design combines a pre-event software inventory, runtime observation of recognized coding assistants, and a competition-session policy. Participants retain control of their personal laptops.
 
-> **Current stage: M2.4/M2.5 candidate-only preflight and reports.** Consented bounded installation inventory and current-session process-name candidates work with text/JSON output. M2.6 validation tooling is available, but the full Windows 10/11 desktop exit gate remains incomplete. No trusted strong-identity catalog, continuous monitor, installer or dashboard is implemented.
+> **Current stage: M2 preflight with a pinned native identity pilot.** Consented bounded installation inventory and current-session process-name candidates work with text/JSON output. M2.6 validation tooling is available, but the full Windows 10/11 desktop exit gate remains incomplete. A guarded boot adapter and one [pinned Codex native identity rule](docs/artifact-identity.md) are implemented; other variants remain candidates. No continuous monitor, installer or dashboard is implemented.
 
 The implemented reports use [JSON schema v2](docs/report-schema-v2.md), preserving FILETIME identity as a decimal string and distinguishing operational gaps from expected identity limitations. The [2026-11-01 local fixture rerun](docs/validation/results.md#local-fixture-rerun---2026-11-01) passed 80 tests and two doctests; this does not replace pinned-tool desktop acceptance. [Finish M2 first](docs/m2-completion.md); the [eight M3 chunks](docs/m3-plan.md) are planning only.
 
@@ -25,6 +25,8 @@ The implemented reports use [JSON schema v2](docs/report-schema-v2.md), preservi
 - [Shared contracts and synthetic diagnostic example](docs/shared-contracts.md)
 - [Bounded Windows installation inventory](docs/installation-inventory.md)
 - [Current-session process snapshots](docs/process-snapshots.md)
+- [Pinned native artifact identity pilot](docs/artifact-identity.md)
+- [Guarded boot identity and limits](docs/boot-identity.md)
 - [Combined scans and text/JSON reports](docs/diagnostic-reports.md)
 - [Public JSON schema v2 and compatibility](docs/report-schema-v2.md)
 - [Validation evidence and remaining M2 gates](docs/validation/README.md)

@@ -208,6 +208,8 @@ pub(super) enum Gap {
     MissingBootIdentity,
     #[serde(rename = "ProcessIdentityChanged")]
     ProcessIdentityChanged,
+    #[serde(rename = "ArtifactIdentityUnavailable")]
+    ArtifactIdentityUnavailable,
 }
 impl From<GapReason> for Gap {
     fn from(value: GapReason) -> Self {
@@ -226,6 +228,7 @@ impl From<GapReason> for Gap {
             GapReason::SharingConflict => Self::SharingConflict,
             GapReason::MissingBootIdentity => Self::MissingBootIdentity,
             GapReason::ProcessIdentityChanged => Self::ProcessIdentityChanged,
+            GapReason::ArtifactIdentityUnavailable => Self::ArtifactIdentityUnavailable,
         }
     }
 }
@@ -246,6 +249,7 @@ impl fmt::Display for Gap {
             Self::SharingConflict => "SharingConflict",
             Self::MissingBootIdentity => "MissingBootIdentity",
             Self::ProcessIdentityChanged => "ProcessIdentityChanged",
+            Self::ArtifactIdentityUnavailable => "ArtifactIdentityUnavailable",
         })
     }
 }

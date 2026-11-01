@@ -257,6 +257,7 @@ fn known_identity_limit_is_distinct_from_operational_gaps_without_weakening_cove
         GapReason::InvalidScope,
         GapReason::SharingConflict,
         GapReason::ProcessIdentityChanged,
+        GapReason::ArtifactIdentityUnavailable,
     ] {
         let mut result = boot_only();
         result.diagnostic.snapshot.coverage[1].gaps.push(gap);
@@ -320,4 +321,40 @@ fn reported_boot_availability_agrees_with_normalized_identity() {
         }
         assert!(!public.json().contains("fixture.boot"));
     }
+}
+
+#[test]
+fn public_artifact_references_are_allowlisted_not_arbitrary_upstream_strings() {
+    let catalog: serde_json::Value =
+        serde_json::from_str(include_str!("../catalog/windows-artifacts.json")).unwrap();
+    let pin = &catalog["artifacts"][0];
+    let mut result = published_synthetic::fixture();
+    let identity = &mut result.diagnostic.snapshot.observations[1].identity;
+    identity.class = EvidenceClass::Corroborated;
+    identity.rule_match = Some(RuleMatch {
+        catalog_version: catalog["catalog_version"].as_str().unwrap().into(),
+        rule_id: pin["rule_id"].as_str().unwrap().into(),
+        rule_version: pin["rule_version"].as_str().unwrap().into(),
+        approval: RuleApproval::DiagnosticClosure,
+    });
+    result.diagnostic = policy::evaluate(result.diagnostic.snapshot);
+    let public = report::project(&result);
+    assert_eq!(
+        public.value()["findings"][1]["artifact_rule_id"],
+        pin["rule_id"]
+    );
+    assert!(public.text().contains(pin["rule_id"].as_str().unwrap()));
+    result.diagnostic.snapshot.observations[1]
+        .identity
+        .rule_match
+        .as_mut()
+        .unwrap()
+        .rule_id = "fake-secret-upstream-rule".into();
+    result.diagnostic = policy::evaluate(result.diagnostic.snapshot);
+    let public = report::project(&result);
+    assert!(public.value()["findings"][1]
+        .get("artifact_rule_id")
+        .is_none());
+    assert!(!public.json().contains("fake-secret"));
+    assert!(!public.text().contains("fake-secret"));
 }

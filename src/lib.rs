@@ -1,7 +1,10 @@
 //! Consented, bounded diagnostic preflight. No competition verification.
+#[cfg(windows)]
+mod artifact;
 #[cfg(any(windows, test))]
 mod boot;
 pub mod cancellation;
+mod catalog;
 pub mod inventory;
 pub mod model;
 pub mod platform;
