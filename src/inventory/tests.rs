@@ -125,7 +125,7 @@ fn exact_package_selectors_keep_both_opencode_generations_separate() {
     assert!(ids.contains(&"opencode-v2"));
     assert!(ids.contains(&"opencode-unknown-generation"));
     assert_eq!(result.coverage[0].state, CoverageState::Inspected);
-    assert_eq!(result.probes, 13);
+    assert_eq!(result.probes, 15);
 }
 
 #[test]
@@ -135,7 +135,7 @@ fn bin_scope_does_not_read_package_manifests() {
     let request = InventoryRequest::new(true, vec![directory], Limits::default()).unwrap();
     let mut fs = fake();
     let result = collect_with(&request, &AtomicBool::new(false), &mut fs);
-    assert_eq!(result.probes, 9);
+    assert_eq!(result.probes, 11);
     assert_eq!(result.bytes_read, 0);
     assert!(fs
         .calls
@@ -367,7 +367,7 @@ fn partial_read_errors_still_consume_the_total_byte_budget() {
         &mut ReadFailure,
     );
     assert_eq!(result.bytes_read, 8);
-    assert_eq!(result.probes, 11);
+    assert_eq!(result.probes, 13);
     assert!(result.coverage[0]
         .gaps
         .contains(&GapReason::CollectorFailed));

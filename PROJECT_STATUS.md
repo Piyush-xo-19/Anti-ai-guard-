@@ -133,3 +133,10 @@ scope IDs in location linkage, and distinguish totally unavailable inventory
 regressions and the full local suite pass101 tests/doctests, with two intentional
 ignored tests; strict Clippy/rustdoc/format pass. See the inventory guide for
 unchanged consent, privacy, exit and literal-percent handling.
+
+The standalone Codex download names now have exact inventory selectors, matching
+the existing process-name selectors (#34). A filesystem regression proves both
+names yield candidate installation evidence with zero content bytes read. An ARM64
+filename is inventory evidence only, never ARM64 scanner support. The complete
+local suite now passes102 tests/doctests, zero failures, two intentional ignored
+tests; strict Clippy, rustdoc and format pass.

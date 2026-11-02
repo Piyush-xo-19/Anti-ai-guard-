@@ -120,6 +120,28 @@ fn no_recursive_discovery_or_tool_execution_occurs() {
 }
 
 #[test]
+fn standalone_codex_download_names_are_inventory_candidates_without_content_reads() {
+    let _serial = SERIAL.lock().unwrap();
+    let fixture = Fixture::new();
+    for name in [
+        "codex-x86_64-pc-windows-msvc.exe",
+        "codex-aarch64-pc-windows-msvc.exe",
+    ] {
+        fixture.write(name, b"inert standalone-name fixture; never execute");
+    }
+    let result = fixture.collect(RootKind::BinDirectory);
+    assert_eq!(result.execution, ScanExecution::Finished);
+    assert_eq!(result.findings.len(), 2);
+    assert_eq!(result.bytes_read, 0);
+    for finding in result.findings {
+        assert_eq!(finding.observation.identity.tool.unwrap().id, "codex-cli");
+        assert_eq!(finding.observation.kind, ObservationKind::Installation);
+        assert_eq!(finding.observation.identity.class, EvidenceClass::Candidate);
+        assert!(finding.observation.identity.rule_match.is_none());
+    }
+}
+
+#[test]
 fn invalid_or_oversized_manifests_report_partial_without_echoing_contents() {
     let _serial = SERIAL.lock().unwrap();
     let fixture = Fixture::new();

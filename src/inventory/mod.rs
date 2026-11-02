@@ -150,6 +150,16 @@ struct Selector {
 
 const BIN_SELECTORS: &[Selector] = &[
     Selector {
+        relative: "codex-x86_64-pc-windows-msvc.exe",
+        tool: "codex-cli",
+        package: None,
+    },
+    Selector {
+        relative: "codex-aarch64-pc-windows-msvc.exe",
+        tool: "codex-cli",
+        package: None,
+    },
+    Selector {
         relative: "codex.exe",
         tool: "codex-cli",
         package: None,
