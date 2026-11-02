@@ -4,7 +4,7 @@ Status (2026-11-02): **active ruleset verified**. The maintainer imported the
 template; GitHub reports [Protect main](https://github.com/Piyush-xo-19/Anti-ai-guard-/rules/26384686)
 Active, targeting refs/heads/main with deletion, force-push, PR/thread and required
 check rules. Committing a template alone does not enable protection. The activation
-instructions below remain useful for another repository or recreating the rule.
+instructions below apply to recreating this repository's rule; their links are repository-specific.
 
 ## Intended rules
 

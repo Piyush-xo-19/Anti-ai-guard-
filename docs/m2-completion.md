@@ -17,9 +17,16 @@ candidate, not a tested-support claim. Record the token mode at each actual tria
 The registry ProductName alone must not determine the OS family.
 
 No Windows 10 desktop or VM is attached. Windows Server CI is fixture evidence,
-not a substitute. Do not create a VM, install assistants or elevate automatically.
+not a substitute. Windows 10 VM work is deferred by the maintainer as of
+2026-11-02. Do not create a VM, install assistants system-wide or elevate automatically.
 A reviewed four-artifact native set is compiled into the matcher; see
 [ground truth](validation/native-artifacts.md). A synthetic process named codex.exe remains a fixture, not a real tool.
+
+Separate [native](validation/native-matrix-2026-11-02.json) and
+[npm metadata/dependency-image](validation/npm-inventory-2026-11-02.json) records
+contain passing partial Windows 11 subcases. npm setup stayed in disposable
+repository-local prefixes with lifecycle scripts disabled. Ordinary package
+launchers/runners and full acceptance rows are not validated by those records.
 
 ## Ordered closure work
 
