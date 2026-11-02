@@ -139,6 +139,27 @@ fn standalone_codex_download_names_are_inventory_candidates_without_content_read
         assert_eq!(finding.observation.identity.class, EvidenceClass::Candidate);
         assert!(finding.observation.identity.rule_match.is_none());
     }
+    let output = Command::new(env!("CARGO_BIN_EXE_anti-ai-guard"))
+        .args(["scan", "--consent", "--bin-root"])
+        .arg(&fixture.path)
+        .arg("--json")
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let public: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(public["schema_version"], 2);
+    assert_eq!(
+        public["indicator_catalog_version"],
+        "windows-name-and-package-indicators-v2"
+    );
+    assert_eq!(public["eligibility"], "NotIssued");
+    for finding in public["findings"].as_array().unwrap() {
+        assert_eq!(
+            finding["indicator_rule_id"],
+            "native-file-name-indicators-v2"
+        );
+        assert_eq!(finding["action"], "InventoryOnly");
+    }
 }
 
 #[test]

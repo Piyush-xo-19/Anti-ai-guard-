@@ -69,7 +69,7 @@
       "upstream_rule_reference_omitted": false
     }
   ],
-  "indicator_catalog_version": "windows-name-and-package-indicators-v1",
+  "indicator_catalog_version": "windows-name-and-package-indicators-v2",
   "limitations": [
     "only-explicit-installation-roots-and-known-native-name-selectors",
     "strong-identity-limited-to-reviewed-native-artifact-pins",

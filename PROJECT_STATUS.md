@@ -114,9 +114,9 @@ remain pending. M2 and M3 status are unchanged: M2 incomplete, M3 not started.
 
 The [frozen native scope](docs/validation/native-artifacts.md) now covers Codex,
 Claude and both OpenCode generations. [Eight native subcases](docs/validation/native-matrix-2026-11-02.json)
-passed (four inactive inventory, four owned suspended images). Default suite98
-tests/doctests passes; two helper/lab tests are intentionally ignored. No full
-row/interactive/performance claim follows. Windows10 VM work is deferred by the
+passed (four inactive inventory, four owned suspended images). The default suite passed 98
+tests/doctests; two helper/lab tests are intentionally ignored. No full
+row/interactive/performance claim follows. Windows 10 VM work is deferred by the
 maintainer; remaining M2 work continues and M3 is not started. Main protection
 is active, independently verified through the GitHub ruleset API.
 
@@ -127,22 +127,23 @@ remains unvalidated. These results do not close full INST-02/RUN-02 rows.
 
 ## M2 scope and failure regressions - 2026-11-02
 
-Reject Windows reserved device/illegal components before I/O, reject zero/out-of-range
-scope IDs in location linkage, and distinguish totally unavailable inventory
-(Failed) from mixed coverage (Partial). Relevant scope/failure/cancellation
-regressions and the full local suite pass101 tests/doctests, with two intentional
-ignored tests; strict Clippy/rustdoc/format pass. See the inventory guide for
-unchanged consent, privacy, exit and literal-percent handling.
+Windows reserved device names and illegal path components are rejected before
+I/O. Invalid scope IDs cannot link to the first root. Totally unavailable
+inventory reports Failed; mixed coverage reports Partial. At this stage, the
+full local suite passed 101 tests/doctests, with two intentionally ignored tests.
+Formatting, strict Clippy and strict rustdoc checks passed. The inventory guide
+documents consent, privacy, exit codes and unchanged literal-percent handling.
 
 The standalone Codex download names now have exact inventory selectors, matching
-the existing process-name selectors (#34). A filesystem regression proves both
-names yield candidate installation evidence with zero content bytes read. An ARM64
-filename is inventory evidence only, never ARM64 scanner support. The complete
-local suite now passes102 tests/doctests, zero failures, two intentional ignored
-tests; strict Clippy, rustdoc and format pass.
+the existing process selectors (#34). A filesystem regression verifies candidate
+installation evidence with zero content bytes read. An ARM64 filename does not
+establish ARM64 scanner support. This follow-up passed 102 tests/doctests, with
+zero failures and two intentionally ignored tests; formatting and strict Clippy
+and rustdoc checks passed.
 
 CodeRabbit identified cancellation arriving during the final failed root open.
-The collector now preserves Cancelled execution and the original Unavailable/
-AccessDenied details, with a deterministic provider regression. Full local suite
-103 tests/doctests passes, two intentional ignored tests; strict lint/doc/format
-pass. Review completion remains mandatory before merge.
+The collector now reports Cancelled while retaining Unavailable and AccessDenied
+details. A deterministic regression covers that race. The full local suite now
+passes 103 tests/doctests, with zero failures and two intentionally ignored tests.
+Formatting, strict Clippy and strict rustdoc checks passed. Review completion
+remains mandatory before merge.
