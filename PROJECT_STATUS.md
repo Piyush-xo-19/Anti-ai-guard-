@@ -119,3 +119,8 @@ tests/doctests passes; two helper/lab tests are intentionally ignored. No full
 row/interactive/performance claim follows. Windows10 VM work is deferred by the
 maintainer; remaining M2 work continues and M3 is not started. Main protection
 is active, independently verified through the GitHub ruleset API.
+
+Four pinned npm metadata subcases and four directly observed package-native
+dependency images also pass; see [package evidence](docs/validation/npm-inventory-2026-11-02.json).
+Lifecycle scripts were disabled, so ordinary package-launcher/runner behavior
+remains unvalidated. These results do not close full INST-02/RUN-02 rows.

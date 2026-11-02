@@ -42,3 +42,8 @@ Follow the [M2 completion checklist](../m2-completion.md) before starting [M3 im
 See the [partial native identity pilot](identity-pilot-2026-11-01.json) for the
 first pinned Codex Windows11 subcases. It records its own source/scope and leaves
 M2 incomplete. It does not replace the original unexecuted two-desktop template.
+
+The [four-native record](native-matrix-2026-11-02.json) and
+[actual npm metadata/dependency-image record](npm-inventory-2026-11-02.json)
+add dated partial Windows11 subcases. Their clean source revisions, exact pins,
+setup limitations and still-unexecuted scenarios are retained per record.

@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "record_kind": "partial M2 actual npm metadata inventory",
+  "recorded_on": "2026-11-02",
+  "timezone": "Asia/Calcutta",
+  "source_revision": "d1c719cc75957642b9345258b909d410d255af2f",
+  "working_tree_dirty": false,
+  "platform": {
+    "compiled_architecture": "X64",
+    "build": "26200.9711",
+    "os": "Windows11",
+    "release": "25H2",
+    "inspection_mode": "StandardUser"
+  },
+  "cases": [
+    {
+      "tool_id": "codex-cli",
+      "package_name": "@openai/codex",
+      "version": "0.166.0",
+      "tarball_url": "https://registry.npmjs.org/@openai/codex/-/codex-0.166.0.tgz",
+      "integrity": "sha512-2Szlp1l1cz5TX1ccpX4Zok3DZrot9xeZe0km+6/1v8JmqxADwyJxKBJah4dBymkwtS25j/u6dipJusTOI97Z8Q==",
+      "setup": "repo-local npm prefix, lifecycle scripts disabled",
+      "inactive_inventory": "PASS",
+      "source": "PackageMetadata",
+      "identity": "Candidate",
+      "action": "InventoryOnly",
+      "eligibility": "NotIssued",
+      "manifest_sha256_unchanged_after": true,
+      "full_parent_row_complete": false,
+      "package_native_image_subcase": {
+        "status": "PASS",
+        "rule_id": "codex-win-x64-0.166.0-sha256-v1",
+        "identity": "Corroborated",
+        "action": "RequestClosureAndRescan",
+        "eligibility": "NotIssued",
+        "sha256_unchanged_after": true,
+        "launched_through_package_runner": false,
+        "setup": "verified dependency binary created suspended directly; lifecycle scripts disabled"
+      }
+    },
+    {
+      "tool_id": "claude-code",
+      "package_name": "@anthropic-ai/claude-code",
+      "version": "2.1.316",
+      "tarball_url": "https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-2.1.316.tgz",
+      "integrity": "sha512-i3BpzyDkcCPnsa0CSkWgxGPs7WMsyqDkxkqT0SDxyEC5XMIxEmcUmluWRHG9VSeBY8Vyv+l9X34JvJ/Bj54nBQ==",
+      "setup": "repo-local npm prefix, lifecycle scripts disabled",
+      "inactive_inventory": "PASS",
+      "source": "PackageMetadata",
+      "identity": "Candidate",
+      "action": "InventoryOnly",
+      "eligibility": "NotIssued",
+      "manifest_sha256_unchanged_after": true,
+      "full_parent_row_complete": false,
+      "package_native_image_subcase": {
+        "status": "PASS",
+        "rule_id": "claude-win-x64-2.1.316-sha256-v1",
+        "identity": "Corroborated",
+        "action": "RequestClosureAndRescan",
+        "eligibility": "NotIssued",
+        "sha256_unchanged_after": true,
+        "launched_through_package_runner": false,
+        "setup": "verified dependency binary created suspended directly; lifecycle scripts disabled"
+      }
+    },
+    {
+      "tool_id": "opencode-v1",
+      "package_name": "opencode-ai",
+      "version": "1.19.5",
+      "tarball_url": "https://registry.npmjs.org/opencode-ai/-/opencode-ai-1.19.5.tgz",
+      "integrity": "sha512-tEqMvQahfhdDj8vceYpXtoIrvjPXm5XRfetWnPN5YISueU7adNx9JcUA3zZ+2GKuDVgDpGdQe1ZLtCZDjqodvA==",
+      "setup": "repo-local npm prefix, lifecycle scripts disabled",
+      "inactive_inventory": "PASS",
+      "source": "PackageMetadata",
+      "identity": "Candidate",
+      "action": "InventoryOnly",
+      "eligibility": "NotIssued",
+      "manifest_sha256_unchanged_after": true,
+      "full_parent_row_complete": false,
+      "package_native_image_subcase": {
+        "status": "PASS",
+        "rule_id": "opencode-v1-win-x64-1.19.5-sha256-v1",
+        "identity": "Corroborated",
+        "action": "RequestClosureAndRescan",
+        "eligibility": "NotIssued",
+        "sha256_unchanged_after": true,
+        "launched_through_package_runner": false,
+        "setup": "verified dependency binary created suspended directly; lifecycle scripts disabled"
+      }
+    },
+    {
+      "tool_id": "opencode-v2",
+      "package_name": "@opencode/cli",
+      "version": "2.2.5",
+      "tarball_url": "https://registry.npmjs.org/@opencode/cli/-/cli-2.2.5.tgz",
+      "integrity": "sha512-sJAwrwuVa5b+pA3O1UOiSDcC9DgdPVmtkWv6aF6q3+rOiOTCqrE41tkz1kyyE2O8BYPs4eOvBuzkQ6oEm8w5Mw==",
+      "setup": "repo-local npm prefix, lifecycle scripts disabled",
+      "inactive_inventory": "PASS",
+      "source": "PackageMetadata",
+      "identity": "Candidate",
+      "action": "InventoryOnly",
+      "eligibility": "NotIssued",
+      "manifest_sha256_unchanged_after": true,
+      "full_parent_row_complete": false,
+      "package_native_image_subcase": {
+        "status": "PASS",
+        "rule_id": "opencode-v2-win-x64-2.2.5-sha256-v1",
+        "identity": "Corroborated",
+        "action": "RequestClosureAndRescan",
+        "eligibility": "NotIssued",
+        "sha256_unchanged_after": true,
+        "launched_through_package_runner": false,
+        "setup": "verified dependency binary created suspended directly; lifecycle scripts disabled"
+      }
+    }
+  ],
+  "m2_exit_gate": "INCOMPLETE",
+  "not_run": [
+    "lifecycle scripts and normal installed launcher behavior",
+    "package runner execution",
+    "Windows10",
+    "full desktop matrix"
+  ]
+}
