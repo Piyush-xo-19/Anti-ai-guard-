@@ -1,6 +1,6 @@
 # M2 completion checklist: finish preflight before M3
 
-Updated: 2026-11-01 (Asia/Calcutta)
+Updated: 2026-11-02 (Asia/Calcutta)
 
 [Status](../PROJECT_STATUS.md) | [M2 plan](m2-plan.md) | [Coverage](coverage-matrix.md) | [Acceptance](acceptance-plan.md) | [Queued M3 plan](m3-plan.md)
 
@@ -17,19 +17,26 @@ candidate, not a tested-support claim. Record the token mode at each actual tria
 The registry ProductName alone must not determine the OS family.
 
 No Windows 10 desktop or VM is attached. Windows Server CI is fixture evidence,
-not a substitute. Do not create a VM, install assistants or elevate automatically.
-No pinned real-tool artifact set or reviewed production identity rules has been
-supplied. A synthetic process named codex.exe remains a fixture, not a real tool.
+not a substitute. Windows 10 VM work is deferred by the maintainer as of
+2026-11-02. Do not create a VM, install assistants system-wide or elevate automatically.
+A reviewed four-artifact native set is compiled into the matcher; see
+[ground truth](validation/native-artifacts.md). A synthetic process named codex.exe remains a fixture, not a real tool.
+
+Separate [native](validation/native-matrix-2026-11-02.json) and
+[npm metadata/dependency-image](validation/npm-inventory-2026-11-02.json) records
+contain passing partial Windows 11 subcases. npm setup stayed in disposable
+repository-local prefixes with lifecycle scripts disabled. Ordinary package
+launchers/runners and full acceptance rows are not validated by those records.
 
 ## Ordered closure work
 
 | Step | Deliverable | Evidence required before closing | Current state |
 | --- | --- | --- | --- |
-| 1. Freeze the lab scope and ground truth | Reviewed required versus exploratory variants, OS/build/token matrix, pinned artifact manifest | Exact official acquisition URL, version, architecture, digest/provenance, rule predicates and expected classification per artifact | Pending; Windows 11 host identified, Windows 10 unavailable |
-| 2. Finish strong identity in the M2.4 boundary | Reviewed trusted artifact predicates and bounded read-only matching bound to the observed process instance | Positive known-artifact, benign same-name, changed/replaced artifact, stale-cache and exit/race results; no basename/package-only promotion | Pinned Codex native pilot implemented with SHA-256 and guarded image binding; remaining variants and broader failure/desktop evidence pending |
+| 1. Freeze the lab scope and ground truth | Reviewed required versus exploratory variants, OS/build/token matrix, pinned artifact manifest | Exact official acquisition URL, version, architecture, digest/provenance, rule predicates and expected classification per artifact | Four exact native pins frozen; package and broader lab rows remain separate; Windows 10 deferred by maintainer |
+| 2. Finish strong identity in the M2.4 boundary | Reviewed trusted artifact predicates and bounded read-only matching bound to the observed process instance | Positive known-artifact, benign same-name, changed/replaced artifact, stale-cache and exit/race results; no basename/package-only promotion | Four-tool native pilot implemented with SHA-256 and guarded image binding; remaining variants and broader failure/desktop evidence pending |
 | 3. Settle boot-scoped correlation | Reviewed OS-backed boot identity approach, or an explicit maintainer decision about the outstanding requirement | Same-boot stability, restart distinction, denied/unavailable behavior and privacy checks; no clock/uptime estimates represented as trusted identity | Fixed self-header adapter implemented; same-boot Windows 11 fixture passed; restart/restore and Windows 10 checks pending, with gap fallback |
-| 4. Execute the Windows 11 desktop subset | Complete trials on the actual declared build/mode with pinned tools | Required acceptance subcases, before/after no-mutation checks, redacted reports and ground-truth references | Not run; passing synthetic fixtures do not close this step |
-| 5. Execute the Windows 10 desktop subset | Independent Windows 10 configuration and the same declared required subset | Its own exact build/mode/artifacts and required outcomes | Blocked by unavailable Windows 10 lab |
+| 4. Execute the Windows 11 desktop subset | Complete trials on the actual declared build/mode with pinned tools | Required acceptance subcases, before/after no-mutation checks, redacted reports and ground-truth references | Partial controlled native-image trials available; full variant/privacy/failure matrix remains open |
+| 5. Execute the Windows 10 desktop subset | Independent Windows 10 configuration and the same declared required subset | Its own exact build/mode/artifacts and required outcomes | Deferred by maintainer on 2026-11-02; not validated |
 | 6. Review M2.6 and publish the result | Reviewed evidence, working commands, honest support matrix and known limitations | All required gates satisfied; focused PRs, relevant CI and completed CodeRabbit review; then update M2 status | Not ready; M3 implementation stays queued |
 
 These steps complete existing M2 obligations; they are not a new product milestone

@@ -127,3 +127,11 @@ must pass; unsupported/denied behavior cannot promote identity. See [design](art
 Add optional allowlisted artifact rule/catalog fields within schema v2; replace
 the obsolete no-catalog limitation in goldens. Eligibility/actions remain diagnostic.
 This does not certify injection resistance, unpinned variants or desktop completion.
+
+## Native artifact scope expansion (2026-11-02)
+
+The maintainer requested remaining M2 work with Windows 10 VM work deferred.
+Freeze four native x64 pins in [ground truth](validation/native-artifacts.md),
+retain differing provenance, and use existing exact digest/image-binding
+predicates. OpenCode generations stay separate; no broader scanning or process
+control follows. M2 still needs its remaining acceptance evidence; no M3 code.

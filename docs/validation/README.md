@@ -28,9 +28,9 @@ Follow [acceptance-plan.md](../acceptance-plan.md) and [coverage-matrix.md](../c
 ## Why the milestone stays open
 
 - No Windows 10 desktop lab was available in this session.
-- The local Windows 11 build 26200 standard-user environment exercised process fixtures, but its restricted ancestor-directory access blocks the complete installation fixture suite; no full pinned-tool desktop acceptance was run.
-- No reviewed trusted strong-identity catalog/artifact predicate is supplied. Real processes remain candidates; renamed/custom/interpreter-hosted assistants are not validated.
-- Trusted boot identity is absent, so cross-scan process correlation remains incomplete.
+- The normal-access Windows 11 fixture suite passes; restricted sandbox access is a separate historical limitation. Controlled native-image subcases have results, but full desktop acceptance is incomplete.
+- Four exact native artifact pins exist. Other versions and renamed/custom/interpreter-hosted assistants are not validated.
+- Guarded device-local boot metadata exists, but reboot/Fast Startup/restore validation remains pending.
 - Exact lab/privilege/variant requirements still need review before any support claim.
 
 See [results.md](results.md) for exact available checks and commits. No 95% recall, 2% false-positive or five-second runtime target is claimed. M3 continuous observation has not started. Do not mark M2 complete until the declared baseline's real-tool/OS/privacy/failure gates have recorded outcomes and the unresolved identity/coverage requirements are settled.
@@ -42,3 +42,8 @@ Follow the [M2 completion checklist](../m2-completion.md) before starting [M3 im
 See the [partial native identity pilot](identity-pilot-2026-11-01.json) for the
 first pinned Codex Windows11 subcases. It records its own source/scope and leaves
 M2 incomplete. It does not replace the original unexecuted two-desktop template.
+
+The [four-native record](native-matrix-2026-11-02.json) and
+[actual npm metadata/dependency-image record](npm-inventory-2026-11-02.json)
+add dated partial Windows11 subcases. Their clean source revisions, exact pins,
+setup limitations and still-unexecuted scenarios are retained per record.

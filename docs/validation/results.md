@@ -48,3 +48,35 @@ all variants. The process was deliberately paused for deterministic image identi
 interactive coding, package-runner/background behavior and runtime recall were
 not tested. Boot restart/restore, other catalogs/variants and Windows10 still need
 separate results. Full M2 remains INCOMPLETE; M3 has not started.
+
+## Four native artifact subcases - 2026-11-02
+
+[Minimized clean-source evidence](native-matrix-2026-11-02.json) records source
+4d291be on Windows 11 25H2 build 26200.9711, StandardUser. All four frozen native
+artifacts passed separate inactive InventoryOnly and owned suspended-image
+Corroborated/RequestClosureAndRescan trials; eligibility stayed NotIssued.
+Each artifact digest was unchanged after its trials. The default suite passed
+98 tests/doctests, zero failures, two intentional ignored helper/lab tests;
+format, strict Clippy and strict rustdoc passed. Same-name/same-size benign
+controls cover all four pins and remain candidates. These are partial native
+subcases, not interactive coding, full acceptance rows or performance targets.
+Windows 10 is deferred; reboot/restore and broader desktop cases remain open.
+
+## Pinned npm metadata and dependency images - 2026-11-02
+
+[Minimized package evidence](npm-inventory-2026-11-02.json) records clean source
+d1c719c on the same Windows11 StandardUser lab. Four exact packages were installed
+only in ignored repository-local prefixes, with lifecycle scripts disabled, no
+audit/funding requests and an isolated cache/config. npm lockfile integrity
+matched the official registry metadata. Package metadata inventory passed for
+Codex, Claude and both OpenCode generations: Candidate, InventoryOnly, NotIssued;
+manifest hashes were unchanged after scanning. Their four x64 native dependency
+executables independently matched the compiled pins and passed direct owned
+suspended-image trials; post-trial digests were unchanged.
+
+This supplies separate INST-02 metadata and package-native-image subcases. It is
+not normal postinstall/launcher validation or RUN-02 package-runner execution.
+No lifecycle script, npx assistant, model request or personal package prefix ran.
+Baseline CPU variants, background execution and the full desktop matrix remain
+open. Native-name inventory cannot infer an OpenCode generation; exact package
+metadata and matched process digests are separate evidence sources.

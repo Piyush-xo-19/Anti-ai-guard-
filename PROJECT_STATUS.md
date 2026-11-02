@@ -1,6 +1,6 @@
 # Project status and milestone plan
 
-Updated: 2026-11-01 (Asia/Calcutta)
+Updated: 2026-11-02 (Asia/Calcutta)
 
 **M2.4 process candidates and M2.5 integrated reports are implemented. M2.6 validation tooling is implemented; full desktop acceptance and full M2 completion remain INCOMPLETE.**
 
@@ -17,7 +17,7 @@ Updated: 2026-11-01 (Asia/Calcutta)
 - M2.5: explicitly scoped combined scans, one bounded minimized text/JSON projection, cooperative cancellation and synthetic public examples. Eligibility is always NotIssued.
 - M2.6 tooling: Windows fixture harness, sanitized artifacts and a template containing both desktop OS configurations and all 33 NOT RUN scenarios. Both hosted Windows Server jobs passed 64 tests each; see [permanent sanitized evidence](docs/validation/fixtures-2026-10-30.json).
 
-A single reviewed native artifact pin and guarded device-local boot adapter now exist. Other variants remain candidates; no continuous runtime monitor, backend, installer or dashboard exists. Installed inventory never proves execution. Native names/writable metadata remain candidates. There is no automatic termination, deletion, uninstall, disqualification or competition verification.
+Four reviewed native artifact pins and guarded device-local boot adapter now exist. Other variants remain candidates; no continuous runtime monitor, backend, installer or dashboard exists. Installed inventory never proves execution. Native names/writable metadata remain candidates. There is no automatic termination, deletion, uninstall, disqualification or competition verification.
 
 ## Milestones
 
@@ -25,7 +25,7 @@ A single reviewed native artifact pin and guarded device-local boot adapter now 
 | --- | --- | --- |
 | M0: public foundation | Complete | Maintain documentation |
 | M1: coverage/design | Documents prepared; relevant reviews open | Review exact lab/privilege/variant and strong-identity requirements |
-| M2: read-only preflight | Candidate-only implementation available; NOT complete | Trusted identity/boot requirements and required Windows 10/11 real-tool/privacy/failure lab outcomes |
+| M2: read-only preflight | Bounded preflight and four native pins available; NOT complete | Trusted identity/boot requirements and required Windows 10/11 real-tool/privacy/failure lab outcomes |
 | M3: runtime observation | Eight chunks planned; implementation not started | Supported event source, reconciliation, continuity and health evidence |
 | M4: sessions/audit | Not started | Durable policy transitions, outbox and recovery |
 | M5: organizer workflow | Proposed; not started | Enrollment, leases/heartbeats, review and interfaces |
@@ -46,7 +46,7 @@ Linux remains a later v1 target. Windows 10/11 are prototype targets; hosted Win
 | Local available checks | Windows 11 build 26200, X64 compiled target, StandardUser, Rust 1.99.1 GNU | Format/lint/build and 57 selected tests passed; one helper ignored |
 | Historical local restrictions (2026-10-30) | [Validation review](docs/validation/README.md) | Restricted filesystem checks and direct harness invocation blocked then; see the 2026-11-01 fixture rerun below |
 
-The ignored local tracker is optional maintainer context. All contributor-facing decisions, plans, commands and remaining gates are public. All 33 original pinned-tool desktop scenarios remain NOT RUN; synthetic fixtures do not replace them. No recall/false-positive/runtime-latency target has been achieved.
+The ignored local tracker is optional maintainer context. All contributor-facing decisions, plans, commands and remaining gates are public. The desktop scenarios are not complete across variants; partial real-artifact subcases are recorded separately from synthetic fixtures. No recall/false-positive/runtime-latency target has been achieved.
 
 ## Next work
 
@@ -109,3 +109,18 @@ variants remain candidates. The boot adapter merged in PR#26 after all seven
 checks including CodeRabbit passed. One controlled suspended-image Windows11
 real-artifact trial passed; broader real-tool, reboot/restore and Windows10 trials
 remain pending. M2 and M3 status are unchanged: M2 incomplete, M3 not started.
+
+## Four native pins and controlled Windows 11 evidence - 2026-11-02
+
+The [frozen native scope](docs/validation/native-artifacts.md) now covers Codex,
+Claude and both OpenCode generations. [Eight native subcases](docs/validation/native-matrix-2026-11-02.json)
+passed (four inactive inventory, four owned suspended images). Default suite98
+tests/doctests passes; two helper/lab tests are intentionally ignored. No full
+row/interactive/performance claim follows. Windows10 VM work is deferred by the
+maintainer; remaining M2 work continues and M3 is not started. Main protection
+is active, independently verified through the GitHub ruleset API.
+
+Four pinned npm metadata subcases and four directly observed package-native
+dependency images also pass; see [package evidence](docs/validation/npm-inventory-2026-11-02.json).
+Lifecycle scripts were disabled, so ordinary package-launcher/runner behavior
+remains unvalidated. These results do not close full INST-02/RUN-02 rows.

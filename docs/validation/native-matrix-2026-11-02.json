@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "record_kind": "partial native artifact M2 subcases, not full desktop acceptance",
+  "recorded_on": "2026-11-02",
+  "timezone": "Asia/Calcutta",
+  "source_revision": "4d291be035ada0f59b4dde3baa5de9b75b726f14",
+  "working_tree_dirty": false,
+  "platform": {
+    "compiled_architecture": "X64",
+    "build": "26200.9711",
+    "os": "Windows11",
+    "release": "25H2",
+    "inspection_mode": "StandardUser"
+  },
+  "catalog_version": "windows-artifact-pins-2026-11-02-v2",
+  "cases": [
+    {
+      "tool_id": "codex-cli",
+      "tool_version": "0.166.0",
+      "rule_id": "codex-win-x64-0.166.0-sha256-v1",
+      "inactive_inventory": "PASS",
+      "inventory_tool_id": "codex-cli",
+      "inventory_action": "InventoryOnly",
+      "suspended_image_identity": "PASS",
+      "identity": "Corroborated",
+      "action": "RequestClosureAndRescan",
+      "eligibility": "NotIssued",
+      "sha256_unchanged_after": true,
+      "collector_limit_seconds": 10,
+      "full_parent_row_complete": false
+    },
+    {
+      "tool_id": "claude-code",
+      "tool_version": "2.1.316",
+      "rule_id": "claude-win-x64-2.1.316-sha256-v1",
+      "inactive_inventory": "PASS",
+      "inventory_tool_id": "claude-code",
+      "inventory_action": "InventoryOnly",
+      "suspended_image_identity": "PASS",
+      "identity": "Corroborated",
+      "action": "RequestClosureAndRescan",
+      "eligibility": "NotIssued",
+      "sha256_unchanged_after": true,
+      "collector_limit_seconds": 10,
+      "full_parent_row_complete": false
+    },
+    {
+      "tool_id": "opencode-v1",
+      "tool_version": "1.19.5",
+      "rule_id": "opencode-v1-win-x64-1.19.5-sha256-v1",
+      "inactive_inventory": "PASS",
+      "inventory_tool_id": "opencode-unknown-generation",
+      "inventory_action": "InventoryOnly",
+      "suspended_image_identity": "PASS",
+      "identity": "Corroborated",
+      "action": "RequestClosureAndRescan",
+      "eligibility": "NotIssued",
+      "sha256_unchanged_after": true,
+      "collector_limit_seconds": 10,
+      "full_parent_row_complete": false
+    },
+    {
+      "tool_id": "opencode-v2",
+      "tool_version": "2.2.5",
+      "rule_id": "opencode-v2-win-x64-2.2.5-sha256-v1",
+      "inactive_inventory": "PASS",
+      "inventory_tool_id": "opencode-unknown-generation",
+      "inventory_action": "InventoryOnly",
+      "suspended_image_identity": "PASS",
+      "identity": "Corroborated",
+      "action": "RequestClosureAndRescan",
+      "eligibility": "NotIssued",
+      "sha256_unchanged_after": true,
+      "collector_limit_seconds": 10,
+      "full_parent_row_complete": false
+    }
+  ],
+  "default_fixture_suite": {
+    "passed_including_doctests": 98,
+    "failed": 0,
+    "ignored": 2
+  },
+  "m2_exit_gate": "INCOMPLETE",
+  "not_run": [
+    "Windows10 VM deferred",
+    "reboot/Fast Startup/restore",
+    "interactive coding, package-runner and background execution",
+    "full privacy/failure/elevated desktop matrix",
+    "performance and recall targets"
+  ]
+}
