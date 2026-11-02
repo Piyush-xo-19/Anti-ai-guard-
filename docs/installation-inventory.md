@@ -83,3 +83,16 @@ Fixture results cover portions of INST/SCOPE/NEG/PRIV/FAIL/SAFE requirements, no
 PATH scope validation fails before any collection. Errors name a missing/oversized PATH, a one-based invalid entry index, or the 32 distinct root/selector limit without echoing entries. Empty PATH segments (including a trailing or doubled semicolon) are ignored. An empty-only PATH with no explicit root is rejected; an empty PATH is allowed when explicit valid roots remain; unresolved variables and nonempty relative/network/device/drive-root paths are rejected, using their original one-based PATH position. Select explicit roots for long or mixed PATHs; no nonempty invalid entries are silently skipped. Equivalent lexical separators/trailing separators are deduplicated before counting the limit, without resolving links.
 
 Unexpanded Windows percent-variable expressions are rejected in PATH entries even when the surrounding spelling is absolute. The scanner does not expand environment references itself; callers must supply resolved directory entries. Literal paired percent expressions in directory names are conservatively rejected for PATH opt-in; explicitly declared roots retain their existing lexical validation.
+
+## Input and unavailable-scope follow-up (2026-11-02)
+
+Windows roots reject reserved DOS device components (including extensions and
+superscript device digits), wildcards, control characters and Win32 illegal
+characters before filesystem access. This follows [Microsoft naming rules](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file).
+Literal percent names remain allowed for explicit roots as documented; rejecting
+unexpanded expressions in PATH is a distinct, conservative opt-in rule.
+
+If every requested installation root is Unavailable, collection execution is
+Failed. A mixture of inspected/unavailable roots stays Partial, and cancellation
+takes precedence. Coverage reasons remain explicit; exit3 and NotIssued are
+unchanged. Invalid ScopeId0 cannot link an observation to the first root.

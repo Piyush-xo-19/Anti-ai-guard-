@@ -72,10 +72,10 @@ impl InventoryRequest {
     /// cached artifact hash. Paths are compared transiently and not returned.
     pub(crate) fn finding_at_path(&self, result: &InventoryResult, path: &Path) -> Option<usize> {
         result.findings.iter().position(|finding| {
-            let Some(root) = self
-                .roots
-                .get(finding.observation.scope.0.saturating_sub(1) as usize)
-            else {
+            let Some(index) = finding.observation.scope.0.checked_sub(1) else {
+                return false;
+            };
+            let Some(root) = self.roots.get(index as usize) else {
                 return false;
             };
             finding.observation.source == ObservationSource::ExecutableArtifact
@@ -400,6 +400,13 @@ fn collect_with(
         .any(|c| c.gaps.contains(&GapReason::Cancelled))
     {
         result.execution = ScanExecution::Cancelled;
+    } else if !result.coverage.is_empty()
+        && result
+            .coverage
+            .iter()
+            .all(|c| c.state == CoverageState::Unavailable)
+    {
+        result.execution = ScanExecution::Failed;
     } else if result
         .coverage
         .iter()

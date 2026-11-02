@@ -154,9 +154,99 @@ fn denied_root_is_unavailable_not_clean() {
         &mut fs,
     );
     assert!(result.findings.is_empty());
-    assert_eq!(result.execution, ScanExecution::Partial);
+    assert_eq!(result.execution, ScanExecution::Failed);
     assert_eq!(result.coverage[0].state, CoverageState::Unavailable);
     assert_eq!(result.coverage[0].gaps, vec![GapReason::AccessDenied]);
+}
+
+#[test]
+fn total_unavailability_and_mixed_coverage_have_distinct_execution_states() {
+    let denied = InventoryRoot {
+        path: root().path.join("denied"),
+        ..root()
+    };
+    let request = InventoryRequest::new(true, vec![root(), denied], Limits::default()).unwrap();
+    struct Mixed(FakeFs);
+    impl InventoryFs for Mixed {
+        fn open_root(&mut self, path: &Path) -> Result<Box<dyn RootReader>, GapReason> {
+            if path.ends_with("denied") {
+                Err(GapReason::AccessDenied)
+            } else {
+                self.0.open_root(path)
+            }
+        }
+    }
+    let mixed = collect_with(&request, &AtomicBool::new(false), &mut Mixed(fake()));
+    assert_eq!(mixed.execution, ScanExecution::Partial);
+    assert_eq!(mixed.coverage[0].state, CoverageState::Inspected);
+    assert_eq!(mixed.coverage[1].state, CoverageState::Unavailable);
+    let mut denied = fake();
+    denied.denied = true;
+    let all = collect_with(&request, &AtomicBool::new(false), &mut denied);
+    assert_eq!(all.execution, ScanExecution::Failed);
+    let cancelled = collect_with(&request, &AtomicBool::new(true), &mut denied);
+    assert_eq!(cancelled.execution, ScanExecution::Cancelled);
+}
+
+#[test]
+fn invalid_scope_ids_cannot_link_to_the_first_root() {
+    let request = request(Limits::default());
+    let mut result = collect_with(&request, &AtomicBool::new(false), &mut fake());
+    let path = root().path.join("codex.exe");
+    assert_eq!(request.finding_at_path(&result, &path), Some(0));
+    result.findings[0].observation.scope = ScopeId(0);
+    assert_eq!(request.finding_at_path(&result, &path), None);
+    result.findings[0].observation.scope = ScopeId(u32::MAX);
+    assert_eq!(request.finding_at_path(&result, &path), None);
+}
+
+#[cfg(windows)]
+#[test]
+fn windows_device_aliases_and_illegal_components_are_rejected_before_io() {
+    for component in [
+        "NUL",
+        "con.txt",
+        "AUX",
+        "prn.log",
+        "COM1",
+        "LPT9.cfg",
+        "COM¹",
+        "lpt².log",
+        "COM³",
+        "CONIN$",
+        "CONOUT$",
+        "NUL .txt",
+        "bad*",
+        "bad?",
+        "bad<",
+        "bad>",
+        "bad\"",
+        "bad|",
+        "bad\u{1f}",
+        "bad\0",
+    ] {
+        let root = InventoryRoot {
+            path: PathBuf::from(r"C:\fixture").join(component).join("nested"),
+            ..root()
+        };
+        assert_eq!(
+            InventoryRequest::new(true, vec![root], Limits::default()).unwrap_err(),
+            RequestError::InvalidScope
+        );
+    }
+    for component in [
+        "COM10",
+        "COM1data",
+        "console",
+        "auxiliary",
+        "null",
+        "normal.name",
+        "100%",
+    ] {
+        assert!(windows::valid_root(
+            &PathBuf::from(r"C:\fixture").join(component)
+        ));
+    }
 }
 
 #[test]

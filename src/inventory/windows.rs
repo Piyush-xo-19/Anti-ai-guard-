@@ -5,11 +5,51 @@ use super::*;
 #[cfg(windows)]
 pub(super) fn valid_root(path: &Path) -> bool {
     use std::path::{Component, Prefix};
+    // Reject Win32 aliases before any CreateFile call. Extensions do not make
+    // DOS device names ordinary files; superscript 1/2/3 are reserved too.
+    // https://learn.microsoft.com/windows/win32/fileio/naming-a-file
+    fn ordinary_component(value: &std::ffi::OsStr) -> bool {
+        let Some(text) = value.to_str() else {
+            return false;
+        };
+        if text.ends_with(['.', ' '])
+            || text
+                .chars()
+                .any(|c| matches!(c, ':' | '<' | '>' | '"' | '|' | '?' | '*' | '\0'..='\u{1f}'))
+        {
+            return false;
+        }
+        let stem = text
+            .split('.')
+            .next()
+            .unwrap_or_default()
+            .trim_end_matches(' ')
+            .to_ascii_uppercase();
+        if matches!(
+            stem.as_str(),
+            "CON" | "PRN" | "AUX" | "NUL" | "CONIN$" | "CONOUT$"
+        ) {
+            return false;
+        }
+        let device_digit = stem
+            .strip_prefix("COM")
+            .or_else(|| stem.strip_prefix("LPT"));
+        !device_digit.is_some_and(|d| {
+            matches!(
+                d,
+                "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "¹" | "²" | "³"
+            )
+        })
+    }
     let components: Vec<_> = path.components().collect();
-    path.is_absolute() && components.len() >= 3 && components.len() <= 32
+    path.is_absolute()
+        && components.len() >= 3
+        && components.len() <= 32
         && matches!(components[0], Component::Prefix(p) if matches!(p.kind(), Prefix::Disk(_)))
         && matches!(components[1], Component::RootDir)
-        && components[2..].iter().all(|c| matches!(c, Component::Normal(value) if !value.to_string_lossy().contains(':') && !value.to_string_lossy().ends_with(['.', ' '])))
+        && components[2..]
+            .iter()
+            .all(|c| matches!(c, Component::Normal(value) if ordinary_component(value)))
 }
 
 #[cfg(not(windows))]

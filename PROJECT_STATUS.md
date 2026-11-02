@@ -124,3 +124,12 @@ Four pinned npm metadata subcases and four directly observed package-native
 dependency images also pass; see [package evidence](docs/validation/npm-inventory-2026-11-02.json).
 Lifecycle scripts were disabled, so ordinary package-launcher/runner behavior
 remains unvalidated. These results do not close full INST-02/RUN-02 rows.
+
+## M2 scope and failure regressions - 2026-11-02
+
+Reject Windows reserved device/illegal components before I/O, reject zero/out-of-range
+scope IDs in location linkage, and distinguish totally unavailable inventory
+(Failed) from mixed coverage (Partial). Relevant scope/failure/cancellation
+regressions and the full local suite pass101 tests/doctests, with two intentional
+ignored tests; strict Clippy/rustdoc/format pass. See the inventory guide for
+unchanged consent, privacy, exit and literal-percent handling.
