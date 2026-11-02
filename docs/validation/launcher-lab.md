@@ -25,8 +25,8 @@ node 'C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js' install --prefix 
 node scripts/prepare-launcher-lab.cjs --consent
 ```
 
-Prepare all four prefixes before the second command. The setup helper performs
-no installation/download. It verifies frozen dependency executable hashes and
+Prepare all four prefixes before the second command. The setup helper does not download packages. It finalizes the existing
+installations, verifying frozen dependency executable hashes and
 reviewed postinstall script hashes before running those scripts. Only Claude and
 OpenCode's selected postinstall scripts run, offline, with isolated home/config/
 temp directories. Their final launcher hashes must match the compiled lab manifest.
@@ -89,3 +89,14 @@ Relevant primary APIs: [pipes](https://learn.microsoft.com/en-us/windows/win32/a
 [job assignment](https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-assignprocesstojobobject),
 [job membership](https://learn.microsoft.com/en-us/windows/win32/api/jobapi/nf-jobapi-isprocessinjob),
 [npm exec](https://docs.npmjs.com/cli/v11/commands/npm-exec/).
+
+## Real denied-directory control
+
+The [recorded permission case](negative-controls-2026-11-03.json) used one newly
+created empty directory under the ignored lab root. Its original Access DACL was
+saved before adding a target-only deny for directory-list/read-attributes. A
+try/finally restored that descriptor using a DirectorySecurity object with the
+Access section explicitly marked for persistence. The restored descriptor was
+compared with the original, inventory recovery was checked, and only that empty
+owned fixture was removed. No existing participant or system directory was used.
+This is manual lab setup; the scanner never changes ACLs.
