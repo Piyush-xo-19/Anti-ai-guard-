@@ -47,3 +47,9 @@ The [four-native record](native-matrix-2026-11-02.json) and
 [actual npm metadata/dependency-image record](npm-inventory-2026-11-02.json)
 add dated partial Windows11 subcases. Their clean source revisions, exact pins,
 setup limitations and still-unexecuted scenarios are retained per record.
+
+The fixture harness keeps its desktop gate INCOMPLETE and does not execute real
+assistants. Its blocker summaries now describe incomplete artifact-variant and
+boot-transition validation rather than incorrectly claiming that no catalog or
+boot adapter exists. Runtime facts are read from the actual scanner report;
+separate native/npm records are not silently converted into full row passes.

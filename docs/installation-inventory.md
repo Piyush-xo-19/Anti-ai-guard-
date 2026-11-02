@@ -35,6 +35,7 @@ Absolute roots and raw arguments are not echoed. Output uses numbered roots and 
 | Root kind | Fixed selectors | Candidate identity |
 | --- | --- | --- |
 | Both | `codex.exe`, `codex.cmd`, `codex.ps1` | Codex CLI |
+| Both | `codex-x86_64-pc-windows-msvc.exe`, `codex-aarch64-pc-windows-msvc.exe` | Codex standalone download names; inventory candidates only, no ARM64 collector support implied |
 | Both | `claude.exe`, `claude.cmd`, `claude.ps1` | Claude Code |
 | Both | `opencode.exe`, `opencode.cmd`, `opencode.ps1` | OpenCode, unknown generation |
 | npm prefix | `node_modules/@openai/codex/package.json` | Exact package name `@openai/codex` |
@@ -46,7 +47,7 @@ Windows npm global packages reside under `{prefix}/node_modules`, with command l
 
 Selected manifests are parsed with `serde_json`. Only recognized `name` and bounded `version` values leave the parser. Versions allow at most 64 ASCII alphanumeric/dot/plus/hyphen/underscore characters; this controls output size/control characters, not authenticity. Other JSON fields and parser error text are discarded. Invalid JSON, mismatched names or invalid versions produce an explicit metadata gap. A matching writable manifest remains a candidate, even if it describes a native binary.
 
-All findings are M2.2 `Installation` observations with `Candidate` identity and no approved rule match. Policy A treats them as `InventoryOnly`. There is no executable hash/publisher check, package entry-point execution or production trusted identity catalog.
+All inventory findings are M2.2 `Installation` observations with `Candidate` identity and no approved rule match. Policy A treats them as `InventoryOnly`. Inventory performs no executable hash/publisher check or package entry-point execution. The separate process matcher applies the [reviewed native artifact pins](artifact-identity.md).
 
 ## Filesystem boundary
 
@@ -83,3 +84,16 @@ Fixture results cover portions of INST/SCOPE/NEG/PRIV/FAIL/SAFE requirements, no
 PATH scope validation fails before any collection. Errors name a missing/oversized PATH, a one-based invalid entry index, or the 32 distinct root/selector limit without echoing entries. Empty PATH segments (including a trailing or doubled semicolon) are ignored. An empty-only PATH with no explicit root is rejected; an empty PATH is allowed when explicit valid roots remain; unresolved variables and nonempty relative/network/device/drive-root paths are rejected, using their original one-based PATH position. Select explicit roots for long or mixed PATHs; no nonempty invalid entries are silently skipped. Equivalent lexical separators/trailing separators are deduplicated before counting the limit, without resolving links.
 
 Unexpanded Windows percent-variable expressions are rejected in PATH entries even when the surrounding spelling is absolute. The scanner does not expand environment references itself; callers must supply resolved directory entries. Literal paired percent expressions in directory names are conservatively rejected for PATH opt-in; explicitly declared roots retain their existing lexical validation.
+
+## Input and unavailable-scope follow-up (2026-11-02)
+
+Windows roots reject reserved DOS device components (including extensions and
+superscript device digits), wildcards, control characters and Win32 illegal
+characters before filesystem access. This follows [Microsoft naming rules](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file).
+Literal percent names remain allowed for explicit roots as documented; rejecting
+unexpanded expressions in PATH is a distinct, conservative opt-in rule.
+
+If every requested installation root is Unavailable, collection execution is
+Failed. A mixture of inspected/unavailable roots stays Partial, and cancellation
+takes precedence. Coverage reasons remain explicit; exit3 and NotIssued are
+unchanged. Invalid ScopeId0 cannot link an observation to the first root.

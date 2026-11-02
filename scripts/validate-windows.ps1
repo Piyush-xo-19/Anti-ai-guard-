@@ -144,7 +144,7 @@ $validationRecord = [ordered]@{
     real_tool_desktop_cases = 'NOT RUN'
     desktop_matrix_validated = $false
     m2_exit_gate = 'INCOMPLETE'
-    blockers = @('Windows 10 pinned-tool desktop lab not executed', 'Windows 11 full pinned-tool desktop lab not executed', 'Trusted strong identity catalog unavailable', 'Trusted boot identity unavailable', 'Required lab/variant scope review still open')
+    blockers = @('Windows 10 pinned-tool desktop lab deferred', 'Windows 11 full pinned-tool desktop lab not executed; separate partial lab records exist', 'Artifact identity limited to reviewed native pins; full variant validation incomplete', 'Boot restart/Fast Startup/restore validation pending', 'Required full lab/variant acceptance remains incomplete')
 }
 [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($validationOutput))
 [IO.File]::WriteAllText($validationOutput, ($validationRecord | ConvertTo-Json -Depth 10) + "`n", (New-Object Text.UTF8Encoding($false)))

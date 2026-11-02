@@ -108,3 +108,13 @@ The new required operational_gaps boolean describes collection/validation health
 ## Optional pinned-artifact references (2026-11-01)
 
 Findings may include artifact_rule_id and artifact_catalog_version as strings, only for an exact approved reference in the compiled catalog. Both are omitted for other findings; untrusted upstream strings are never forwarded. These optional additive fields follow the existing v2 policy. Text renders the same references. ArtifactIdentityUnavailable extends the gap vocabulary and is an operational gap. The static no-catalog limitation changes to strong-identity-limited-to-reviewed-native-artifact-pins; golden examples deliberately update that extensible limitation code. See [artifact identity](artifact-identity.md).
+
+## Candidate indicator catalog expansion (2026-11-02)
+
+Adding the exact standalone Codex download names changes the candidate set.
+Reports now identify windows-name-and-package-indicators-v2 and native-file-name-indicators-v2.
+Package and process-basename rules remain v1; artifact pin catalog versions are
+independent. The schema version remains 2 and policy remains policy-a-diagnostic-v1: no wire
+field, evidence/action meaning or eligibility changes. The synthetic JSON golden
+intentionally changes only its indicator_catalog_version value; its package and
+process findings and the text golden stay unchanged.

@@ -254,7 +254,7 @@ pub fn project(result: &ScanResult) -> PublicReport {
                         Some("npm-package-name-indicators-v1")
                     }
                     (EvidenceClass::Candidate, ObservationSource::ExecutableArtifact) => {
-                        Some("native-file-name-indicators-v1")
+                        Some("native-file-name-indicators-v2")
                     }
                     (EvidenceClass::Candidate, ObservationSource::ProcessSnapshot) => {
                         Some("process-basename-indicators-v1")
@@ -297,7 +297,7 @@ pub fn project(result: &ScanResult) -> PublicReport {
         eligibility: "NotIssued",
         report_truncated: truncated,
         operational_gaps: operational_gaps(result, truncated),
-        indicator_catalog_version: "windows-name-and-package-indicators-v1",
+        indicator_catalog_version: "windows-name-and-package-indicators-v2",
         scopes: snapshot
             .scopes
             .iter()

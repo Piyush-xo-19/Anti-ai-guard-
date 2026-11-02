@@ -125,7 +125,7 @@ fn exact_package_selectors_keep_both_opencode_generations_separate() {
     assert!(ids.contains(&"opencode-v2"));
     assert!(ids.contains(&"opencode-unknown-generation"));
     assert_eq!(result.coverage[0].state, CoverageState::Inspected);
-    assert_eq!(result.probes, 13);
+    assert_eq!(result.probes, 15);
 }
 
 #[test]
@@ -135,7 +135,7 @@ fn bin_scope_does_not_read_package_manifests() {
     let request = InventoryRequest::new(true, vec![directory], Limits::default()).unwrap();
     let mut fs = fake();
     let result = collect_with(&request, &AtomicBool::new(false), &mut fs);
-    assert_eq!(result.probes, 9);
+    assert_eq!(result.probes, 11);
     assert_eq!(result.bytes_read, 0);
     assert!(fs
         .calls
@@ -154,9 +154,124 @@ fn denied_root_is_unavailable_not_clean() {
         &mut fs,
     );
     assert!(result.findings.is_empty());
-    assert_eq!(result.execution, ScanExecution::Partial);
+    assert_eq!(result.execution, ScanExecution::Failed);
     assert_eq!(result.coverage[0].state, CoverageState::Unavailable);
     assert_eq!(result.coverage[0].gaps, vec![GapReason::AccessDenied]);
+}
+
+#[test]
+fn total_unavailability_and_mixed_coverage_have_distinct_execution_states() {
+    let denied = InventoryRoot {
+        path: root().path.join("denied"),
+        ..root()
+    };
+    let request = InventoryRequest::new(true, vec![root(), denied], Limits::default()).unwrap();
+    struct Mixed(FakeFs);
+    impl InventoryFs for Mixed {
+        fn open_root(&mut self, path: &Path) -> Result<Box<dyn RootReader>, GapReason> {
+            if path.ends_with("denied") {
+                Err(GapReason::AccessDenied)
+            } else {
+                self.0.open_root(path)
+            }
+        }
+    }
+    let mixed = collect_with(&request, &AtomicBool::new(false), &mut Mixed(fake()));
+    assert_eq!(mixed.execution, ScanExecution::Partial);
+    assert_eq!(mixed.coverage[0].state, CoverageState::Inspected);
+    assert_eq!(mixed.coverage[1].state, CoverageState::Unavailable);
+    let mut denied = fake();
+    denied.denied = true;
+    let all = collect_with(&request, &AtomicBool::new(false), &mut denied);
+    assert_eq!(all.execution, ScanExecution::Failed);
+    let cancelled = collect_with(&request, &AtomicBool::new(true), &mut denied);
+    assert_eq!(cancelled.execution, ScanExecution::Cancelled);
+}
+
+#[test]
+fn cancellation_during_the_last_failed_root_open_is_preserved() {
+    struct CancelOnOpen<'a>(&'a AtomicBool);
+    impl InventoryFs for CancelOnOpen<'_> {
+        fn open_root(&mut self, _: &Path) -> Result<Box<dyn RootReader>, GapReason> {
+            self.0.store(true, Ordering::Relaxed);
+            Err(GapReason::AccessDenied)
+        }
+    }
+    let cancelled = AtomicBool::new(false);
+    let result = collect_with(
+        &request(Limits::default()),
+        &cancelled,
+        &mut CancelOnOpen(&cancelled),
+    );
+    assert_eq!(result.execution, ScanExecution::Cancelled);
+    assert_eq!(result.coverage[0].state, CoverageState::Unavailable);
+    assert_eq!(
+        result.coverage[0].gaps,
+        vec![GapReason::AccessDenied, GapReason::Cancelled]
+    );
+    assert_eq!(result.probes, 0);
+    assert!(result.findings.is_empty());
+}
+
+#[test]
+fn invalid_scope_ids_cannot_link_to_the_first_root() {
+    let request = request(Limits::default());
+    let mut result = collect_with(&request, &AtomicBool::new(false), &mut fake());
+    let path = root().path.join("codex.exe");
+    assert_eq!(request.finding_at_path(&result, &path), Some(0));
+    result.findings[0].observation.scope = ScopeId(0);
+    assert_eq!(request.finding_at_path(&result, &path), None);
+    result.findings[0].observation.scope = ScopeId(u32::MAX);
+    assert_eq!(request.finding_at_path(&result, &path), None);
+}
+
+#[cfg(windows)]
+#[test]
+fn windows_device_aliases_and_illegal_components_are_rejected_before_io() {
+    for component in [
+        "NUL",
+        "con.txt",
+        "AUX",
+        "prn.log",
+        "COM1",
+        "LPT9.cfg",
+        "COM¹",
+        "lpt².log",
+        "COM³",
+        "CONIN$",
+        "CONOUT$",
+        "NUL .txt",
+        "bad*",
+        "bad?",
+        "bad<",
+        "bad>",
+        "bad\"",
+        "bad|",
+        "bad\u{1f}",
+        "bad\0",
+    ] {
+        let root = InventoryRoot {
+            path: PathBuf::from(r"C:\fixture").join(component).join("nested"),
+            ..root()
+        };
+        assert_eq!(
+            InventoryRequest::new(true, vec![root], Limits::default()).unwrap_err(),
+            RequestError::InvalidScope
+        );
+    }
+    for component in [
+        "COM10",
+        "COM1data",
+        "console",
+        "auxiliary",
+        "null",
+        "normal.name",
+        "100%",
+    ] {
+        assert!(windows::valid_root(
+            &PathBuf::from(r"C:\fixture").join(component)
+        ));
+    }
 }
 
 #[test]
@@ -277,7 +392,7 @@ fn partial_read_errors_still_consume_the_total_byte_budget() {
         &mut ReadFailure,
     );
     assert_eq!(result.bytes_read, 8);
-    assert_eq!(result.probes, 11);
+    assert_eq!(result.probes, 13);
     assert!(result.coverage[0]
         .gaps
         .contains(&GapReason::CollectorFailed));
