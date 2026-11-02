@@ -147,3 +147,16 @@ details. A deterministic regression covers that race. The full local suite now
 passes 103 tests/doctests, with zero failures and two intentionally ignored tests.
 Formatting, strict Clippy and strict rustdoc checks passed. Review completion
 remains mandatory before merge.
+
+## Launcher and boot-transition validation tooling - 2026-11-03
+
+An opt-in [npm launcher lab](docs/validation/launcher-lab.md) verifies frozen
+entrypoints, isolated profiles, an owned process tree and the actual scanner
+report. All four launcher trials passed during development; committed-source
+evidence follows separately. This is a controlled headless version-query
+snapshot, not interactive coding or daemon-mode acceptance.
+
+A [private boot checkpoint](docs/validation/boot-transition-lab.md) can compare
+the existing self-header provider before and after a deliberate power transition.
+It never changes the machine power state. Actual restart/restore and Windows 10
+results are still pending. M2 remains incomplete and M3 has not started.

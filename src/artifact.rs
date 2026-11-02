@@ -108,6 +108,12 @@ impl Hash {
         Ok(digest)
     }
 }
+#[cfg(test)]
+pub(crate) fn lab_sha256(bytes: &[u8]) -> [u8; 32] {
+    let mut hash = Hash::new().expect("lab SHA-256 provider unavailable");
+    hash.update(bytes).unwrap();
+    hash.finish().unwrap()
+}
 fn query() -> Result<Query, GapReason> {
     let name: Vec<u16> = "ntdll.dll\0".encode_utf16().collect();
     // SAFETY: already loaded OS module, fixed export; no DLL search path.
