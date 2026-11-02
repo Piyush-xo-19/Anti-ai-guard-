@@ -404,6 +404,15 @@ fn collect_with(
         }
         result.coverage.push(coverage);
     }
+    // A failed final root open skips the per-root post-probe check. Preserve a
+    // cancellation arriving during that call, including its original I/O gap.
+    if cancelled.load(Ordering::Relaxed) {
+        if let Some(coverage) = result.coverage.last_mut() {
+            if !coverage.gaps.contains(&GapReason::Cancelled) {
+                coverage.gaps.push(GapReason::Cancelled);
+            }
+        }
+    }
     if result
         .coverage
         .iter()

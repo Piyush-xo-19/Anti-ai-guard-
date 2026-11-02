@@ -189,6 +189,31 @@ fn total_unavailability_and_mixed_coverage_have_distinct_execution_states() {
 }
 
 #[test]
+fn cancellation_during_the_last_failed_root_open_is_preserved() {
+    struct CancelOnOpen<'a>(&'a AtomicBool);
+    impl InventoryFs for CancelOnOpen<'_> {
+        fn open_root(&mut self, _: &Path) -> Result<Box<dyn RootReader>, GapReason> {
+            self.0.store(true, Ordering::Relaxed);
+            Err(GapReason::AccessDenied)
+        }
+    }
+    let cancelled = AtomicBool::new(false);
+    let result = collect_with(
+        &request(Limits::default()),
+        &cancelled,
+        &mut CancelOnOpen(&cancelled),
+    );
+    assert_eq!(result.execution, ScanExecution::Cancelled);
+    assert_eq!(result.coverage[0].state, CoverageState::Unavailable);
+    assert_eq!(
+        result.coverage[0].gaps,
+        vec![GapReason::AccessDenied, GapReason::Cancelled]
+    );
+    assert_eq!(result.probes, 0);
+    assert!(result.findings.is_empty());
+}
+
+#[test]
 fn invalid_scope_ids_cannot_link_to_the_first_root() {
     let request = request(Limits::default());
     let mut result = collect_with(&request, &AtomicBool::new(false), &mut fake());

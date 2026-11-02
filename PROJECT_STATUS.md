@@ -140,3 +140,9 @@ names yield candidate installation evidence with zero content bytes read. An ARM
 filename is inventory evidence only, never ARM64 scanner support. The complete
 local suite now passes102 tests/doctests, zero failures, two intentional ignored
 tests; strict Clippy, rustdoc and format pass.
+
+CodeRabbit identified cancellation arriving during the final failed root open.
+The collector now preserves Cancelled execution and the original Unavailable/
+AccessDenied details, with a deterministic provider regression. Full local suite
+103 tests/doctests passes, two intentional ignored tests; strict lint/doc/format
+pass. Review completion remains mandatory before merge.
