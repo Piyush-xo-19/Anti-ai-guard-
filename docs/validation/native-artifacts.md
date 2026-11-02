@@ -35,6 +35,12 @@ budget. It does not validate interactive coding, package runners, background mod
 renamed images, memory integrity or full acceptance/recall/performance targets.
 Inactive scans must remain InventoryOnly; all results remain NotIssued.
 
+Positive trials run one artifact at a time. All four executables together exceed
+the existing 1 GiB per-invocation hashing budget. Multiple live artifacts can
+therefore exhaust that budget (or the cooperative deadline), yielding explicit
+incomplete coverage rather than universal recognition. These trials do not
+establish simultaneous four-tool coverage or the default two-second budget.
+
 Benign self-built images padded to each of the four exact sizes must remain
 Candidate with no approved rule. A distinct byte-identical file must fail native
 binding. OpenCode's shared filename may select both pins, but an exact digest
