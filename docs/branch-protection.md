@@ -55,4 +55,3 @@ GitHub documents [rulesets](https://docs.github.com/en/repositories/configuring-
 and the [REST schema](https://docs.github.com/en/rest/repos/rules#create-a-repository-ruleset).
 For a public repository, this does not require upgrading just to use a branch
 ruleset. Never create/share a personal token in chat to enable these settings.
-
