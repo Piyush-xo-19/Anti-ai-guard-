@@ -80,3 +80,22 @@ No lifecycle script, npx assistant, model request or personal package prefix ran
 Baseline CPU variants, background execution and the full desktop matrix remain
 open. Native-name inventory cannot infer an OpenCode generation; exact package
 metadata and matched process digests are separate evidence sources.
+
+## npm launcher and same-boot checkpoint - 2026-11-03
+
+[Minimized committed-source evidence](launcher-boot-2026-11-03.json) records clean
+source 0e0ba31 on Windows 11 25H2 build 26200.9711, StandardUser. All four pinned
+npm exec version queries produced the expected job-owned Corroborated image and
+diagnostic closure suggestion, with NotIssued eligibility. Version output and
+entrypoint hashes were checked, with isolated profiles and requested no-window
+launch flags. Controlled stdout backpressure held the version write during the
+snapshot. These are partial launcher/headless cases, not daemon or interactive
+behavior, launch-event recall or default-budget performance results.
+
+The private boot baseline was created and a same-boot comparison passed. Negative
+trials refused overwriting that baseline, a restart label without a restart, and
+a mismatched source label; the baseline remained unchanged. No actual power
+transition occurred. The baseline nonce/fingerprint stays private and ignored.
+Default suite: 106 tests/doctests passed, zero failures, five intentionally ignored
+labs/helpers. Strict formatting, Clippy and rustdoc checks passed. M2 remains
+incomplete; Windows 10 VM and actual power transitions are not claimed.

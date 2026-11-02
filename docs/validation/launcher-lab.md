@@ -33,6 +33,13 @@ temp directories. Their final launcher hashes must match the compiled lab manife
 This differs from the earlier scripts-disabled inventory trials. The npm executable
 and Node interpreter are trusted lab tools, not identity claims about assistants.
 
+OpenCode setup can choose a baseline CPU binary. Those possible setup targets
+also have frozen hashes in the lab manifest and must be present and verified.
+They are setup-only checks, not additional strong-identity pins or tested baseline
+CPU support. Profiles and job ownership do not sandbox arbitrary software or
+attest that a vendor made no network request; these are trusted pinned packages
+running only a version query in a consenting lab.
+
 ## Run
 
 After the normal [Rust toolchain setup](../development.md):
@@ -52,6 +59,15 @@ Default Node location is C:\Program Files\nodejs\node.exe; npm is resolved besid
 it under node_modules/npm/bin/npm-cli.js. Set GUARD_LAUNCHER_LAB_NODE and
 GUARD_LAUNCHER_LAB_NPM to absolute trusted toolchain paths when necessary. No raw
 launcher output is published. Isolated failure logs remain under ignored .tools.
+
+For the ordinary-runner negative, also set GUARD_LAUNCHER_LAB_CASE=benign-node
+and use the codex-cli prefix, then run the same test. Remove that environment
+variable afterwards. This uses the fixed command `npm exec --call "node --version"`
+with the same offline/profile options. A bounded list of the test-owned job's
+processes must show both npm's interpreter and its Node child alive before and
+after collection; no owned process may be classified as an assistant. Only
+job-member image metadata is queried for this control; paths are discarded.
+It does not claim the rest of the machine has no assistants.
 
 The test fills a private stdout pipe to its measured capacity. The real version
 write then waits while the scanner observes the live image. No initial process

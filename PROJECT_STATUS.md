@@ -160,3 +160,9 @@ A [private boot checkpoint](docs/validation/boot-transition-lab.md) can compare
 the existing self-header provider before and after a deliberate power transition.
 It never changes the machine power state. Actual restart/restore and Windows 10
 results are still pending. M2 remains incomplete and M3 has not started.
+
+[Committed-source launcher and checkpoint evidence](docs/validation/launcher-boot-2026-11-03.json)
+now records four passing npm entrypoint trials, a same-boot comparison and three
+expected checkpoint rejection cases. The default suite passes 106 tests/doctests,
+with zero failures and five intentionally ignored labs/helpers. Actual machine
+power transitions remain pending; no private baseline was published.

@@ -54,9 +54,86 @@ unsafe extern "system" {
     fn IsProcessInJob(process: Handle, job: Handle, result: *mut i32) -> i32;
     fn OpenProcess(access: u32, inherit: i32, pid: u32) -> Handle;
     fn CloseHandle(handle: Handle) -> i32;
+    fn QueryInformationJobObject(
+        job: Handle,
+        class: u32,
+        info: *mut c_void,
+        size: u32,
+        returned: *mut u32,
+    ) -> i32;
+    fn QueryFullProcessImageNameW(
+        process: Handle,
+        flags: u32,
+        image: *mut u16,
+        length: *mut u32,
+    ) -> i32;
 }
 struct Job(Handle);
 impl Job {
+    fn active_node_count(&self) -> usize {
+        #[repr(C)]
+        struct Pids {
+            assigned: u32,
+            count: u32,
+            ids: [usize; 64],
+        }
+        let mut list = Pids {
+            assigned: 0,
+            count: 0,
+            ids: [0; 64],
+        };
+        assert_ne!(
+            unsafe {
+                QueryInformationJobObject(
+                    self.0,
+                    3,
+                    (&mut list as *mut Pids).cast(),
+                    std::mem::size_of::<Pids>() as u32,
+                    std::ptr::null_mut(),
+                )
+            },
+            0,
+            "owned job process list unavailable"
+        );
+        assert!(
+            list.assigned == list.count && list.count <= 64,
+            "owned job process list truncated"
+        );
+        list.ids[..list.count as usize]
+            .iter()
+            .filter(|&&pid| {
+                let Ok(pid) = u32::try_from(pid) else {
+                    return false;
+                };
+                let handle = unsafe { OpenProcess(0x1000, 0, pid) };
+                if handle.is_null() {
+                    return false;
+                }
+                let mut inside = 0;
+                if unsafe { IsProcessInJob(handle, self.0, &mut inside) } == 0 || inside == 0 {
+                    unsafe {
+                        CloseHandle(handle);
+                    }
+                    return false;
+                }
+                let mut image = [0u16; 32768];
+                let mut length = image.len() as u32;
+                let ok = unsafe {
+                    QueryFullProcessImageNameW(handle, 0, image.as_mut_ptr(), &mut length)
+                };
+                unsafe {
+                    CloseHandle(handle);
+                }
+                if ok == 0 {
+                    return false;
+                }
+                let image = String::from_utf16_lossy(&image[..length as usize]);
+                Path::new(&image).file_name().is_some_and(|name| {
+                    name.eq_ignore_ascii_case(toolchain().0.file_name().unwrap())
+                })
+            })
+            .count()
+    }
     fn new() -> Self {
         let job = Self(unsafe { CreateJobObjectW(std::ptr::null_mut(), std::ptr::null()) });
         assert!(!job.0.is_null(), "owned lab job unavailable");
@@ -117,6 +194,13 @@ fn consent() {
         std::env::var("GUARD_LAUNCHER_LAB_CONSENT").as_deref(),
         Ok("yes")
     );
+}
+fn benign_case() -> bool {
+    match std::env::var("GUARD_LAUNCHER_LAB_CASE").as_deref() {
+        Err(std::env::VarError::NotPresent) | Ok("assistant") => false,
+        Ok("benign-node") => true,
+        _ => panic!("unknown launcher lab case"),
+    }
 }
 fn row() -> serde_json::Value {
     let id = std::env::var("GUARD_LAUNCHER_LAB_TOOL").expect("explicit frozen tool required");
@@ -205,18 +289,21 @@ fn launcher_child() {
     verify_entry(&row);
     let mut cmd = Command::new(toolchain().0);
     isolated(&mut cmd);
+    cmd.arg(toolchain().1).args([
+        "exec",
+        "--offline",
+        "--yes=false",
+        "--ignore-scripts",
+        "--loglevel=silent",
+    ]);
+    if benign_case() {
+        cmd.args(["--call", "node --version"]);
+    } else {
+        cmd.arg("--")
+            .arg(row["command"].as_str().unwrap())
+            .arg("--version");
+    }
     let status = cmd
-        .arg(toolchain().1)
-        .args([
-            "exec",
-            "--offline",
-            "--yes=false",
-            "--ignore-scripts",
-            "--loglevel=silent",
-            "--",
-        ])
-        .arg(row["command"].as_str().unwrap())
-        .arg("--version")
         .current_dir(root(&row))
         .stdin(Stdio::null())
         .stdout(Stdio::from(
@@ -237,6 +324,7 @@ fn launcher_child() {
 #[ignore = "explicit real npm launcher lab with owned job and stdout backpressure"]
 fn package_launcher_lab() {
     consent();
+    let benign = benign_case();
     let row = row();
     verify_entry(&row);
     let catalog = catalog::get().unwrap();
@@ -280,6 +368,10 @@ fn package_launcher_lab() {
         .args(["--ignored", "--exact", "lab::launcher_child", "--quiet"])
         .env("GUARD_LAUNCHER_LAB_CONSENT", "yes")
         .env("GUARD_LAUNCHER_LAB_TOOL", row["tool_id"].as_str().unwrap())
+        .env(
+            "GUARD_LAUNCHER_LAB_CASE",
+            if benign { "benign-node" } else { "assistant" },
+        )
         .stdin(Stdio::piped())
         .stdout(Stdio::null())
         .stderr(Stdio::from(writer.try_clone().unwrap()))
@@ -303,6 +395,10 @@ fn package_launcher_lab() {
     let until = Instant::now() + Duration::from_secs(15);
     let mut observed = false;
     while Instant::now() < until {
+        if benign && owned.job.as_ref().unwrap().active_node_count() < 2 {
+            std::thread::sleep(Duration::from_millis(100));
+            continue;
+        }
         let request = processes::ProcessRequest::new(
             true,
             ScopeId(1),
@@ -313,6 +409,15 @@ fn package_launcher_lab() {
         )
         .unwrap();
         let result = processes::collect(&request, &AtomicBool::new(false), None);
+        if benign {
+            assert!(
+                owned.job.as_ref().unwrap().active_node_count() >= 2,
+                "Node/npm exited during negative snapshot"
+            );
+            assert!(result.findings.iter().all(|f| !matches!(&f.observation.kind,ObservationKind::Process{instance,..} if owned.job.as_ref().unwrap().contains(instance.pid))),"benign Node/npm classified as an assistant");
+            observed = true;
+            break;
+        }
         for finding in result.findings {
             let ObservationKind::Process { instance, .. } = &finding.observation.kind else {
                 continue;
@@ -395,16 +500,29 @@ fn package_launcher_lab() {
         status.success(),
         "owned npm launcher failed; isolated private log retained"
     );
-    assert!(
-        String::from_utf8_lossy(&bytes).contains(&pin.tool_version),
-        "expected pinned version output missing"
-    );
+    let text = String::from_utf8_lossy(&bytes);
+    if benign {
+        let version = text.trim_start_matches('\0').trim();
+        assert!(
+            version.starts_with('v') && version.as_bytes().get(1).is_some_and(u8::is_ascii_digit),
+            "Node version output missing"
+        );
+    } else {
+        assert!(
+            text.contains(&pin.tool_version),
+            "expected pinned version output missing"
+        );
+    }
     assert!(
         observed,
         "no pinned image observed in the owned launcher job"
     );
     verify_entry(&row);
-    println!("LAUNCHER_LAB result=PASS tool={} version={} source=npm-exec native_image=Corroborated launcher_no_window_flag=true model_request=none", pin.tool_id, pin.tool_version);
+    if benign {
+        println!("LAUNCHER_BENIGN result=PASS node_and_npm_alive=true owned_assistant_findings=0");
+    } else {
+        println!("LAUNCHER_LAB result=PASS tool={} version={} source=npm-exec native_image=Corroborated launcher_no_window_flag=true model_request=none", pin.tool_id, pin.tool_version);
+    }
 }
 
 #[test]
@@ -412,6 +530,7 @@ fn frozen_launcher_entries_match_the_reviewed_tool_versions() {
     let rows: Vec<serde_json::Value> =
         serde_json::from_str(include_str!("../catalog/windows-launcher-lab.json")).unwrap();
     assert_eq!(rows.len(), 4);
+    let mut distinct = std::collections::HashSet::new();
     for row in rows {
         let pin = catalog::get()
             .unwrap()
@@ -420,6 +539,7 @@ fn frozen_launcher_entries_match_the_reviewed_tool_versions() {
             .find(|p| p.rule_id == row["rule_id"])
             .unwrap();
         assert_eq!(row["tool_id"], pin.tool_id);
+        assert!(distinct.insert(pin.tool_id.as_str()));
         assert_eq!(row["version"], pin.tool_version);
         let expected = match pin.tool_id.as_str() {
             "codex-cli" => "node_modules/@openai/codex/bin/codex.js",
@@ -429,6 +549,20 @@ fn frozen_launcher_entries_match_the_reviewed_tool_versions() {
             _ => panic!("unknown frozen launcher"),
         };
         assert_eq!(row["entrypoint"], expected);
+        let alternative = match pin.tool_id.as_str() {
+            "opencode-v1" => Some("node_modules/opencode-windows-x64-baseline/bin/opencode.exe"),
+            "opencode-v2" => {
+                Some("node_modules/@opencode/cli-windows-x64-baseline/bin/opencode.exe")
+            }
+            _ => None,
+        };
+        assert_eq!(row["setup_alternative"]["file"].as_str(), alternative);
+        if alternative.is_some() {
+            assert_eq!(
+                row["setup_alternative"]["sha256"].as_str().unwrap().len(),
+                64
+            );
+        }
         if pin.tool_id != "codex-cli" {
             assert_eq!(row["entry_sha256"], pin.sha256);
         } else {

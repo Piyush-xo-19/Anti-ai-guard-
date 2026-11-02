@@ -24,7 +24,11 @@
     "command": "opencode",
     "entrypoint": "node_modules/opencode-ai/bin/opencode.exe",
     "entry_sha256": "d7b473388cb62555970e400ce54cdfb6d6573608beea6f8fdf382cd1a698a3fa",
-    "setup_script_sha256": "5a7c990fe552e76b16422cdba3f4b0550590c7a487f7932c773362f74317c87b"
+    "setup_script_sha256": "5a7c990fe552e76b16422cdba3f4b0550590c7a487f7932c773362f74317c87b",
+    "setup_alternative": {
+      "file": "node_modules/opencode-windows-x64-baseline/bin/opencode.exe",
+      "sha256": "6f15c8f241f3df22375f174753193a71c488f6c0a6bbbae3f9fa34d112673b7b"
+    }
   },
   {
     "tool_id": "opencode-v2",
@@ -33,6 +37,10 @@
     "command": "opencode",
     "entrypoint": "node_modules/@opencode/cli/bin/opencode.exe",
     "entry_sha256": "0c346fdaf519d2f23a31d3b6cb9d65e369a72d77cac6f027b5e0a06376ec3a43",
-    "setup_script_sha256": "0e5498455f4fcb95bf03ee1185e77839eb2465f8c5e86fe0cb1443d17f7eeef5"
+    "setup_script_sha256": "0e5498455f4fcb95bf03ee1185e77839eb2465f8c5e86fe0cb1443d17f7eeef5",
+    "setup_alternative": {
+      "file": "node_modules/@opencode/cli-windows-x64-baseline/bin/opencode.exe",
+      "sha256": "17531635c255d2dd70057b8d50564b829349eae8c2946590ce355f003cb251e6"
+    }
   }
 ]
