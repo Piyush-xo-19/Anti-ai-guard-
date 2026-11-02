@@ -166,3 +166,9 @@ now records four passing npm entrypoint trials, a same-boot comparison and three
 expected checkpoint rejection cases. The default suite passes 106 tests/doctests,
 with zero failures and five intentionally ignored labs/helpers. Actual machine
 power transitions remain pending; no private baseline was published.
+
+[Real negative controls](docs/validation/negative-controls-2026-11-03.json) also
+pass: ordinary Node/npm execution yields no owned assistant finding, and a
+temporary denied empty directory reports explicit AccessDenied/incomplete
+coverage. Its original ACL was restored, recovery was verified and the empty
+fixture was removed. Existing user directory permissions were not changed.

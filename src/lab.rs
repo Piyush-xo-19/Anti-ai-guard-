@@ -541,6 +541,13 @@ fn frozen_launcher_entries_match_the_reviewed_tool_versions() {
         assert_eq!(row["tool_id"], pin.tool_id);
         assert!(distinct.insert(pin.tool_id.as_str()));
         assert_eq!(row["version"], pin.tool_version);
+        let command = match pin.tool_id.as_str() {
+            "codex-cli" => "codex",
+            "claude-code" => "claude",
+            "opencode-v1" | "opencode-v2" => "opencode",
+            _ => panic!("unknown command family"),
+        };
+        assert_eq!(row["command"], command);
         let expected = match pin.tool_id.as_str() {
             "codex-cli" => "node_modules/@openai/codex/bin/codex.js",
             "claude-code" => "node_modules/@anthropic-ai/claude-code/bin/claude.exe",

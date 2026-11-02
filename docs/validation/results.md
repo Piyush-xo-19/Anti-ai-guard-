@@ -99,3 +99,19 @@ transition occurred. The baseline nonce/fingerprint stays private and ignored.
 Default suite: 106 tests/doctests passed, zero failures, five intentionally ignored
 labs/helpers. Strict formatting, Clippy and rustdoc checks passed. M2 remains
 incomplete; Windows 10 VM and actual power transitions are not claimed.
+
+## Real Node/npm and denied-directory controls - 2026-11-03
+
+[Clean-source negative controls](negative-controls-2026-11-03.json) use source
+63da5fb on the same Windows 11 StandardUser lab. The ordinary npm/Node version
+query had both owned interpreters alive around collection and produced zero
+owned assistant findings. This is a scoped negative, not a clean-device claim.
+
+A separate newly created empty lab directory received a temporary explicit deny
+of directory-list/read-attributes for the current token. Inventory returned
+exit3, Failed, Unavailable, AccessDenied, operational gaps and NotIssued. Its
+original DACL was restored in finally and independently compared with the saved
+Access descriptor. The same root then returned Finished/NotIssued/exit0. Only
+that empty owned directory was removed. No existing user directory ACL changed,
+and no raw path or SID is published. This is a standard-user FAIL-01 subcase;
+an elevated comparison and the full desktop matrix remain separate.
