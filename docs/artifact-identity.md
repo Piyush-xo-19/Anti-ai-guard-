@@ -7,9 +7,10 @@ that every version, packaging method, renamed program or coding behavior is know
 ## Trust root and initial scope
 
 [catalog/windows-artifacts.json](../catalog/windows-artifacts.json) is compiled
-into the scanner. It initially contains only Codex CLI 0.166.0, Windows x64,
-with its exact executable size and SHA-256 from the official OpenAI GitHub release
-API. The lab download independently verified the bytes against that pin. Catalog
+into the scanner. It contains four exact Windows x64 pins: Codex CLI 0.166.0,
+Claude Code 2.1.316, OpenCode 1.19.5 and OpenCode 2.2.5. The
+[ground truth record](validation/native-artifacts.md) distinguishes release digests,
+signed manifests and the weaker official-HTTPS provenance of OpenCode 2. Catalog
 changes require repository review; there is no participant-provided catalog flag,
 runtime network lookup, automatic update or acceptance of arbitrary upstream
 rule strings. This trusts the reviewed release provenance and SHA-256, not an
@@ -17,8 +18,9 @@ unrelated writable package name, pathname or publisher-looking metadata.
 
 The validator bounds catalog size/rows/identifiers, checks the schema, architecture,
 approval, exact official URL shapes and digest encoding, and rejects duplicate
-rules/digests. Unsupported versions and the Claude/OpenCode variants have no strong
-pin yet and remain candidates. Do not treat this pilot as completion of that matrix.
+rules/digests. Unsupported versions/packaging remain candidates. The matching
+digest identifies OpenCode's generation; its shared basename cannot do so.
+Do not treat this pilot as completion of the full matrix.
 
 ## Binding a digest to the actual process image
 
@@ -77,8 +79,8 @@ cancellation checks, allowlisted report IDs and malformed catalog cases. They do
 not download or execute real assistants. The ordinary native child helper and a
 separate real-tool lab test are intentionally ignored in automatic discovery.
 
-The explicit real-tool test requires both GUARD_PINNED_LAB_CONSENT=yes and an
-absolute GUARD_PINNED_LAB_ARTIFACT path to the official pinned executable. It hashes
+The explicit real-tool test requires GUARD_PINNED_LAB_CONSENT=yes, an exact catalog
+GUARD_PINNED_LAB_RULE and an absolute GUARD_PINNED_LAB_ARTIFACT path. It hashes
 and verifies the guarded file before creating a process. It creates only that
 owned process suspended with a fixed --version command, observes its image, then
 resumes it and waits; timeout cleanup can target only that test-owned handle.
@@ -88,11 +90,13 @@ not interactive assistant use, recall, or coverage of every installation variant
 
 ```powershell
 $env:GUARD_PINNED_LAB_CONSENT = 'yes'
+$env:GUARD_PINNED_LAB_RULE = 'codex-win-x64-0.166.0-sha256-v1'
 $env:GUARD_PINNED_LAB_ARTIFACT = 'C:\approved\lab\codex.exe'
 try {
-    cargo test --locked --offline --lib artifact::pinned_codex_native_lab -- --ignored --exact --nocapture
+    cargo test --locked --offline --lib artifact::pinned_native_lab -- --ignored --exact --nocapture
 } finally {
     Remove-Item Env:GUARD_PINNED_LAB_CONSENT
+    Remove-Item Env:GUARD_PINNED_LAB_RULE
     Remove-Item Env:GUARD_PINNED_LAB_ARTIFACT
 }
 ```

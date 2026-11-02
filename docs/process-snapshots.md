@@ -1,6 +1,6 @@
 # M2.4: bounded current-session process snapshots
 
-The maintainer authorized M2.4/M2.5/M2.6 on 2026-10-29. This collector uses the current Windows token without elevation and preserves the diagnostic boundary. The 2026-11-01 [pinned native pilot](artifact-identity.md) adds corroborated identity for one reviewed artifact; all unpinned variants remain candidates.
+The maintainer authorized M2.4/M2.5/M2.6 on 2026-10-29. This collector uses the current Windows token without elevation and preserves the diagnostic boundary. The 2026-11-01 [pinned native pilot](artifact-identity.md) adds corroborated identity for reviewed artifacts (four pins as of 2026-11-02); all unpinned variants remain candidates.
 
 ```powershell
 .\target\debug\anti-ai-guard.exe processes --consent
@@ -16,7 +16,7 @@ The pre-snapshot checkpoint uses GetSystemTimePreciseAsFileTime to avoid coarse-
 
 Defaults bound enumeration to 4096 rows, findings to 512 and elapsed time to two cooperative seconds. Library hard bounds are 16384 rows, 512 findings and ten seconds. Native snapshot construction and synchronous OS calls are not hard time-limited. Cancellation and limits prevent further queries and remain explicit in execution/coverage status. Linux is unsupported.
 
-**Identity limitations:** names alone stay candidates. Strong identity is limited to the single reviewed native artifact pin in the [artifact identity pilot](artifact-identity.md); all other variants remain candidates. Renamed/custom assistants and script-hosted agents hidden behind a generic interpreter name remain outside this native-name selector. No command-line substring inference is added to fill that gap.
+**Identity limitations:** names alone stay candidates. Strong identity is limited to the four reviewed native artifact pins in the [artifact identity pilot](artifact-identity.md); all other variants remain candidates. Renamed/custom assistants and script-hosted agents hidden behind a generic interpreter name remain outside this native-name selector. No command-line substring inference is added to fill that gap.
 
 **Boot/correlation:** the [guarded self-header adapter](boot-identity.md) supplies a device-local OS token only when its checks succeed; no token is fabricated from uptime or wall-clock estimates. Unavailable identity retains `MissingBootIdentity` and incomplete coverage; restart/restore/Windows 10 validation is pending. PID reuse with differing known start times is rejected; cross-scan same-instance correlation remains conservative. This is an open M2 validation gate, not verified monitoring.
 

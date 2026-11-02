@@ -1,6 +1,6 @@
 # Project status and milestone plan
 
-Updated: 2026-11-01 (Asia/Calcutta)
+Updated: 2026-11-02 (Asia/Calcutta)
 
 **M2.4 process candidates and M2.5 integrated reports are implemented. M2.6 validation tooling is implemented; full desktop acceptance and full M2 completion remain INCOMPLETE.**
 
@@ -17,7 +17,7 @@ Updated: 2026-11-01 (Asia/Calcutta)
 - M2.5: explicitly scoped combined scans, one bounded minimized text/JSON projection, cooperative cancellation and synthetic public examples. Eligibility is always NotIssued.
 - M2.6 tooling: Windows fixture harness, sanitized artifacts and a template containing both desktop OS configurations and all 33 NOT RUN scenarios. Both hosted Windows Server jobs passed 64 tests each; see [permanent sanitized evidence](docs/validation/fixtures-2026-10-30.json).
 
-A single reviewed native artifact pin and guarded device-local boot adapter now exist. Other variants remain candidates; no continuous runtime monitor, backend, installer or dashboard exists. Installed inventory never proves execution. Native names/writable metadata remain candidates. There is no automatic termination, deletion, uninstall, disqualification or competition verification.
+Four reviewed native artifact pins and guarded device-local boot adapter now exist. Other variants remain candidates; no continuous runtime monitor, backend, installer or dashboard exists. Installed inventory never proves execution. Native names/writable metadata remain candidates. There is no automatic termination, deletion, uninstall, disqualification or competition verification.
 
 ## Milestones
 
@@ -46,7 +46,7 @@ Linux remains a later v1 target. Windows 10/11 are prototype targets; hosted Win
 | Local available checks | Windows 11 build 26200, X64 compiled target, StandardUser, Rust 1.99.1 GNU | Format/lint/build and 57 selected tests passed; one helper ignored |
 | Historical local restrictions (2026-10-30) | [Validation review](docs/validation/README.md) | Restricted filesystem checks and direct harness invocation blocked then; see the 2026-11-01 fixture rerun below |
 
-The ignored local tracker is optional maintainer context. All contributor-facing decisions, plans, commands and remaining gates are public. All 33 original pinned-tool desktop scenarios remain NOT RUN; synthetic fixtures do not replace them. No recall/false-positive/runtime-latency target has been achieved.
+The ignored local tracker is optional maintainer context. All contributor-facing decisions, plans, commands and remaining gates are public. The desktop scenarios are not complete across variants; partial real-artifact subcases are recorded separately from synthetic fixtures. No recall/false-positive/runtime-latency target has been achieved.
 
 ## Next work
 

@@ -339,7 +339,7 @@ mod tests {
 #[cfg(windows)]
 #[test]
 #[ignore = "explicit opt-in pinned official Windows artifact lab; never a default fixture"]
-fn pinned_codex_native_lab() {
+fn pinned_native_lab() {
     use std::os::windows::ffi::OsStrExt;
     assert_eq!(
         std::env::var("GUARD_PINNED_LAB_CONSENT").as_deref(),
@@ -350,7 +350,12 @@ fn pinned_codex_native_lab() {
         std::env::var_os("GUARD_PINNED_LAB_ARTIFACT").expect("pinned lab path required"),
     );
     let catalog = catalog::get().unwrap();
-    let pin = &catalog.artifacts[0];
+    let rule = std::env::var("GUARD_PINNED_LAB_RULE").expect("explicit catalog rule required");
+    let pin = catalog
+        .artifacts
+        .iter()
+        .find(|p| p.rule_id == rule)
+        .expect("unknown lab rule; refusing launch");
     let mut artifact = inventory::open_image(&path).expect("guarded lab artifact unavailable");
     assert_eq!(
         artifact.file.metadata().unwrap().len(),
@@ -481,6 +486,20 @@ fn pinned_codex_native_lab() {
         finding.observation.identity.class,
         EvidenceClass::Corroborated
     );
+    assert_eq!(
+        finding.observation.identity.tool.as_ref().unwrap().id,
+        pin.tool_id
+    );
+    assert_eq!(
+        finding
+            .observation
+            .identity
+            .rule_match
+            .as_ref()
+            .unwrap()
+            .rule_id,
+        pin.rule_id
+    );
     let action = crate::policy::suggest_action(&finding.observation);
     assert_eq!(
         action.action,
@@ -511,7 +530,7 @@ fn pinned_codex_native_lab() {
         pin.rule_id
     );
     assert!(public.text().contains(&pin.rule_id));
-    println!("PINNED_LAB_CASE result=PASS tool=codex-cli version=0.166.0 evidence=Corroborated action=RequestClosureAndRescan eligibility=NotIssued process_started_suspended=true");
+    println!("PINNED_LAB_CASE result=PASS tool={} version={} evidence=Corroborated action=RequestClosureAndRescan eligibility=NotIssued process_started_suspended=true", pin.tool_id, pin.tool_version);
     drop(owned);
     drop(artifact);
 }

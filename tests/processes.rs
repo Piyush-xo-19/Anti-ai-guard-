@@ -8,6 +8,10 @@ use std::process::{Child, Command, Stdio};
 use std::sync::atomic::AtomicBool;
 use std::time::Duration;
 
+// Collectors retain no-delete image guards. Keep these owned process trials
+// separate so a neighboring test cannot still hold a guard during cleanup.
+static PROCESS_TRIAL: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
 #[test]
 #[ignore = "only launched as a controlled subprocess by the native fixture test"]
 fn fixture_child() {
@@ -37,29 +41,49 @@ impl Drop for Fixture {
 
 #[test]
 fn controlled_candidate_is_observed_without_retaining_paths_or_arguments() {
-    controlled_candidate(false);
+    controlled_candidate(false, "codex-cli");
 }
 
 #[test]
 fn a_same_name_same_size_benign_image_never_matches_the_artifact_pin() {
-    controlled_candidate(true);
+    controlled_candidate(true, "codex-cli");
 }
 
-fn controlled_candidate(padded: bool) {
+#[test]
+fn benign_images_cannot_impersonate_claude_or_either_opencode_generation() {
+    for tool in ["claude-code", "opencode-v1", "opencode-v2"] {
+        controlled_candidate(true, tool);
+    }
+}
+
+fn controlled_candidate(padded: bool, tool: &str) {
+    let _trial = PROCESS_TRIAL.lock().unwrap();
     let path = Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("target/process-fixtures")
         .join(format!(
-            "{}-{}",
+            "{}-{}-{}",
             std::process::id(),
-            if padded { "padded" } else { "normal" }
+            if padded { "padded" } else { "normal" },
+            tool
         ));
     fs::create_dir_all(&path).unwrap();
-    let binary = path.join("codex.exe");
+    let binary = path.join(match tool {
+        "codex-cli" => "codex.exe",
+        "claude-code" => "claude.exe",
+        _ => "opencode.exe",
+    });
     fs::copy(std::env::current_exe().unwrap(), &binary).unwrap();
     if padded {
         let catalog: serde_json::Value =
             serde_json::from_str(include_str!("../catalog/windows-artifacts.json")).unwrap();
-        let length = catalog["artifacts"][0]["bytes"].as_u64().unwrap();
+        let length = catalog["artifacts"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|p| p["tool_id"] == tool)
+            .unwrap()["bytes"]
+            .as_u64()
+            .unwrap();
         // Preserve the self-built fixture code; a zero-filled PE overlay makes
         // its file size equal the pin without executing any third-party code.
         fs::OpenOptions::new()
