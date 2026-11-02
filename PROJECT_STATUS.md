@@ -168,8 +168,9 @@ with zero failures and five intentionally ignored labs/helpers. Actual machine
 power transitions remain pending; no private baseline was published.
 
 The [real denied-directory control](docs/validation/negative-controls-2026-11-03.json)
-passes. The earlier Node/npm negative verdict is withdrawn pending a corrected
-completion-checked rerun; empty findings alone cannot pass. A
+passes. The earlier Node/npm negative verdict was withdrawn; the
+[completion-checked rerun](docs/validation/node-complete-2026-11-03.json) passes
+with Finished execution, Inspected coverage and zero gaps. A
 temporary denied empty directory reports explicit AccessDenied/incomplete
 coverage. Its original ACL was restored, recovery was verified and the empty
 fixture was removed. Existing user directory permissions were not changed.

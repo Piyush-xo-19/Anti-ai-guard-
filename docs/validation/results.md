@@ -117,3 +117,12 @@ Access descriptor. The same root then returned Finished/NotIssued/exit0. Only
 that empty owned directory was removed. No existing user directory ACL changed,
 and no raw path or SID is published. This is a standard-user FAIL-01 subcase;
 an elevated comparison and the full desktop matrix remain separate.
+
+## Completion-checked Node/npm rerun - 2026-11-03
+
+[Corrected clean-source evidence](node-complete-2026-11-03.json) records source
+05c0adb. The collector finished with Inspected coverage and zero gaps, both owned
+interpreters remained alive around collection, and no owned assistant finding
+was produced. This replaces only the earlier insufficient Node/npm verdict.
+The independent real denied-directory result remains valid. No broader device
+absence, full acceptance-row or Windows 10 claim follows.

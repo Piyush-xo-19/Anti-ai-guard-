@@ -21,7 +21,8 @@
       "scope": "owned test job, not absence on entire device",
       "full_parent_row_complete": false,
       "no_raw_machine_paths_pids_or_participant_arguments_published": true,
-      "reason": "Historical harness did not require completed/inspected collection; its negative verdict is not accepted. A corrected-source rerun is required."
+      "reason": "Historical harness did not require completed/inspected collection; its negative verdict is not accepted. A corrected-source rerun is required.",
+      "superseded_by": "node-complete-2026-11-03.json"
     },
     {
       "case_id": "FAIL-01/owned-empty-directory/standard-user",
