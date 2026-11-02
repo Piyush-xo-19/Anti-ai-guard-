@@ -410,6 +410,20 @@ fn package_launcher_lab() {
         .unwrap();
         let result = processes::collect(&request, &AtomicBool::new(false), None);
         if benign {
+            assert_eq!(
+                result.execution,
+                ScanExecution::Finished,
+                "negative requires completed collection"
+            );
+            assert_eq!(
+                result.coverage.state,
+                CoverageState::Inspected,
+                "negative requires inspected coverage"
+            );
+            assert!(
+                result.coverage.gaps.is_empty(),
+                "negative cannot pass with coverage gaps"
+            );
             assert!(
                 owned.job.as_ref().unwrap().active_node_count() >= 2,
                 "Node/npm exited during negative snapshot"
@@ -519,7 +533,7 @@ fn package_launcher_lab() {
     );
     verify_entry(&row);
     if benign {
-        println!("LAUNCHER_BENIGN result=PASS node_and_npm_alive=true owned_assistant_findings=0");
+        println!("LAUNCHER_BENIGN result=PASS collection=Finished coverage=Inspected gaps=0 node_and_npm_alive=true owned_assistant_findings=0");
     } else {
         println!("LAUNCHER_LAB result=PASS tool={} version={} source=npm-exec native_image=Corroborated launcher_no_window_flag=true model_request=none", pin.tool_id, pin.tool_version);
     }

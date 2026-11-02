@@ -14,13 +14,14 @@
   "cases": [
     {
       "case_id": "NEG-02/ordinary-node-and-npm-at-snapshot",
-      "status": "PASS",
+      "status": "BLOCKED",
       "setup": "npm exec offline --call node --version in an owned job; installed Codex package inactive",
       "node_and_npm_alive_before_and_after_collection": true,
       "owned_assistant_findings": 0,
       "scope": "owned test job, not absence on entire device",
       "full_parent_row_complete": false,
-      "no_raw_machine_paths_pids_or_participant_arguments_published": true
+      "no_raw_machine_paths_pids_or_participant_arguments_published": true,
+      "reason": "Historical harness did not require completed/inspected collection; its negative verdict is not accepted. A corrected-source rerun is required."
     },
     {
       "case_id": "FAIL-01/owned-empty-directory/standard-user",

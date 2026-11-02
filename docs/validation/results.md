@@ -104,8 +104,10 @@ incomplete; Windows 10 VM and actual power transitions are not claimed.
 
 [Clean-source negative controls](negative-controls-2026-11-03.json) use source
 63da5fb on the same Windows 11 StandardUser lab. The ordinary npm/Node version
-query had both owned interpreters alive around collection and produced zero
-owned assistant findings. This is a scoped negative, not a clean-device claim.
+query had both owned interpreters alive around collection and returned zero
+owned assistant findings, but its harness did not require completed/inspected
+collection. That negative verdict is withdrawn (BLOCKED); a corrected-source
+rerun must replace it. The independent denied-directory case below remains valid.
 
 A separate newly created empty lab directory received a temporary explicit deny
 of directory-list/read-attributes for the current token. Inventory returned
