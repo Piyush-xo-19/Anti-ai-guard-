@@ -80,3 +80,49 @@ No lifecycle script, npx assistant, model request or personal package prefix ran
 Baseline CPU variants, background execution and the full desktop matrix remain
 open. Native-name inventory cannot infer an OpenCode generation; exact package
 metadata and matched process digests are separate evidence sources.
+
+## npm launcher and same-boot checkpoint - 2026-11-03
+
+[Minimized committed-source evidence](launcher-boot-2026-11-03.json) records clean
+source 0e0ba31 on Windows 11 25H2 build 26200.9711, StandardUser. All four pinned
+npm exec version queries produced the expected job-owned Corroborated image and
+diagnostic closure suggestion, with NotIssued eligibility. Version output and
+entrypoint hashes were checked, with isolated profiles and requested no-window
+launch flags. Controlled stdout backpressure held the version write during the
+snapshot. These are partial launcher/headless cases, not daemon or interactive
+behavior, launch-event recall or default-budget performance results.
+
+The private boot baseline was created and a same-boot comparison passed. Negative
+trials refused overwriting that baseline, a restart label without a restart, and
+a mismatched source label; the baseline remained unchanged. No actual power
+transition occurred. The baseline nonce/fingerprint stays private and ignored.
+Default suite: 106 tests/doctests passed, zero failures, five intentionally ignored
+labs/helpers. Strict formatting, Clippy and rustdoc checks passed. M2 remains
+incomplete; Windows 10 VM and actual power transitions are not claimed.
+
+## Real Node/npm and denied-directory controls - 2026-11-03
+
+[Clean-source negative controls](negative-controls-2026-11-03.json) use source
+63da5fb on the same Windows 11 StandardUser lab. The ordinary npm/Node version
+query had both owned interpreters alive around collection and returned zero
+owned assistant findings, but its harness did not require completed/inspected
+collection. That negative verdict is withdrawn (BLOCKED); a corrected-source
+rerun must replace it. The independent denied-directory case below remains valid.
+
+A separate newly created empty lab directory received a temporary explicit deny
+of directory-list/read-attributes for the current token. Inventory returned
+exit3, Failed, Unavailable, AccessDenied, operational gaps and NotIssued. Its
+original DACL was restored in finally and independently compared with the saved
+Access descriptor. The same root then returned Finished/NotIssued/exit0. Only
+that empty owned directory was removed. No existing user directory ACL changed,
+and no raw path or SID is published. This is a standard-user FAIL-01 subcase;
+an elevated comparison and the full desktop matrix remain separate.
+
+## Completion-checked Node/npm rerun - 2026-11-03
+
+[Corrected clean-source evidence](node-complete-2026-11-03.json) records source
+05c0adb. The collector finished with Inspected coverage and zero gaps, both owned
+interpreters remained alive around collection, and no owned assistant finding
+was produced. This replaces only the earlier insufficient Node/npm verdict.
+The independent real denied-directory result remains valid. No broader device
+absence, full acceptance-row or Windows 10 claim follows.

@@ -32,3 +32,7 @@ short/malformed headers, error statuses and every variable-offset field.
 M2 completion still requires a real restart/Fast Startup/resume/restore test
 matrix and the Windows 10 VM evidence. Reboot/restore trials are not claimed from
 adjacent queries or fixture comparisons. No machine restart is initiated by tests.
+
+The [manual checkpoint procedure](validation/boot-transition-lab.md) now supports
+private before/after comparisons without exposing raw boot tokens. Its record and
+same-boot checks do not stand in for an actual restart or restore.

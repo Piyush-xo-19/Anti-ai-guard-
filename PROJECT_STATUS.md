@@ -147,3 +147,37 @@ details. A deterministic regression covers that race. The full local suite now
 passes 103 tests/doctests, with zero failures and two intentionally ignored tests.
 Formatting, strict Clippy and strict rustdoc checks passed. Review completion
 remains mandatory before merge.
+
+## Launcher and boot-transition validation tooling - 2026-11-03
+
+An opt-in [npm launcher lab](docs/validation/launcher-lab.md) verifies frozen
+entrypoints, isolated profiles, an owned process tree and the actual scanner
+report. All four launcher trials passed during development; committed-source
+evidence follows separately. This is a controlled headless version-query
+snapshot, not interactive coding or daemon-mode acceptance.
+
+A [private boot checkpoint](docs/validation/boot-transition-lab.md) can compare
+the existing self-header provider before and after a deliberate power transition.
+It never changes the machine power state. Actual restart/restore and Windows 10
+results are still pending. M2 remains incomplete and M3 has not started.
+
+[Committed-source launcher and checkpoint evidence](docs/validation/launcher-boot-2026-11-03.json)
+now records four passing npm entrypoint trials, a same-boot comparison and three
+expected checkpoint rejection cases. The default suite passes 106 tests/doctests,
+with zero failures and five intentionally ignored labs/helpers. Actual machine
+power transitions remain pending; no private baseline was published.
+
+The [real denied-directory control](docs/validation/negative-controls-2026-11-03.json)
+passes. The earlier Node/npm negative verdict was withdrawn; the
+[completion-checked rerun](docs/validation/node-complete-2026-11-03.json) passes
+with Finished execution, Inspected coverage and zero gaps. A
+temporary denied empty directory reports explicit AccessDenied/incomplete
+coverage. Its original ACL was restored, recovery was verified and the empty
+fixture was removed. Existing user directory permissions were not changed.
+
+Final lab QA searches decoded nested JSON values for private paths and boot
+tokens, so JSON backslash escaping cannot hide a value from the check. The four
+real launcher trials pass with these assertions. The local default suite now
+passes 107 tests/doctests, with zero failures and five intentionally ignored
+labs/helpers; formatting, strict Clippy and strict rustdoc checks pass. Earlier
+evidence records retain their original source revisions and test counts.

@@ -53,3 +53,8 @@ assistants. Its blocker summaries now describe incomplete artifact-variant and
 boot-transition validation rather than incorrectly claiming that no catalog or
 boot adapter exists. Runtime facts are read from the actual scanner report;
 separate native/npm records are not silently converted into full row passes.
+
+See the [launcher/headless snapshot lab](launcher-lab.md) and
+[manual boot-transition protocol](boot-transition-lab.md) for opt-in reproduction.
+Both helpers are compiled only into Windows tests; default CI does not run real
+assistants or change machine power state.

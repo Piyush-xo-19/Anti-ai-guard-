@@ -1,0 +1,27 @@
+{
+  "record_kind": "corrected completion-checked real Node/npm negative",
+  "owned_assistant_findings": 0,
+  "timezone": "Asia/Calcutta",
+  "source_revision": "05c0adb29154f57a1ef1d87423960e5daaaf112e",
+  "scope": "owned test job, not absence on the entire device",
+  "recorded_on": "2026-11-03",
+  "coverage_gaps": [],
+  "status": "PASS",
+  "full_parent_row_complete": false,
+  "collector_state": "Inspected",
+  "supersedes": "Only the Node/npm verdict in negative-controls-2026-11-03.json; its independent denied-directory result remains valid",
+  "m2_exit_gate": "INCOMPLETE",
+  "case_id": "NEG-02/ordinary-node-and-npm-at-snapshot",
+  "platform": {
+    "compiled_architecture": "X64",
+    "build": "26200.9711",
+    "os": "Windows11",
+    "release": "25H2",
+    "inspection_mode": "StandardUser"
+  },
+  "node_and_npm_alive_before_and_after_collection": true,
+  "schema_version": 1,
+  "working_tree_dirty": false,
+  "no_raw_machine_paths_pids_or_participant_arguments_published": true,
+  "collection_execution": "Finished"
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "recorded_on": "2026-11-03",
+  "timezone": "Asia/Calcutta",
+  "source_revision": "63da5fb0e72701b1e1493ea686601241eb711d6b",
+  "working_tree_dirty": false,
+  "record_kind": "partial M2 real standard-user negative controls",
+  "platform": {
+    "build": "26200.9711",
+    "os": "Windows11",
+    "release": "25H2",
+    "inspection_mode": "StandardUser"
+  },
+  "cases": [
+    {
+      "case_id": "NEG-02/ordinary-node-and-npm-at-snapshot",
+      "status": "BLOCKED",
+      "setup": "npm exec offline --call node --version in an owned job; installed Codex package inactive",
+      "node_and_npm_alive_before_and_after_collection": true,
+      "owned_assistant_findings": 0,
+      "scope": "owned test job, not absence on entire device",
+      "full_parent_row_complete": false,
+      "no_raw_machine_paths_pids_or_participant_arguments_published": true,
+      "reason": "Historical harness did not require completed/inspected collection; its negative verdict is not accepted. A corrected-source rerun is required.",
+      "superseded_by": "node-complete-2026-11-03.json"
+    },
+    {
+      "case_id": "FAIL-01/owned-empty-directory/standard-user",
+      "status": "PASS",
+      "setup": "temporary explicit deny of directory-list/read-attributes on a newly created empty lab directory only",
+      "actual": "exit3; Failed; Unavailable; AccessDenied; operational_gaps=true; NotIssued",
+      "acl_restored": true,
+      "post_restore_inventory": "Finished; NotIssued; exit0",
+      "empty_fixture_removed": true,
+      "elevated_comparison": "NOT RUN",
+      "full_parent_row_complete": false
+    }
+  ],
+  "m2_exit_gate": "INCOMPLETE",
+  "not_run": [
+    "Windows10 VM deferred",
+    "actual power transitions",
+    "full desktop matrix or performance targets"
+  ]
+}

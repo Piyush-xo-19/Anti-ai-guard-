@@ -6,6 +6,8 @@ mod boot;
 pub mod cancellation;
 mod catalog;
 pub mod inventory;
+#[cfg(all(windows, test))]
+mod lab;
 pub mod model;
 pub mod platform;
 pub mod policy;
