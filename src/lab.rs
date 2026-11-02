@@ -218,6 +218,16 @@ fn root(row: &serde_json::Value) -> PathBuf {
 fn hex(bytes: &[u8]) -> String {
     bytes.iter().map(|b| format!("{b:02x}")).collect()
 }
+fn contains_text(value: &serde_json::Value, private: &str) -> bool {
+    match value {
+        serde_json::Value::String(text) => text.contains(private),
+        serde_json::Value::Array(values) => values.iter().any(|v| contains_text(v, private)),
+        serde_json::Value::Object(values) => values
+            .iter()
+            .any(|(key, value)| key.contains(private) || contains_text(value, private)),
+        _ => false,
+    }
+}
 fn verify_entry(row: &serde_json::Value) {
     let path = root(row).join(row["entrypoint"].as_str().unwrap());
     let mut image = crate::inventory::open_image(&path).expect("guarded launcher unavailable");
@@ -474,8 +484,11 @@ fn package_launcher_lab() {
                     public.value()["findings"][0]["artifact_rule_id"],
                     pin.rule_id
                 );
-                assert!(!public.json().contains(env!("CARGO_MANIFEST_DIR")));
-                assert!(!public.json().contains(&crate::boot::current().unwrap()));
+                assert!(!contains_text(public.value(), env!("CARGO_MANIFEST_DIR")));
+                assert!(!contains_text(
+                    public.value(),
+                    &crate::boot::current().unwrap()
+                ));
                 observed = true;
             }
         }
@@ -537,6 +550,18 @@ fn package_launcher_lab() {
     } else {
         println!("LAUNCHER_LAB result=PASS tool={} version={} source=npm-exec native_image=Corroborated launcher_no_window_flag=true model_request=none", pin.tool_id, pin.tool_version);
     }
+}
+
+#[test]
+fn privacy_checks_search_decoded_nested_json_strings() {
+    let private = r"C:\synthetic-private\fixture";
+    let wire = serde_json::json!({"nested": [{"root": private}]}).to_string();
+    let parsed: serde_json::Value = serde_json::from_str(&wire).unwrap();
+    assert!(contains_text(&parsed, private));
+    assert!(!contains_text(
+        &serde_json::json!({"label":"scope-1"}),
+        private
+    ));
 }
 
 #[test]

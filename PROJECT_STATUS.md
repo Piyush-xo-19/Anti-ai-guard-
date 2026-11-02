@@ -174,3 +174,10 @@ with Finished execution, Inspected coverage and zero gaps. A
 temporary denied empty directory reports explicit AccessDenied/incomplete
 coverage. Its original ACL was restored, recovery was verified and the empty
 fixture was removed. Existing user directory permissions were not changed.
+
+Final lab QA searches decoded nested JSON values for private paths and boot
+tokens, so JSON backslash escaping cannot hide a value from the check. The four
+real launcher trials pass with these assertions. The local default suite now
+passes 107 tests/doctests, with zero failures and five intentionally ignored
+labs/helpers; formatting, strict Clippy and strict rustdoc checks pass. Earlier
+evidence records retain their original source revisions and test counts.
