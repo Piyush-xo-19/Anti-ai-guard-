@@ -1,10 +1,10 @@
 # Main branch protection
 
-Status (2026-11-01): **template prepared; not enabled by committing this file**.
-The repository reported no rulesets when inspected. Activation requires a GitHub
-repository admin; this session's GitHub integration lacks administration access
-and the browser connection is unavailable. Never label main protected merely
-because this template is present.
+Status (2026-11-02): **active ruleset verified**. The maintainer imported the
+template; GitHub reports [Protect main](https://github.com/Piyush-xo-19/Anti-ai-guard-/rules/26384686)
+Active, targeting refs/heads/main with deletion, force-push, PR/thread and required
+check rules. Committing a template alone does not enable protection. The activation
+instructions below remain useful for another repository or recreating the rule.
 
 ## Intended rules
 

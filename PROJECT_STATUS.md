@@ -25,7 +25,7 @@ Four reviewed native artifact pins and guarded device-local boot adapter now exi
 | --- | --- | --- |
 | M0: public foundation | Complete | Maintain documentation |
 | M1: coverage/design | Documents prepared; relevant reviews open | Review exact lab/privilege/variant and strong-identity requirements |
-| M2: read-only preflight | Candidate-only implementation available; NOT complete | Trusted identity/boot requirements and required Windows 10/11 real-tool/privacy/failure lab outcomes |
+| M2: read-only preflight | Bounded preflight and four native pins available; NOT complete | Trusted identity/boot requirements and required Windows 10/11 real-tool/privacy/failure lab outcomes |
 | M3: runtime observation | Eight chunks planned; implementation not started | Supported event source, reconciliation, continuity and health evidence |
 | M4: sessions/audit | Not started | Durable policy transitions, outbox and recovery |
 | M5: organizer workflow | Proposed; not started | Enrollment, leases/heartbeats, review and interfaces |
@@ -109,3 +109,13 @@ variants remain candidates. The boot adapter merged in PR#26 after all seven
 checks including CodeRabbit passed. One controlled suspended-image Windows11
 real-artifact trial passed; broader real-tool, reboot/restore and Windows10 trials
 remain pending. M2 and M3 status are unchanged: M2 incomplete, M3 not started.
+
+## Four native pins and controlled Windows 11 evidence - 2026-11-02
+
+The [frozen native scope](docs/validation/native-artifacts.md) now covers Codex,
+Claude and both OpenCode generations. [Eight native subcases](docs/validation/native-matrix-2026-11-02.json)
+passed (four inactive inventory, four owned suspended images). Default suite98
+tests/doctests passes; two helper/lab tests are intentionally ignored. No full
+row/interactive/performance claim follows. Windows10 VM work is deferred by the
+maintainer; remaining M2 work continues and M3 is not started. Main protection
+is active, independently verified through the GitHub ruleset API.

@@ -48,3 +48,16 @@ all variants. The process was deliberately paused for deterministic image identi
 interactive coding, package-runner/background behavior and runtime recall were
 not tested. Boot restart/restore, other catalogs/variants and Windows10 still need
 separate results. Full M2 remains INCOMPLETE; M3 has not started.
+
+## Four native artifact subcases - 2026-11-02
+
+[Minimized clean-source evidence](native-matrix-2026-11-02.json) records source
+4d291be on Windows 11 25H2 build 26200.9711, StandardUser. All four frozen native
+artifacts passed separate inactive InventoryOnly and owned suspended-image
+Corroborated/RequestClosureAndRescan trials; eligibility stayed NotIssued.
+Each artifact digest was unchanged after its trials. The default suite passed
+98 tests/doctests, zero failures, two intentional ignored helper/lab tests;
+format, strict Clippy and strict rustdoc passed. Same-name/same-size benign
+controls cover all four pins and remain candidates. These are partial native
+subcases, not interactive coding, full acceptance rows or performance targets.
+Windows 10 is deferred; reboot/restore and broader desktop cases remain open.
