@@ -153,6 +153,7 @@ fn standalone_codex_download_names_are_inventory_candidates_without_content_read
         "windows-name-and-package-indicators-v2"
     );
     assert_eq!(public["eligibility"], "NotIssued");
+    assert_eq!(public["findings"].as_array().unwrap().len(), 2);
     for finding in public["findings"].as_array().unwrap() {
         assert_eq!(
             finding["indicator_rule_id"],
