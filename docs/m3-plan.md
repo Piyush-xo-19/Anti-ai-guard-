@@ -24,7 +24,9 @@ reviewable steps, not eight product versions or eight releases. They can split
 into smaller commits when needed; a scope/source change requires a documented
 review rather than silently changing the plan.
 
-## Entry gate: bounded M3.1 experiments
+## Entry gate
+
+### Bounded M3.1 experiments
 
 - [ ] Close the [M2 completion checklist](m2-completion.md), with required desktop,
   trusted identity and boot-correlation outcomes recorded honestly.
