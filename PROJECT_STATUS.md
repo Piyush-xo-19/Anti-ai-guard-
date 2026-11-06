@@ -181,3 +181,14 @@ real launcher trials pass with these assertions. The local default suite now
 passes 107 tests/doctests, with zero failures and five intentionally ignored
 labs/helpers; formatting, strict Clippy and strict rustdoc checks pass. Earlier
 evidence records retain their original source revisions and test counts.
+
+## M2 CLI consistency - 2026-11-06
+
+All three collection subcommands accept `-h` as well as `--help` without consent
+or collection. Explicit roots reach lexical deduplication before the 32 distinct
+root/selector limit is enforced; the independent 131-token CLI bound remains.
+The combined PATH error now explains that explicit roots share that same limit.
+These corrections address #29, #31 and #37. Pure scope boundary tests and CLI
+integration checks pass; the full local suite passes 110 tests/doctests, with
+zero failures and five intentionally ignored helpers/labs. Formatting, strict
+Clippy and rustdoc pass. M2 desktop gates remain open; M3 implementation is queued.

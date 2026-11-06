@@ -76,7 +76,7 @@ impl fmt::Display for ArgumentError {
             Self::Unsupported => f.write_str("unsupported arguments; run anti-ai-guard --help for usage"),
             Self::PathUnavailable => f.write_str("PATH scope rejected: missing, over size limit, or no directory scope; use explicit roots"),
             Self::InvalidPathEntry(index) => write!(f, "PATH scope rejected: invalid entry {index}; use absolute local directory entries or explicit roots"),
-            Self::TooManyPathRoots => f.write_str("PATH scope rejected: more than 32 distinct root/selector pairs; use explicit roots"),
+            Self::TooManyPathRoots => f.write_str("PATH scope rejected: more than 32 distinct root/selector pairs across combined explicit roots and PATH; reduce the combined scope"),
         }
     }
 }
@@ -145,7 +145,7 @@ pub fn parse_args(args: impl IntoIterator<Item = OsString>) -> Result<Command, A
     };
     if first == "inventory" || first == "processes" || first == "scan" {
         let rest: Vec<_> = args.collect();
-        if rest.len() == 1 && rest[0] == "--help" {
+        if rest.len() == 1 && (rest[0] == "--help" || rest[0] == "-h") {
             return Ok(Command::Help);
         }
         let mut args = rest.into_iter();
@@ -176,9 +176,6 @@ pub fn parse_args(args: impl IntoIterator<Item = OsString>) -> Result<Command, A
                         inventory::RootKind::WindowsNpmPrefix
                     },
                 });
-                if roots.len() > 32 {
-                    return Err(ArgumentError::Unsupported);
-                }
             } else {
                 return Err(ArgumentError::Unsupported);
             }

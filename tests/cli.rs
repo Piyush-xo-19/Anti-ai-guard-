@@ -103,9 +103,19 @@ fn inventory_requires_consent_and_explicit_scope() {
 
 #[test]
 fn inventory_help_does_not_require_consent_or_inspect() {
-    let output = run(&["inventory", "--help"]);
-    assert!(output.status.success());
-    assert_eq!(output.stdout, run(&["--help"]).stdout);
+    let expected = run(&["--help"]).stdout;
+    for subcommand in ["inventory", "processes", "scan"] {
+        for flag in ["--help", "-h"] {
+            let output = run(&[subcommand, flag]);
+            assert!(output.status.success());
+            assert!(output.stderr.is_empty());
+            assert_eq!(output.stdout, expected);
+            let extra = run(&[subcommand, flag, "fake-private-extra"]);
+            assert_eq!(extra.status.code(), Some(2));
+            assert!(extra.stdout.is_empty());
+            assert!(!String::from_utf8_lossy(&extra.stderr).contains("fake-private-extra"));
+        }
+    }
 }
 
 #[test]

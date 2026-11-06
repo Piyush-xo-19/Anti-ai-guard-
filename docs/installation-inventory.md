@@ -57,7 +57,7 @@ Ancestor attributes are inspected, never ancestor directory contents. Guard hand
 
 | Budget | Default / hard limit |
 | --- | --- |
-| Roots | 32 before deduplication |
+| Roots | 32 distinct root/selector pairs after lexical deduplication; CLI accepts at most 131 argument tokens |
 | Root path components | 32, without parent traversal |
 | Candidate probes | 512 |
 | Manifest size/read | 64 KiB each |
