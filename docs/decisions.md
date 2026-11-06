@@ -1,6 +1,6 @@
 # Project decision log
 
-Updated: 2026-10-29 | Status: accepted choices and open proposals
+Updated: 2026-11-06 | Status: accepted choices and open proposals
 
 [Public status](../PROJECT_STATUS.md) | [Architecture](architecture-v1.md) | [Coverage contract](coverage-matrix.md) | [M2 plan](m2-plan.md)
 
@@ -135,3 +135,17 @@ Freeze four native x64 pins in [ground truth](validation/native-artifacts.md),
 retain differing provenance, and use existing exact digest/image-binding
 predicates. OpenCode generations stay separate; no broader scanning or process
 control follows. M2 still needs its remaining acceptance evidence; no M3 code.
+
+## Continued milestone delivery (2026-11-06)
+
+The maintainer authorized planning and carrying forward remaining M2 and then M3
+work while busy. The [delivery queue](delivery-plan.md) makes the order, concrete
+outcomes and machine-dependent tests public. Preserve small tested commits,
+completed CI/CodeRabbit before merge, the existing M2-before-M3 entry gate and
+the deferred Windows 10 evidence. General continuation does not turn unexecuted
+acceptance into a pass or silently waive the two-desktop requirement. M3 source
+research is preparation. After M2 closes and the experiment scope/privacy/privilege
+review passes, bounded M3.1 trials may produce capability evidence and a source
+decision. That evidence and the reviewed API/dependency choice gate M3.3 adapter
+delivery, rather than blocking the experiments that establish them. No runtime
+source is selected by the planning documents.

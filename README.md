@@ -12,7 +12,7 @@ The design combines a pre-event software inventory, runtime observation of recog
 
 > **Current stage: M2 preflight with a pinned native identity pilot.** Consented bounded installation inventory and current-session process-name candidates work with text/JSON output. M2.6 validation tooling is available, but the full Windows 10/11 desktop exit gate remains incomplete. A guarded boot adapter and four [pinned native identity rules](docs/artifact-identity.md) are implemented; unpinned variants remain candidates. No continuous monitor, installer or dashboard is implemented.
 
-The implemented reports use [JSON schema v2](docs/report-schema-v2.md), preserving FILETIME identity as a decimal string and distinguishing operational gaps from expected identity limitations. The [2026-11-01 local fixture rerun](docs/validation/results.md#local-fixture-rerun---2026-11-01) passed 80 tests and two doctests; this does not replace pinned-tool desktop acceptance. [Finish M2 first](docs/m2-completion.md); the [eight M3 chunks](docs/m3-plan.md) are planning only.
+The implemented reports use [JSON schema v2](docs/report-schema-v2.md), preserving FILETIME identity as a decimal string and distinguishing operational gaps from expected identity limitations. The latest local suite passed 111 tests/doctests, with five intentionally ignored labs/helpers. The [2026-11-06 regression record](docs/validation/launcher-regression-2026-11-06.json) records four real npm launcher positives and a benign Node/npm control; these partial checks do not replace full desktop acceptance. [Finish M2 first](docs/m2-completion.md); the [eight M3 chunks](docs/m3-plan.md) are planning only.
 
 ## Explore the project
 
@@ -20,7 +20,9 @@ The implemented reports use [JSON schema v2](docs/report-schema-v2.md), preservi
 - [Accepted decisions and open proposals](docs/decisions.md)
 - [M2 implementation plan](docs/m2-plan.md)
 - [Remaining M2 completion work](docs/m2-completion.md)
+- [M2 closure and M3 delivery queue](docs/delivery-plan.md)
 - [M3 runtime plan: eight queued chunks](docs/m3-plan.md)
+- [M3 source research and experiment checklist](docs/m3-source-review.md)
 - [Build, run and test the CLI](docs/development.md)
 - [Shared contracts and synthetic diagnostic example](docs/shared-contracts.md)
 - [Bounded Windows installation inventory](docs/installation-inventory.md)

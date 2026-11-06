@@ -204,3 +204,25 @@ boot/contents combinations and the capture-failure regression pass. The full
 local suite passes 111 tests/doctests, zero failures, five intentionally ignored
 helpers/labs; formatting, strict Clippy and rustdoc pass. Physical transition and
 remaining desktop acceptance remain separate gates.
+
+## Public delivery queue and acceptance refresh - 2026-11-06
+
+[PR #48](https://github.com/Piyush-xo-19/Anti-ai-guard-/pull/48) and
+[PR #49](https://github.com/Piyush-xo-19/Anti-ai-guard-/pull/49) merged after all
+seven final-head checks passed, including CodeRabbit; neither had unresolved
+review findings. They close #29/#31/#37 and #35 respectively.
+
+The [public delivery queue](docs/delivery-plan.md) maps M2's remaining case groups,
+external dependencies and eight subsequent M3 deliverables. The
+[source-research note](docs/m3-source-review.md) records documented WMI/ETW
+constraints and a bounded experiment protocol; it selects no source and runs no
+collector. The inventory guide now explains probe-scoped manifest handles (#42),
+and schema v2 documents its existing `MissingSuggestion` fallback (#44).
+
+The [clean-source launcher rerun](docs/validation/launcher-regression-2026-11-06.json)
+passes all four real entrypoint positives and the completion-checked Node/npm
+negative after the coverage fix. The full fixture suite passes 111 tests/doctests,
+with five intentional ignored labs/helpers. Physical boot transitions and
+remaining Windows 11 desktop cases still require evidence; Windows 10 is deferred.
+M2 remains incomplete and M3 implementation has not started. No boot checkpoint
+was overwritten and no power transition was initiated.

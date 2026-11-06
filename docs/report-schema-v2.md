@@ -59,7 +59,11 @@ Action and concern reasons, gaps and limitations use the exact case-sensitive
 names in [policy.rs](../src/policy.rs), [model.rs](../src/model.rs) and the static
 projection in [report.rs](../src/report.rs). They are extensible diagnostic
 vocabularies. Current maintenance adds `InvalidScanId`, `CollectorOutsideMilestone`
-and `UnrequestedRecord`. Identical target/reason concerns occur once; global
+and `UnrequestedRecord`. The wire projection also emits `MissingSuggestion`
+when an observation has no matching policy suggestion, using `RequestReview`
+as its action. See [wire reason vocabulary](../src/report/wire.rs). This is an
+existing defensive fallback, not a new schema value introduced by this document.
+Identical target/reason concerns occur once; global
 concerns have no target. Every concern makes coverage incomplete.
 
 `RequestClosureAndRescan` is a suggestion, never process control or competition

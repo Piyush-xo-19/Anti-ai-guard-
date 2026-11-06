@@ -68,7 +68,12 @@ Discovery must never execute an unknown assistant, invoke its help/version comma
 
 ## 5. Coverage rows and acceptance mapping
 
-All rows below remain unexecuted as real-tool desktop lab scenarios. M2.3 has separate synthetic filesystem fixtures; see the [inventory guide](installation-inventory.md). M2 identity findings are diagnostic and never grant competition verification.
+This table defines coverage and expected behavior; it is not a results table.
+Dated partial native, npm and launcher trials now exist, indexed in the
+[delivery queue](delivery-plan.md#acceptance-ledger-to-finish). Full Windows 10/11
+desktop acceptance remains incomplete. M2.3 also has separate synthetic filesystem
+fixtures; see the [inventory guide](installation-inventory.md). M2 identity
+findings are diagnostic and never grant competition verification.
 
 Evidence abbreviations: **P** = readable package metadata; **X** = executable identity/path; **H** = trusted pinned executable hash or equivalent approved strong identity; **I** = process instance including start identity where available; **C** = corroborated package entry point/launch context.
 
@@ -101,7 +106,14 @@ Proposed top-level report fields: schema version, scan ID/time, platform/build/a
 
 Each finding includes category, tool ID or unknown identity, installation versus observed execution, evidence class, rule ID, redacted source explanation and relevant process-instance reference. Do not persist raw command lines, credentials, prompts or unnecessary absolute personal paths.
 
-M2.2 now implements the [in-memory shared contracts and diagnostic evaluator](shared-contracts.md) for supplied observations. Scope uses opaque IDs/minimized labels, and gap/action explanations use typed reasons. M2.3 now adds consent-gated installation collection. M2.4/M2.5 now add current-session native-name candidates and minimized text/JSON reports. Trusted strong identity remains unimplemented; fixtures do not validate the real-tool desktop rows above. See the [M2.6 review](validation/README.md).
+M2.2 implements the [in-memory shared contracts and diagnostic evaluator](shared-contracts.md)
+for supplied observations. Scope uses opaque IDs/minimized labels, and gap/action
+explanations use typed reasons. M2.3 adds consent-gated installation collection.
+M2.4/M2.5 add current-session native-name candidates and minimized text/JSON
+reports. The [four-pin native artifact pilot](artifact-identity.md) can corroborate
+only its exact reviewed artifacts when all guarded predicates succeed. Other
+variants remain candidates; fixtures do not validate the full desktop rows above.
+See the [M2.6 review](validation/README.md).
 
 Keep these concepts separate:
 
@@ -111,7 +123,10 @@ Keep these concepts separate:
 - **Suggested preflight action:** inventory only, request closure, request review or coverage incomplete.
 - **Competition eligibility:** not issued by the standalone M2 scanner.
 
-An empty findings list is not proof that no assistants exist. Names or participant-writable metadata alone produce candidates. Strong identity predicates need a documented trusted catalog artifact; until that exists, the scanner must not pretend to confirm identity.
+An empty findings list is not proof that no assistants exist. Names or
+participant-writable metadata alone produce candidates. Strong identity predicates
+need a documented reviewed catalog artifact and process-image binding; an
+uncataloged artifact or failed predicate cannot be promoted to supported identity.
 
 ## 7. M2 delivery and later work
 
