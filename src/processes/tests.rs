@@ -172,6 +172,57 @@ fn failed_snapshot_is_not_empty_success() {
     assert!(result.findings.is_empty());
     assert_eq!(result.execution, ScanExecution::Failed);
     assert_eq!(result.coverage.state, CoverageState::Unavailable);
+    // Capture never supplied context: report the real failure, not an inferred
+    // boot-capability verdict based on the fake provider's default value.
+    assert_eq!(result.coverage.gaps, vec![GapReason::AccessDenied]);
+}
+
+#[test]
+fn boot_capability_gap_does_not_depend_on_snapshot_contents() {
+    for boot in [None, Some(" "), Some("fixture.boot-1")] {
+        for basename in [None, Some("node.exe"), Some("codex.exe")] {
+            let mut fake = Fake::new();
+            fake.boot_id = boot.map(str::to_owned);
+            fake.rows = basename
+                .into_iter()
+                .map(|name| Row {
+                    pid: 1,
+                    basename: name.into(),
+                })
+                .collect();
+            let result = run(&mut fake);
+            let missing = boot.is_none_or(|id| id.trim().is_empty());
+            assert_eq!(
+                result.coverage.gaps,
+                if missing {
+                    vec![GapReason::MissingBootIdentity]
+                } else {
+                    vec![]
+                }
+            );
+            assert_eq!(
+                result.coverage.state,
+                if missing {
+                    CoverageState::Partial
+                } else {
+                    CoverageState::Inspected
+                }
+            );
+            assert_eq!(
+                result.execution,
+                if missing {
+                    ScanExecution::Partial
+                } else {
+                    ScanExecution::Finished
+                }
+            );
+            assert_eq!(
+                result.findings.len(),
+                usize::from(basename == Some("codex.exe"))
+            );
+            assert_eq!(fake.queries, result.findings.len());
+        }
+    }
 }
 
 #[test]

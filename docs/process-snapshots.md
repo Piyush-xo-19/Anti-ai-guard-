@@ -20,6 +20,13 @@ Defaults bound enumeration to 4096 rows, findings to 512 and elapsed time to two
 
 **Boot/correlation:** the [guarded self-header adapter](boot-identity.md) supplies a device-local OS token only when its checks succeed; no token is fabricated from uptime or wall-clock estimates. Unavailable identity retains `MissingBootIdentity` and incomplete coverage; restart/restore/Windows 10 validation is pending. PID reuse with differing known start times is rejected; cross-scan same-instance correlation remains conservative. This is an open M2 validation gate, not verified monitoring.
 
+Boot availability is checked once after successful capture, independently of
+snapshot contents. An empty snapshot or one containing only benign processes
+still reports `MissingBootIdentity` when correlation is unavailable or blank.
+That identity limitation keeps coverage incomplete; it is not evidence of an
+assistant and does not become an operational failure. A capture failure reports
+its actual error without inventing a boot-capability verdict.
+
 Exit 0 means requested name selectors were inspected without gaps, never a clean device. Exit 3 means partial/failed/cancelled coverage. Missing consent/invalid arguments return 2 before snapshot creation. Report integration is M2.5; continuous launch events remain M3.
 
 Seven provider-driven tests cover consent/cancellation/budgets before capture, current-session filtering, interpreter negatives, capture failure, denied/exited/changed metadata, PID/image races and weak installation linkage. The native integration fixture launches a copy of its own test binary named `codex.exe`, passes a fake secret argument and verifies candidate classification plus omission of arguments/paths. It never launches a real assistant. Exact test results are recorded in public status and validation evidence; fixture passes do not validate pinned real assistant artifacts or both Windows desktop labs.
