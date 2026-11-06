@@ -176,7 +176,20 @@ fn collect_with(
     if let Some(reason) = stop(0, 0) {
         add_gap(&mut result, reason);
     } else {
-        match provider.capture() {
+        let captured = provider.capture();
+        if let Ok(context) = &captured {
+            // Boot correlation is a collector capability, independent of which
+            // candidates are present. Keep missing/blank identity explicit even
+            // for an empty snapshot; never fabricate an uptime/clock fallback.
+            if context
+                .boot_id
+                .as_ref()
+                .is_none_or(|id| id.trim().is_empty())
+            {
+                add_gap(&mut result, GapReason::MissingBootIdentity);
+            }
+        }
+        match captured {
             Err(reason) => {
                 result.coverage.state = CoverageState::Unavailable;
                 result.coverage.gaps.push(reason);
@@ -267,11 +280,6 @@ fn collect_with(
                 }
                 if metadata.state == ProcessState::ExitedDuringEnrichment {
                     add_gap(&mut result, GapReason::ProcessExited);
-                }
-                // Do not fabricate a boot ID from wall-clock/uptime estimates.
-                // Missing OS boot metadata keeps correlation explicitly incomplete.
-                if context.boot_id.is_none() {
-                    add_gap(&mut result, GapReason::MissingBootIdentity);
                 }
                 let installation_indicator = inventory.as_ref().and_then(|link| {
                     metadata

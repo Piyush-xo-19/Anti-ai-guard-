@@ -192,3 +192,15 @@ These corrections address #29, #31 and #37. Pure scope boundary tests and CLI
 integration checks pass; the full local suite passes 110 tests/doctests, with
 zero failures and five intentionally ignored helpers/labs. Formatting, strict
 Clippy and rustdoc pass. M2 desktop gates remain open; M3 implementation is queued.
+
+## M2 boot capability coverage - 2026-11-06
+
+After a successful process capture, missing or blank boot correlation is reported
+once for the collector, including empty and benign-only snapshots (#35). It no
+longer depends on encountering a candidate. Capture errors retain their actual
+failure without an inferred boot verdict. This preserves partial coverage and
+does not create assistant findings or operational-failure evidence. Nine pure
+boot/contents combinations and the capture-failure regression pass. The full
+local suite passes 111 tests/doctests, zero failures, five intentionally ignored
+helpers/labs; formatting, strict Clippy and rustdoc pass. Physical transition and
+remaining desktop acceptance remain separate gates.
