@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "record_kind": "partial M2 launcher regression evidence after boot capability coverage correction",
+  "recorded_on": "2026-11-06",
+  "timezone": "Asia/Calcutta",
+  "source_revision": "8d77af61f35a0d0ba7ababf7546647a688a5720c",
+  "working_tree_dirty": false,
+  "platform": {
+    "os": "Windows11",
+    "release": "25H2",
+    "build": "26200.9711",
+    "compiled_architecture": "X64",
+    "inspection_mode": "StandardUser"
+  },
+  "fixture_verification": {
+    "passed_tests_and_doctests": 111,
+    "failed": 0,
+    "intentionally_ignored": 5,
+    "format": "PASS",
+    "strict_clippy": "PASS",
+    "strict_rustdoc": "PASS"
+  },
+  "cases": [
+    {
+      "case_id": "RUN-02/npm-exec--version/headless-snapshot",
+      "tool_id": "codex-cli",
+      "tool_version": "0.166.0",
+      "status": "PASS",
+      "identity": "Corroborated",
+      "eligibility": "NotIssued",
+      "action": "RequestClosureAndRescan",
+      "collection_limit_seconds": 10,
+      "owned_job_membership_verified": true,
+      "entry_digest_unchanged_after": true,
+      "decoded_json_privacy_checks": "PASS",
+      "full_parent_row_complete": false
+    },
+    {
+      "case_id": "RUN-02/npm-exec--version/headless-snapshot",
+      "tool_id": "claude-code",
+      "tool_version": "2.1.316",
+      "status": "PASS",
+      "identity": "Corroborated",
+      "eligibility": "NotIssued",
+      "action": "RequestClosureAndRescan",
+      "collection_limit_seconds": 10,
+      "owned_job_membership_verified": true,
+      "entry_digest_unchanged_after": true,
+      "decoded_json_privacy_checks": "PASS",
+      "full_parent_row_complete": false
+    },
+    {
+      "case_id": "RUN-02/npm-exec--version/headless-snapshot",
+      "tool_id": "opencode-v1",
+      "tool_version": "1.19.5",
+      "status": "PASS",
+      "identity": "Corroborated",
+      "eligibility": "NotIssued",
+      "action": "RequestClosureAndRescan",
+      "collection_limit_seconds": 10,
+      "owned_job_membership_verified": true,
+      "entry_digest_unchanged_after": true,
+      "decoded_json_privacy_checks": "PASS",
+      "full_parent_row_complete": false
+    },
+    {
+      "case_id": "RUN-02/npm-exec--version/headless-snapshot",
+      "tool_id": "opencode-v2",
+      "tool_version": "2.2.5",
+      "status": "PASS",
+      "identity": "Corroborated",
+      "eligibility": "NotIssued",
+      "action": "RequestClosureAndRescan",
+      "collection_limit_seconds": 10,
+      "owned_job_membership_verified": true,
+      "entry_digest_unchanged_after": true,
+      "decoded_json_privacy_checks": "PASS",
+      "full_parent_row_complete": false
+    }
+  ],
+  "benign_node_npm": {
+    "case_id": "NEG-02/npm-exec-call-node--version",
+    "status": "PASS",
+    "execution": "Finished",
+    "coverage": "Inspected",
+    "gaps": 0,
+    "node_and_npm_alive": true,
+    "owned_assistant_findings": 0,
+    "full_parent_row_complete": false
+  },
+  "not_run": [
+    "actual restart/resume/Fast Startup/restore",
+    "Windows10 desktop/VM deferred",
+    "interactive coding or daemon/server mode",
+    "simultaneous four-tool or default two-second-budget coverage",
+    "full desktop privacy/failure and performance matrix"
+  ],
+  "m2_exit_gate": "INCOMPLETE",
+  "m3_implementation_started": false
+}

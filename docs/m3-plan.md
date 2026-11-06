@@ -5,6 +5,10 @@ State: planning only; implementation queued behind incomplete M2 acceptance.
 
 [Status](../PROJECT_STATUS.md) | [M2 completion](m2-completion.md) | [Architecture](architecture-v1.md) | [Decisions](decisions.md)
 
+The [delivery queue](delivery-plan.md) gives the ordered implementation outcomes.
+The [source research note](m3-source-review.md) links primary API contracts and
+defines capability experiments; no source is selected or exercised by that note.
+
 ## Outcome and boundary
 
 Extend the consented Windows preflight with runtime observations, reconciliation

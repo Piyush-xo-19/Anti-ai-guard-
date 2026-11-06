@@ -1,8 +1,11 @@
 # M2 completion checklist: finish preflight before M3
 
-Updated: 2026-11-03 (Asia/Calcutta)
+Updated: 2026-11-06 (Asia/Calcutta)
 
 [Status](../PROJECT_STATUS.md) | [M2 plan](m2-plan.md) | [Coverage](coverage-matrix.md) | [Acceptance](acceptance-plan.md) | [Queued M3 plan](m3-plan.md)
+
+The [delivery queue](delivery-plan.md) maps remaining work to concrete evidence,
+available agent actions and machine-dependent checks. It preserves this gate.
 
 **M2 is not complete.** Candidate-only collectors, schema v2 reports and fixture
 checks exist. The [artifact pilot](artifact-identity.md) and [boot adapter](boot-identity.md) cover narrow implementations; they do not complete the required artifact matrix, reboot validation, or Windows
