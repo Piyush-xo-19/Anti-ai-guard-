@@ -1,6 +1,6 @@
 # M3 plan: Windows runtime observation
 
-Updated: 2026-11-01 (Asia/Calcutta)
+Updated: 2026-11-06 (Asia/Calcutta)
 State: planning only; implementation queued behind incomplete M2 acceptance.
 
 [Status](../PROJECT_STATUS.md) | [M2 completion](m2-completion.md) | [Architecture](architecture-v1.md) | [Decisions](decisions.md)
@@ -24,15 +24,28 @@ reviewable steps, not eight product versions or eight releases. They can split
 into smaller commits when needed; a scope/source change requires a documented
 review rather than silently changing the plan.
 
-## Entry gate
+## Entry gate: bounded M3.1 experiments
 
 - [ ] Close the [M2 completion checklist](m2-completion.md), with required desktop,
   trusted identity and boot-correlation outcomes recorded honestly.
-- [ ] Review the runtime source's actual privileges, system-wide versus session
-  visibility, fields and privacy boundary before enabling it on a real device.
+- [ ] Review each proposed experiment's documented privileges, requested fields,
+  possible system-wide versus session receipt, minimization and privacy boundary
+  before enabling it on a real device. Denial is a valid experimental outcome;
+  do not elevate or broaden scope automatically.
 - [ ] Agree supported Windows configurations, controlled launch fixtures and
   ground truth. Do not assume that standard-user access works for a chosen source.
-- [ ] Decide dependencies/native API approach and record capability evidence.
+
+These prerequisites permit only the finite, consented capability experiments
+described in M3.1. Capability evidence and the source/API/dependency decision are
+outputs of those experiments, not prerequisites for starting them.
+
+### Gate before adapter delivery (M3.3)
+
+- [ ] Publish the M3.1 capability record for the actual tested configurations,
+  including denied/unavailable results and remaining loss/readiness uncertainty.
+- [ ] Select the runtime source and dependencies/native API approach using that
+  evidence; review actual privilege, visibility and privacy behavior before
+  enabling the product adapter on a real device.
 
 Publication of this plan is authorized; these unchecked gates are not approvals
 or executed tests. No runtime source has been selected by this document. A source

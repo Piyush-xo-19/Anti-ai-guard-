@@ -57,10 +57,15 @@ template. Keep dated evidence records immutable in meaning: the withdrawn Node
 negative was not retrospectively upgraded by its corrected rerun. FUT-01/FUT-02
 belong to M3; FUT-03/FUT-04 are not M2 completion shortcuts.
 
-## M3 implementation sequence after the entry gate
+## M3 sequence: experiments before adapter delivery
 
 Each row is a separate reviewable delivery, followed by relevant checks, public
 status, a commit/PR, completed CI/CodeRabbit and merge before the next delivery.
+M3.1's bounded experiments can start after M2 closure and approval of the lab
+scope, including the privacy and privilege review before real-device use.
+Capability evidence and source/API/dependency selection are M3.1 outputs. They
+must be reviewed before adapter delivery in M3.3; they do not block starting
+the experiments that produce them.
 
 | Chunk | Concrete deliverable | Minimum acceptance before proceeding |
 | --- | --- | --- |

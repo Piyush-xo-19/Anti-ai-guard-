@@ -144,5 +144,8 @@ outcomes and machine-dependent tests public. Preserve small tested commits,
 completed CI/CodeRabbit before merge, the existing M2-before-M3 entry gate and
 the deferred Windows 10 evidence. General continuation does not turn unexecuted
 acceptance into a pass or silently waive the two-desktop requirement. M3 source
-research is preparation; the runtime source and its privilege contract remain
-unselected until capability experiments are authorized by the entry gate.
+research is preparation. After M2 closes and the experiment scope/privacy/privilege
+review passes, bounded M3.1 trials may produce capability evidence and a source
+decision. That evidence and the reviewed API/dependency choice gate M3.3 adapter
+delivery, rather than blocking the experiments that establish them. No runtime
+source is selected by the planning documents.
