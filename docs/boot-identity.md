@@ -30,9 +30,12 @@ header with zero variable offsets and stable adjacent-query identity. Controlled
 process tests exercise integration. Synthetic tests cover changed boot tokens,
 short/malformed headers, error statuses and every variable-offset field.
 
-The successful Windows 11 comparison spans operator-confirmed restarts and a
-Windows build change. Fast Startup, resume, restore and Windows 10 VM evidence
-are still outstanding. No machine restart is initiated by tests.
+The Windows 11 restart comparison spans operator-confirmed restarts and a
+Windows build change. A separate sleep and resume trial passed with an
+unchanged boot identity on build 26300.9974.
+[Resume evidence](test-cases/runs/2026-11-14-windows-11-resume.md)
+
+Fast Startup, restore and Windows 10 VM evidence remain outstanding.
 
 The [manual checkpoint procedure](validation/boot-transition-lab.md) now supports
 private before/after comparisons without exposing raw boot tokens. Its record and

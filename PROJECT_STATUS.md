@@ -257,8 +257,10 @@ before M3.1; Windows 10 remains required for full M2 acceptance.
   alive and no assistant finding. The full-session verdict remains blocked.
 - [x] Check that real CLI output omits a synthetic argument secret and fixture
   paths, and that cooperative cancellation stops before the next candidate.
-- [ ] Complete controlled resume, Fast Startup and restore observations, and
-  review the remaining desktop acceptance gaps before starting M3.1.
+- [x] Confirm sleep and resume preserve boot identity on the updated Windows
+  11 build. See the [resume evidence](docs/test-cases/runs/2026-11-14-windows-11-resume.md).
+- [ ] Record Fast Startup and restore observations and review the remaining
+  desktop acceptance gaps before starting M3.1.
 
 See the [test record](docs/test-cases/runs/windows-11-owned-control.md) for
 setup and limits. The local suite passed 112 tests/doctests; five opt-in

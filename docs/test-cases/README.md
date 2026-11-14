@@ -10,6 +10,7 @@ describes future cases; runtime trials have not started.
 
 | Date | Run | Outcome |
 | --- | --- | --- |
+| 2026-11-14 | [Windows 11 resume on build 26300.9974](runs/2026-11-14-windows-11-resume.md) | Resume PASS after a fresh checkpoint on the updated build |
 | 2026-11-14 | [Windows 11 owned-process validation](runs/windows-11-owned-control.md) | Owned Node/npm, CLI privacy and cooperative cancellation passed; full session remains incomplete |
 | 2026-11-14 | [Windows 11 restart and desktop checks](runs/2026-11-14-windows-11.md) | Restart, default suite and pinned tool subcases PASS; benign Node/npm BLOCKED by partial coverage |
 | 2026-11-06 | [Four package launchers and benign Node/npm](../validation/launcher-regression-2026-11-06.json) | Five passing subcases on the earlier Windows 11 build |

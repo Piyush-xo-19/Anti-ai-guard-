@@ -48,7 +48,7 @@ five intentional ignores; strict Clippy and rustdoc passed.
 ## Remaining physical and desktop checks
 
 An availability check found standby available but hibernation disabled, so
-Fast Startup is currently unavailable. The controlled resume trial requires
-an operator power transition. Restore requires a disposable restore lab; the
-active development desktop was not restored. These cases are pending, as are
-the remaining desktop audit and benign-tool variants. Windows 10 is deferred.
+Fast Startup is currently unavailable. The subsequent controlled resume
+trial passed, as recorded in the [resume evidence](2026-11-14-windows-11-resume.md).
+Restore requires a disposable lab. The remaining desktop audit and benign-tool
+variants are pending. Windows 10 is deferred.
