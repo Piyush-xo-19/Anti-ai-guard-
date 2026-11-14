@@ -1,6 +1,6 @@
 # Project status and milestone plan
 
-Updated: 2026-11-02 (Asia/Calcutta)
+Updated: 2026-11-15 (Asia/Calcutta)
 
 **M2.4 process candidates and M2.5 integrated reports are implemented. M2.6 validation tooling is implemented; full desktop acceptance and full M2 completion remain INCOMPLETE.**
 
@@ -26,7 +26,7 @@ Four reviewed native artifact pins and guarded device-local boot adapter now exi
 | M0: public foundation | Complete | Maintain documentation |
 | M1: coverage/design | Documents prepared; relevant reviews open | Review exact lab/privilege/variant and strong-identity requirements |
 | M2: read-only preflight | Bounded preflight and four native pins available; NOT complete | Trusted identity/boot requirements and required Windows 10/11 real-tool/privacy/failure lab outcomes |
-| M3: runtime observation | Eight chunks planned; implementation not started | Supported event source, reconciliation, continuity and health evidence |
+| M3: runtime observation | M3.1 Windows 11 access trials completed for the first two sources | Authorized source selection, reconciliation, continuity and health evidence |
 | M4: sessions/audit | Not started | Durable policy transitions, outbox and recovery |
 | M5: organizer workflow | Proposed; not started | Enrollment, leases/heartbeats, review and interfaces |
 | M6: controlled validation | Not started | Broader release/platform/performance evidence |
@@ -50,10 +50,11 @@ The ignored local tracker is optional maintainer context. All contributor-facing
 
 ## Next work
 
-Finish the [Windows 11 closeout](docs/m2-completion.md), including the blocked
-benign runner control and remaining desktop coverage. Then review the experiment
-scope for [M3.1](docs/m3-plan.md#entry-gate). The Windows 10 VM is deferred and
-still required for full M2 acceptance. M3 code has not started.
+M3.1 needs an authorized source that fits the Windows permission model. The
+first standard-user trial recorded access denials for WMI process start and
+stop subscriptions and ETW session creation. M2 desktop cases stay open and
+Windows 10 remains deferred. [M3.1 results](docs/test-cases/runs/2026-11-15-m3-1-access.md)
+[M2 checklist](docs/m2-completion.md)
 
 ## Issue maintenance - 2026-10-30
 

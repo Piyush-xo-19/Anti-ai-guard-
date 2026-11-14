@@ -1,8 +1,9 @@
 # M3.1 source research: decision and experiment checklist
 
-Reviewed: 2026-11-06. Planning only; no source selected or subscription run.
-See the [M3 entry gate](m3-plan.md#entry-gate) for Windows 11 closeout and
-experiment scope requirements.
+The first Windows 11 access trial reached the WMI namespace, but both
+process-event subscriptions were denied. ETW real-time session creation was
+also denied. Source selection remains open.
+[Experiment results](test-cases/runs/2026-11-15-m3-1-access.md)
 
 ## Candidates and documented constraints
 
@@ -11,9 +12,13 @@ experiment scope requirements.
 | WMI `Win32_ProcessStartTrace` / `Win32_ProcessStopTrace` | Start schema includes process/parent IDs, name, session, SID and event UTC time; it supplies no executable digest or process creation FILETIME. The event's security descriptor controls recipient access. [Start schema](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/krnlprov/win32-processstarttrace), [stop schema](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/krnlprov/win32-processstoptrace) | Current standard token's actual subscription rights, session predicate behavior, start/stop ordering, readiness, loss notification and cleanup |
 | ETW process source | Controllers have documented privilege/group requirements; process tracing has a specific provider/configuration contract. Queryable session statistics include event and real-time buffer loss. [Controller access](https://learn.microsoft.com/en-us/windows/win32/etw/controlling-event-tracing-sessions), [process source](https://learn.microsoft.com/en-us/windows/win32/etw/process), [statistics](https://learn.microsoft.com/en-us/windows/desktop/ETW/event-trace-properties) | Exact permitted provider/session mode, current-token access, minimum OS configuration, payload minimization and reproducible loss/cleanup behavior |
 
-Neither documented API availability nor being in user mode proves that a normal
-participant token can use the source. Do not add group membership, enable audit
-policy, elevate, start a permanent service or install a driver to make a trial pass.
+A participant's standard-user token remains the default. Keep group membership,
+audit policy, services and drivers outside the lab. A separately consented
+elevated comparison is scoped to a disposable Windows 11 x64 guest. The real-time
+session may receive process start and stop events from across that guest. Use an
+owned synthetic corpus and retain only counts, schema versions and typed outcomes.
+The [lab preparation record](test-cases/runs/2026-11-15-m3-1-etw-lab.md)
+covers the build and host refusal controls. The elevated delivery run is pending.
 
 For a bounded WMI experiment, Microsoft's
 [ExecNotificationQuery contract](https://learn.microsoft.com/en-us/windows/win32/api/wbemcli/nf-wbemcli-iwbemservices-execnotificationquery)
@@ -26,7 +31,7 @@ WMI documents dropped-event and queue-overflow event classes in its
 That is not evidence that a selected temporary process subscription receives every
 upstream loss signal. Prove the applicable path or describe continuity as unknown.
 
-## Experiment contract after Windows 11 closeout
+## Experiment contract
 
 1. Use a clean committed source and explicit lab consent. Record OS/build, compiled
    architecture and actual token mode. Use only an owned disposable process corpus.
