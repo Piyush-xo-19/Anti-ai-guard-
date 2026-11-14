@@ -1,7 +1,7 @@
 # M3 plan: Windows runtime observation
 
 Updated: 2026-11-15 (Asia/Calcutta)
-State: M3.1 access trials started on Windows 11. Source selection remains open.
+State: Windows 11 access trial recorded. An elevated ETW lab is built and awaits a disposable Windows 11 guest. Source selection remains open.
 
 [Status](../PROJECT_STATUS.md) | [M2 completion](m2-completion.md) | [Architecture](architecture-v1.md) | [Decisions](decisions.md)
 
@@ -62,7 +62,7 @@ Snapshots provide point-in-time evidence.
 
 | Chunk | Outcome | Status |
 | --- | --- | --- |
-| M3.1 | Source capability experiment and selection | Windows 11 standard-user trial recorded. Filtered WMI subscriptions and provider-free real-time ETW session creation were denied. |
+| M3.1 | Source capability experiment and selection | Windows 11 standard-user access denials recorded. [ETW delivery lab prepared](test-cases/runs/2026-11-15-m3-1-etw-lab.md), pending a disposable guest. |
 | M3.2 | Runtime contracts and fixture-driven health reducer | Not started |
 | M3.3 | Bounded Windows event adapter | Not started |
 | M3.4 | Listener-first baseline reconciliation | Not started |
