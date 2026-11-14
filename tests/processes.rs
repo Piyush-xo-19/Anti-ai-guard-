@@ -150,4 +150,35 @@ fn controlled_candidate(padded: bool, tool: &str) {
             .contains(&GapReason::MissingBootIdentity),
         !instance.has_boot_identity()
     );
+    // Exercise the release-facing outputs once using the small owned
+    // candidate. Padded variants are already checked above for identity.
+    if !padded {
+        let text = Command::new(env!("CARGO_BIN_EXE_anti-ai-guard"))
+            .args(["processes", "--consent"])
+            .output()
+            .unwrap();
+        let json = Command::new(env!("CARGO_BIN_EXE_anti-ai-guard"))
+            .args(["processes", "--consent", "--json"])
+            .output()
+            .unwrap();
+        for output in [&text, &json] {
+            assert!(matches!(output.status.code(), Some(0 | 3)));
+            for stream in [&output.stdout, &output.stderr] {
+                let body = String::from_utf8_lossy(stream);
+                assert!(!body.contains(secret));
+                assert!(!body.contains("process-fixtures"));
+            }
+        }
+        let wire: serde_json::Value = serde_json::from_slice(&json.stdout).unwrap();
+        assert_eq!(wire["eligibility"], "NotIssued");
+        let findings = wire["findings"].as_array().unwrap();
+        let owned = findings
+            .iter()
+            .find(|finding| finding["process"]["pid"] == fixture.child.id())
+            .expect("the public report must include the owned candidate");
+        assert_eq!(owned["evidence_class"], "Candidate");
+        assert_eq!(owned["action"], "RequestReview");
+        assert!(String::from_utf8_lossy(&text.stdout).contains("NotIssued"));
+        assert!(fixture.child.try_wait().unwrap().is_none());
+    }
 }

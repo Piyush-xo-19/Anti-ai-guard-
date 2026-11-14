@@ -98,6 +98,54 @@ fn run(fake: &mut Fake) -> ProcessResult {
 }
 
 #[test]
+fn cancellation_during_enrichment_stops_before_the_next_candidate() {
+    struct CancellingProvider<'a> {
+        inner: Fake,
+        cancelled: &'a AtomicBool,
+    }
+
+    impl Provider for CancellingProvider<'_> {
+        fn capture(&mut self) -> Result<Context, GapReason> {
+            self.inner.capture()
+        }
+
+        fn next(&mut self) -> Result<Option<Row>, GapReason> {
+            self.inner.next()
+        }
+
+        fn session(&mut self, pid: u32) -> Result<u32, GapReason> {
+            self.inner.session(pid)
+        }
+
+        fn metadata(
+            &mut self,
+            pid: u32,
+            budget: &mut EnrichmentBudget<'_>,
+        ) -> Result<Metadata, GapReason> {
+            let metadata = self.inner.metadata(pid, budget);
+            self.cancelled.store(true, Ordering::Relaxed);
+            metadata
+        }
+    }
+
+    let cancelled = AtomicBool::new(false);
+    let mut inner = Fake::new();
+    inner.boot_id = Some("fixture.boot".into());
+    inner.rows[1].pid = 4; // A second in-session candidate.
+    let mut provider = CancellingProvider {
+        inner,
+        cancelled: &cancelled,
+    };
+    let result = collect_with(&request(Limits::default()), &cancelled, None, &mut provider);
+    assert_eq!(result.execution, ScanExecution::Cancelled);
+    assert_eq!(result.coverage.state, CoverageState::Partial);
+    assert_eq!(result.coverage.gaps, vec![GapReason::Cancelled]);
+    assert_eq!(result.enumerated, 1);
+    assert_eq!(provider.inner.queries, 1);
+    assert_eq!(provider.inner.rows.len(), 2);
+}
+
+#[test]
 fn consent_cancel_and_zero_budgets_precede_native_capture() {
     assert!(ProcessRequest::new(false, ScopeId(1), Limits::default()).is_err());
     assert!(ProcessRequest::new(true, ScopeId(0), Limits::default()).is_err());

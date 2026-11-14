@@ -12,6 +12,8 @@ to those IDs, executable tests, and evidence. The
 | --- | --- | --- |
 | 2026-11-15 | [M3.1 ETW lab preparation](runs/2026-11-15-m3-1-etw-lab.md) | Strict build and host controls PASS; elevated delivery NOT RUN |
 | 2026-11-15 | [M3.1 Windows 11 permission results](runs/2026-11-15-m3-1-access.md) | WMI start/stop subscriptions and ETW session creation denied |
+| 2026-11-14 | [Windows 11 resume on build 26300.9974](runs/2026-11-14-windows-11-resume.md) | Resume PASS after a fresh checkpoint on the updated build |
+| 2026-11-14 | [Windows 11 owned-process validation](runs/windows-11-owned-control.md) | Owned Node/npm, CLI privacy and cooperative cancellation passed; full session remains incomplete |
 | 2026-11-14 | [Windows 11 restart and desktop checks](runs/2026-11-14-windows-11.md) | Restart, default suite and pinned tool subcases PASS; benign Node/npm BLOCKED by partial coverage |
 | 2026-11-06 | [Four package launchers and benign Node/npm](../validation/launcher-regression-2026-11-06.json) | Five passing subcases on the earlier Windows 11 build |
 

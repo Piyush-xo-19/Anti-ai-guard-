@@ -69,6 +69,15 @@ after collection; no owned process may be classified as an assistant. Only
 job-member image metadata is queried for this control; paths are discarded.
 It does not claim the rest of the machine has no assistants.
 
+The default `benign-node` case requires complete current-session collection.
+When an unrelated protected process makes that case incomplete, use the separate
+`benign-node-owned` case to test the owned population. It still requires
+Finished/Inspected with zero gaps **for that test population**, all expected
+job members appearing in the snapshot, an unchanged member list across the
+scan, and both Node processes alive before and after. Its filter is available
+only in Windows test builds. An owned-population pass does not replace a
+blocked full-session result. The product scan still reports permission gaps.
+
 The test fills a private stdout pipe to its measured capacity. The real version
 write then waits while the scanner observes the live image. No initial process
 suspension or debugger is used. A helper waits for a parent handshake before

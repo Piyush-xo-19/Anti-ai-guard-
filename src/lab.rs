@@ -70,7 +70,7 @@ unsafe extern "system" {
 }
 struct Job(Handle);
 impl Job {
-    fn active_node_count(&self) -> usize {
+    fn active_pids(&self) -> Vec<u32> {
         #[repr(C)]
         struct Pids {
             assigned: u32,
@@ -99,12 +99,17 @@ impl Job {
             list.assigned == list.count && list.count <= 64,
             "owned job process list truncated"
         );
-        list.ids[..list.count as usize]
+        let mut ids: Vec<_> = list.ids[..list.count as usize]
             .iter()
+            .map(|&pid| u32::try_from(pid).expect("invalid owned PID"))
+            .collect();
+        ids.sort_unstable();
+        assert!(ids.windows(2).all(|pair| pair[0] != pair[1]));
+        ids
+    }
+    fn active_node_count(&self, ids: &[u32]) -> usize {
+        ids.iter()
             .filter(|&&pid| {
-                let Ok(pid) = u32::try_from(pid) else {
-                    return false;
-                };
                 let handle = unsafe { OpenProcess(0x1000, 0, pid) };
                 if handle.is_null() {
                     return false;
@@ -124,7 +129,7 @@ impl Job {
                 unsafe {
                     CloseHandle(handle);
                 }
-                if ok == 0 {
+                if ok == 0 || length as usize > image.len() {
                     return false;
                 }
                 let image = String::from_utf16_lossy(&image[..length as usize]);
@@ -199,6 +204,7 @@ fn benign_case() -> bool {
     match std::env::var("GUARD_LAUNCHER_LAB_CASE").as_deref() {
         Err(std::env::VarError::NotPresent) | Ok("assistant") => false,
         Ok("benign-node") => true,
+        Ok("benign-node-owned") => true,
         _ => panic!("unknown launcher lab case"),
     }
 }
@@ -335,6 +341,7 @@ fn launcher_child() {
 fn package_launcher_lab() {
     consent();
     let benign = benign_case();
+    let owned_only = std::env::var("GUARD_LAUNCHER_LAB_CASE").as_deref() == Ok("benign-node-owned");
     let row = row();
     verify_entry(&row);
     let catalog = catalog::get().unwrap();
@@ -380,7 +387,13 @@ fn package_launcher_lab() {
         .env("GUARD_LAUNCHER_LAB_TOOL", row["tool_id"].as_str().unwrap())
         .env(
             "GUARD_LAUNCHER_LAB_CASE",
-            if benign { "benign-node" } else { "assistant" },
+            if owned_only {
+                "benign-node-owned"
+            } else if benign {
+                "benign-node"
+            } else {
+                "assistant"
+            },
         )
         .stdin(Stdio::piped())
         .stdout(Stdio::null())
@@ -405,10 +418,17 @@ fn package_launcher_lab() {
     let until = Instant::now() + Duration::from_secs(15);
     let mut observed = false;
     while Instant::now() < until {
-        if benign && owned.job.as_ref().unwrap().active_node_count() < 2 {
-            std::thread::sleep(Duration::from_millis(100));
-            continue;
-        }
+        let before = if benign {
+            let job = owned.job.as_ref().unwrap();
+            let ids = job.active_pids();
+            if job.active_node_count(&ids) < 2 {
+                std::thread::sleep(Duration::from_millis(100));
+                continue;
+            }
+            ids
+        } else {
+            Vec::new()
+        };
         let request = processes::ProcessRequest::new(
             true,
             ScopeId(1),
@@ -418,7 +438,16 @@ fn package_launcher_lab() {
             },
         )
         .unwrap();
-        let result = processes::collect(&request, &AtomicBool::new(false), None);
+        let result = if owned_only {
+            let selected = processes::collect_lab_population(&request, &before);
+            assert!(
+                selected.findings.is_empty(),
+                "owned population included an assistant finding"
+            );
+            selected
+        } else {
+            processes::collect(&request, &AtomicBool::new(false), None)
+        };
         if benign {
             assert_eq!(
                 result.execution,
@@ -434,8 +463,13 @@ fn package_launcher_lab() {
                 result.coverage.gaps.is_empty(),
                 "negative cannot pass with coverage gaps"
             );
+            let job = owned.job.as_ref().unwrap();
+            let after = job.active_pids();
+            if owned_only {
+                assert_eq!(before, after, "owned population changed across collection");
+            }
             assert!(
-                owned.job.as_ref().unwrap().active_node_count() >= 2,
+                job.active_node_count(&after) >= 2,
                 "Node/npm exited during negative snapshot"
             );
             assert!(result.findings.iter().all(|f| !matches!(&f.observation.kind,ObservationKind::Process{instance,..} if owned.job.as_ref().unwrap().contains(instance.pid))),"benign Node/npm classified as an assistant");
@@ -545,7 +579,9 @@ fn package_launcher_lab() {
         "no pinned image observed in the owned launcher job"
     );
     verify_entry(&row);
-    if benign {
+    if owned_only {
+        println!("LAUNCHER_BENIGN_OWNED result=PASS population=owned_job collection=Finished coverage=Inspected gaps=0 node_and_npm_alive=true owned_assistant_findings=0");
+    } else if benign {
         println!("LAUNCHER_BENIGN result=PASS collection=Finished coverage=Inspected gaps=0 node_and_npm_alive=true owned_assistant_findings=0");
     } else {
         println!("LAUNCHER_LAB result=PASS tool={} version={} source=npm-exec native_image=Corroborated launcher_no_window_flag=true model_request=none", pin.tool_id, pin.tool_version);
