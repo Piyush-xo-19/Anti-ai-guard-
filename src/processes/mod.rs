@@ -139,6 +139,16 @@ fn collect_with(
     inventory: Option<InventoryLink<'_>>,
     provider: &mut impl Provider,
 ) -> ProcessResult {
+    collect_selected(request, cancelled, inventory, provider, |_| true)
+}
+
+fn collect_selected(
+    request: &ProcessRequest,
+    cancelled: &AtomicBool,
+    inventory: Option<InventoryLink<'_>>,
+    provider: &mut impl Provider,
+    selected: impl Fn(u32) -> bool,
+) -> ProcessResult {
     let mut result = ProcessResult {
         scope: DeclaredScope {
             id: request.scope,
@@ -216,6 +226,9 @@ fn collect_with(
                     break;
                 }
                 result.enumerated += 1;
+                if !selected(row.pid) {
+                    continue;
+                }
                 let Some(id) = tool_id(&row.basename) else {
                     continue;
                 };
@@ -343,3 +356,37 @@ pub fn collect(
 
 #[cfg(test)]
 mod tests;
+
+/// Test-only selector fixture. The caller must establish its owned population
+/// independently; a successful result says nothing about the full session.
+#[cfg(all(windows, test))]
+pub(crate) fn collect_lab_population(request: &ProcessRequest, expected: &[u32]) -> ProcessResult {
+    assert!(!expected.is_empty() && expected.windows(2).all(|pair| pair[0] < pair[1]));
+    let observed = std::cell::RefCell::new(std::collections::BTreeSet::new());
+    let mut result = collect_selected(
+        request,
+        &AtomicBool::new(false),
+        None,
+        &mut windows::NativeProvider::default(),
+        |pid| {
+            let selected = expected.binary_search(&pid).is_ok();
+            if selected {
+                observed.borrow_mut().insert(pid);
+            }
+            selected
+        },
+    );
+    assert!(
+        observed
+            .into_inner()
+            .into_iter()
+            .eq(expected.iter().copied()),
+        "snapshot did not contain the entire owned population"
+    );
+    assert_eq!(
+        result.skipped_other_sessions, 0,
+        "owned job crossed session boundary"
+    );
+    result.scope.label = "test-owned process population only".into();
+    result
+}
