@@ -40,6 +40,11 @@ Make a commit when a coherent chunk has passed its relevant checks. Push complet
 
 ## Validation
 
+Update the [test-case index and run records](docs/test-cases/README.md) with
+each testable change. Link the case ID, setup, expected outcome, and test entry
+point, then record the dated result and any untested variants. Keep the
+procedure and minimized evidence public; keep raw lab data private.
+
 For documentation changes, check links, terminology, Markdown structure, and whether claims match the actual implementation stage.
 
 For Rust changes, run the formatting, strict Clippy, locked build and tests in the [development instructions](docs/development.md). Build/run and test each feature before pushing; independent testers can then open reproducible issues. Cosmetic and non-blocking issues may be scheduled later. Build failures, data-loss/privacy risks, incorrect violation reports and bugs that block dependent work must be resolved before building on them. OS collector changes require platform-specific evidence; unit tests alone do not establish Windows/Linux telemetry coverage.

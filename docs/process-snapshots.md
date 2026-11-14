@@ -18,7 +18,7 @@ Defaults bound enumeration to 4096 rows, findings to 512 and elapsed time to two
 
 **Identity limitations:** names alone stay candidates. Strong identity is limited to the four reviewed native artifact pins in the [artifact identity pilot](artifact-identity.md); all other variants remain candidates. Renamed/custom assistants and script-hosted agents hidden behind a generic interpreter name remain outside this native-name selector. No command-line substring inference is added to fill that gap.
 
-**Boot/correlation:** the [guarded self-header adapter](boot-identity.md) supplies a device-local OS token only when its checks succeed; no token is fabricated from uptime or wall-clock estimates. Unavailable identity retains `MissingBootIdentity` and incomplete coverage; restart/restore/Windows 10 validation is pending. PID reuse with differing known start times is rejected; cross-scan same-instance correlation remains conservative. This is an open M2 validation gate, not verified monitoring.
+**Boot/correlation:** the [guarded self-header adapter](boot-identity.md) supplies a device-local OS token only when its checks succeed; no token is fabricated from uptime or wall-clock estimates. Unavailable identity retains `MissingBootIdentity` and incomplete coverage. A Windows 11 restart comparison passed; resume, Fast Startup, restore and Windows 10 evidence remain pending. PID reuse with differing known start times is rejected; cross-scan same-instance correlation remains conservative.
 
 Boot availability is checked once after successful capture, independently of
 snapshot contents. An empty snapshot or one containing only benign processes

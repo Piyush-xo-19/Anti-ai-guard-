@@ -1,7 +1,8 @@
 # Boot identity: fixed self-process telemetry header
 
-Implemented as an M2 diagnostic capability on 2026-11-01; Windows 10 and restart
-validation remain pending. This is device-local correlation metadata, not an
+Implemented as an M2 diagnostic capability on 2026-11-01. The [Windows 11
+restart comparison](test-cases/runs/2026-11-14-windows-11.md) passed; Windows 10
+validation remains pending. This is device-local correlation metadata, not an
 attestation, hardware ID or globally unique cross-device identifier.
 
 The source is NtQueryInformationProcess information class 64 and the BootId field
@@ -29,9 +30,9 @@ header with zero variable offsets and stable adjacent-query identity. Controlled
 process tests exercise integration. Synthetic tests cover changed boot tokens,
 short/malformed headers, error statuses and every variable-offset field.
 
-M2 completion still requires a real restart/Fast Startup/resume/restore test
-matrix and the Windows 10 VM evidence. Reboot/restore trials are not claimed from
-adjacent queries or fixture comparisons. No machine restart is initiated by tests.
+The successful Windows 11 comparison spans operator-confirmed restarts and a
+Windows build change. Fast Startup, resume, restore and Windows 10 VM evidence
+are still outstanding. No machine restart is initiated by tests.
 
 The [manual checkpoint procedure](validation/boot-transition-lab.md) now supports
 private before/after comparisons without exposing raw boot tokens. Its record and

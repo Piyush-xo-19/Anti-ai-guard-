@@ -1,6 +1,6 @@
 # M2 closure and M3 delivery queue
 
-Updated: 2026-11-06 (Asia/Calcutta). This is an execution plan, not a support or
+Updated: 2026-11-14 (Asia/Calcutta). This is an execution plan, not a support or
 completion claim. The maintainer authorized continued delivery of remaining M2
 and then M3. Existing acceptance, privacy and review gates still apply.
 
@@ -23,8 +23,8 @@ subcase, not its parent acceptance row or every installation variant.
 | Collector capability (#35) | PR #49 merged after all seven checks, including CodeRabbit; 111 local tests/doctests and five real launcher controls pass | Complete: unavailable boot correlation disclosed independently of findings | Preserve empty, benign and candidate regression cases |
 | Public contract corrections (#42/#44) | Manifest handles are scoped to one probe; wire projection has `MissingSuggestion` | Documentation now explains handle lifetime and the fallback action reason | No wire or lifetime behavior change |
 | Required variant ledger | Native, npm metadata/dependency and real launcher records exist separately | Map each C01-C10/C13 variant to exact source, pin, mode and remaining outcome | Review the frozen four-tool scope; retain separate OpenCode generations |
-| Boot transition | Private checkpoint and same-boot checks pass on the recorded source | Compare the preserved checkpoint after a known physical operation and publish only a minimized verdict | Operator identifies actual Restart versus shutdown/start or sleep; identical source revision |
-| Desktop benign/privacy/failure checks | Controlled same-name processes, Node/npm and denied-directory cases pass; synthetic tests cover other branches | Expand missing real Windows 11 cases with owned fixtures and before/after checks | Existing trusted local tools only; unavailable software stays NOT RUN |
+| Boot transition | [Same-boot and Windows 11 restart comparison passed](test-cases/runs/2026-11-14-windows-11.md) | Record separate resume, Fast Startup and restore outcomes | Suitable controlled lab, known operation and matching baseline source |
+| Desktop benign/privacy/failure checks | [November 14 scope and denied-directory subcases pass](test-cases/runs/2026-11-14-windows-11.md); benign Node/npm is blocked by partial coverage on the updated build | Obtain a complete benign control and expand remaining Windows 11 cases | Existing trusted local tools only; unavailable software stays NOT RUN |
 | Windows 10 | No desktop/VM evidence | Run the same required subset with its own build/token record | Maintainer supplies the deferred desktop/VM |
 | M2 closeout | Required gates remain incomplete | Review per-case outcomes, support wording and reproduction commands | All required gates satisfied, CI and completed CodeRabbit |
 
@@ -61,8 +61,9 @@ belong to M3; FUT-03/FUT-04 are not M2 completion shortcuts.
 
 Each row is a separate reviewable delivery, followed by relevant checks, public
 status, a commit/PR, completed CI/CodeRabbit and merge before the next delivery.
-M3.1's bounded experiments can start after M2 closure and approval of the lab
-scope, including the privacy and privilege review before real-device use.
+M3.1's bounded Windows 11 experiments can start after Windows 11 M2 closeout
+and approval of the lab scope, including privacy and privilege review before
+real-device use. Windows 10 desktop validation remains deferred.
 Capability evidence and source/API/dependency selection are M3.1 outputs. They
 must be reviewed before adapter delivery in M3.3; they do not block starting
 the experiments that produce them.
@@ -87,6 +88,7 @@ competition sessions, backend/UI and automatic process control remain outside M3
 
 Commit counts, green fixtures and successful event receipt are not milestone
 completion criteria. Public status must identify implemented behavior, measured
-subcases, untested variants and external dependencies separately. In particular,
-deferring the Windows 10 VM does not silently waive the existing two-desktop gate.
-Changing that gate needs an explicit maintainer decision in the decision log.
+subcases, untested variants and external dependencies separately. The
+[November 14 decision](decisions.md#windows-11-first-for-m3-entry-2026-11-14)
+allows Windows 11 M3.1 experiments before Windows 10 testing. Full M2
+acceptance still requires the two-desktop evidence.
