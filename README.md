@@ -12,7 +12,12 @@ The design combines a pre-event software inventory, runtime observation of recog
 
 > **Current stage: M2 preflight with a pinned native identity pilot.** Consented bounded installation inventory and current-session process-name candidates work with text/JSON output. M2.6 validation tooling is available, but the full Windows 10/11 desktop exit gate remains incomplete. A guarded boot adapter and four [pinned native identity rules](docs/artifact-identity.md) are implemented; unpinned variants remain candidates. No continuous monitor, installer or dashboard is implemented.
 
-The implemented reports use [JSON schema v2](docs/report-schema-v2.md), preserving FILETIME identity as a decimal string and distinguishing operational gaps from expected identity limitations. The latest local suite passed 111 tests/doctests, with five intentionally ignored labs/helpers. The [2026-11-06 regression record](docs/validation/launcher-regression-2026-11-06.json) records four real npm launcher positives and a benign Node/npm control; these partial checks do not replace full desktop acceptance. [Finish M2 first](docs/m2-completion.md); the [eight M3 chunks](docs/m3-plan.md) are planning only.
+The reports use [JSON schema v2](docs/report-schema-v2.md), preserving FILETIME
+identity as a decimal string and distinguishing operational gaps from expected
+identity limitations. M3.1 has begun with Windows 11 event source access checks.
+The current standard-user account was denied the filtered WMI subscriptions
+and provider-free real-time ETW session creation.
+[M3.1 results](docs/test-cases/runs/2026-11-15-m3-1-access.md)
 
 ## Explore the project
 
@@ -21,7 +26,7 @@ The implemented reports use [JSON schema v2](docs/report-schema-v2.md), preservi
 - [M2 implementation plan](docs/m2-plan.md)
 - [Remaining M2 completion work](docs/m2-completion.md)
 - [M2 closure and M3 delivery queue](docs/delivery-plan.md)
-- [M3 runtime plan: eight queued chunks](docs/m3-plan.md)
+- [M3 runtime plan](docs/m3-plan.md)
 - [M3 source research and experiment checklist](docs/m3-source-review.md)
 - [Build, run and test the CLI](docs/development.md)
 - [Shared contracts and synthetic diagnostic example](docs/shared-contracts.md)
@@ -162,10 +167,9 @@ Browser assistance, IDE extension controls, VM/WSL/container coverage, and activ
 
 See [PROJECT_STATUS.md](PROJECT_STATUS.md) for current progress, the [decision log](docs/decisions.md) for agreed choices and pending reviews, and the [M2 plan](docs/m2-plan.md) for the proposed implementation chunks. These are public contributor references; no private maintainer tracker is required.
 
-The [remaining Windows 11 M2 tests](docs/m2-completion.md) and experiment
-scope review come before Windows 11 M3.1. Windows 10 is deferred and remains
-required for full M2 acceptance. The [M3 plan](docs/m3-plan.md) has eight
-implementation chunks, M3.1–M3.8.
+The maintainer started bounded Windows 11 M3.1 trials while M2 validation
+continues. Windows 10 is deferred and remains required for full M2 acceptance.
+[M2 checklist](docs/m2-completion.md) · [M3 plan](docs/m3-plan.md)
 
 Each milestone will be split further into reviewable changes. The status column distinguishes implemented preflight pieces from pending validation and later planned functionality.
 
@@ -174,7 +178,7 @@ Each milestone will be split further into reviewable changes. The status column 
 | **M0 — Public foundation** | README, MIT license, contribution workflow, and architecture draft | Complete |
 | **M1 — Coverage and design** | Windows 10/11 target matrix, proposed privilege scope, evidence rules and acceptance plan | Documents ready for review; tests not run |
 | **M2 — Read-only preflight** | Rust structure, detection interfaces, installation/process inventory, reports, and tests | Collectors, reports and four native identity pins implemented; full boot/desktop acceptance incomplete |
-| **M3 — Runtime observation** | Process-event collectors, reconciliation, health checks, and failure reporting | Eight chunks planned; M3.1 follows the Windows 11 closeout and experiment scope review |
+| **M3 — Runtime observation** | Process-event collectors, reconciliation, health checks, and failure reporting | M3.1 permission trials recorded. Runtime source selection is open. |
 | **M4 — Session and audit** | Policy transitions, bounded local persistence, notifications, and synchronization contract | Planned |
 | **M5 — Organizer workflow** | Enrollment, heartbeats, evidence review, and participant/organizer interfaces | Proposed scope |
 | **M6 — Controlled validation** | Windows/Linux acceptance results, measured performance, privacy checks, and release documentation | Planned |

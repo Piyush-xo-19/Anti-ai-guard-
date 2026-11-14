@@ -3,13 +3,15 @@
 Start here to see what is being tested, how to reproduce it, and what remains
 open. The [acceptance plan](../acceptance-plan.md#4-acceptance-cases) defines the
 expected behavior and the original case IDs. The [M2 case index](m2.md) maps work
-to those IDs, executable tests, and evidence. The [M3 plan](../m3-plan.md)
-describes future cases; runtime trials have not started.
+to those IDs, executable tests, and evidence. The
+[M3.1 lab index](m3-1.md) covers Windows event source access and the disposable ETW delivery lab.
 
 ## Latest runs
 
 | Date | Run | Outcome |
 | --- | --- | --- |
+| 2026-11-15 | [M3.1 ETW lab preparation](runs/2026-11-15-m3-1-etw-lab.md) | Strict build and host controls PASS; elevated delivery NOT RUN |
+| 2026-11-15 | [M3.1 Windows 11 permission results](runs/2026-11-15-m3-1-access.md) | WMI start/stop subscriptions and ETW session creation denied |
 | 2026-11-14 | [Windows 11 resume on build 26300.9974](runs/2026-11-14-windows-11-resume.md) | Resume PASS after a fresh checkpoint on the updated build |
 | 2026-11-14 | [Windows 11 owned-process validation](runs/windows-11-owned-control.md) | Owned Node/npm, CLI privacy and cooperative cancellation passed; full session remains incomplete |
 | 2026-11-14 | [Windows 11 restart and desktop checks](runs/2026-11-14-windows-11.md) | Restart, default suite and pinned tool subcases PASS; benign Node/npm BLOCKED by partial coverage |

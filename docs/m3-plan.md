@@ -1,13 +1,13 @@
 # M3 plan: Windows runtime observation
 
-Updated: 2026-11-14 (Asia/Calcutta)
-State: planning only; M3.1 follows the Windows 11 M2 closeout review.
+Updated: 2026-11-15 (Asia/Calcutta)
+State: Windows 11 access trial recorded. An elevated ETW lab is built and awaits a disposable Windows 11 guest. Source selection remains open.
 
 [Status](../PROJECT_STATUS.md) | [M2 completion](m2-completion.md) | [Architecture](architecture-v1.md) | [Decisions](decisions.md)
 
 The [delivery queue](delivery-plan.md) gives the ordered implementation outcomes.
 The [source research note](m3-source-review.md) links primary API contracts and
-defines capability experiments; no source is selected or exercised by that note.
+defines capability experiments and links the first results.
 
 ## Outcome and boundary
 
@@ -28,10 +28,12 @@ review rather than silently changing the plan.
 
 ### Bounded M3.1 experiments
 
-- [ ] Finish the [Windows 11 M2 closeout review](m2-completion.md) with the
-  required desktop, identity and boot outcomes recorded and any outstanding
-  Windows 11 blockers resolved. The deferred Windows 10 VM does not block
-  Windows 11 M3.1 experiments; it still blocks full M2 acceptance.
+- [x] Start the bounded Windows 11 M3.1 trial on the maintainer's instruction.
+  The [M2 completion checklist](m2-completion.md) retains outstanding Windows
+  11 cases and the deferred Windows 10 VM.
+- [x] Review the first lab's request fields and privileges. It requests a
+  filtered WMI subscription and an ETW session with zero enabled providers.
+  Validation uses the current standard-user token and no participant corpus.
 - [ ] Review each proposed experiment's documented privileges, requested fields,
   possible system-wide versus session receipt, minimization and privacy boundary
   before enabling it on a real device. Denial is a valid experimental outcome;
@@ -51,16 +53,16 @@ outputs of those experiments, not prerequisites for starting them.
   evidence; review actual privilege, visibility and privacy behavior before
   enabling the product adapter on a real device.
 
-Publication of this plan is authorized; these unchecked gates are not approvals
-or executed tests. No runtime source has been selected by this document. A source
-that cannot establish its scope/readiness must report unavailable; a snapshot
-fallback cannot masquerade as continuous monitoring.
+The tested account was denied access to the filtered WMI process-event
+subscriptions and real-time ETW session creation with zero enabled providers.
+Keep a source unavailable when it cannot establish scope or readiness.
+Snapshots provide point-in-time evidence.
 
 ## Implementation chunks
 
 | Chunk | Outcome | Status |
 | --- | --- | --- |
-| M3.1 | Source capability experiment and selection | Not started; entry gate pending |
+| M3.1 | Source capability experiment and selection | Windows 11 standard-user access denials recorded. [ETW delivery lab prepared](test-cases/runs/2026-11-15-m3-1-etw-lab.md), pending a disposable guest. |
 | M3.2 | Runtime contracts and fixture-driven health reducer | Not started |
 | M3.3 | Bounded Windows event adapter | Not started |
 | M3.4 | Listener-first baseline reconciliation | Not started |

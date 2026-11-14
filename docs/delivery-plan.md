@@ -61,9 +61,9 @@ belong to M3; FUT-03/FUT-04 are not M2 completion shortcuts.
 
 Each row is a separate reviewable delivery, followed by relevant checks, public
 status, a commit/PR, completed CI/CodeRabbit and merge before the next delivery.
-M3.1's bounded Windows 11 experiments can start after Windows 11 M2 closeout
-and approval of the lab scope, including privacy and privilege review before
-real-device use. Windows 10 desktop validation remains deferred.
+The maintainer started bounded Windows 11 M3.1 permission experiments while
+M2 cases remain open. Source experiments use a reviewed privacy and privilege
+scope. Windows 10 desktop validation remains deferred.
 Capability evidence and source/API/dependency selection are M3.1 outputs. They
 must be reviewed before adapter delivery in M3.3; they do not block starting
 the experiments that produce them.
@@ -79,10 +79,10 @@ the experiments that produce them.
 | M3.7 | Separate minimized runtime report contract and CLI integration | Human/JSON agreement, fake secrets, truncation, closed pipe and stopped state; schema changes explicit; eligibility remains NotIssued |
 | M3.8 | Desktop evidence and milestone review | Ground-truth launches, received/classified/missed counts, latency clocks, loss/failure trials, memory bounds and no-mutation records per actual OS/mode |
 
-The [source research note](m3-source-review.md) prepares M3.1 without running an
-event collector or selecting a source prematurely. The [eight-chunk plan](m3-plan.md)
-defines the full contracts and exclusions. Linux collectors, persistent services,
+The source research note includes the first permission results. The eight-chunk
+plan defines the contracts and exclusions. Linux collectors, persistent services,
 competition sessions, backend/UI and automatic process control remain outside M3.
+[Source research](m3-source-review.md) · [M3 plan](m3-plan.md)
 
 ## Completion rule
 
