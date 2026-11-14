@@ -1,8 +1,9 @@
 # M3.1 source research: decision and experiment checklist
 
-Reviewed: 2026-11-06. Planning only; no source selected or subscription run.
-See the [M3 entry gate](m3-plan.md#entry-gate) for Windows 11 closeout and
-experiment scope requirements.
+The first Windows 11 access trial reached the WMI namespace, but both
+process-event subscriptions were denied. ETW real-time session creation was
+also denied. Source selection remains open.
+[Experiment results](test-cases/runs/2026-11-15-m3-1-access.md)
 
 ## Candidates and documented constraints
 
@@ -26,7 +27,7 @@ WMI documents dropped-event and queue-overflow event classes in its
 That is not evidence that a selected temporary process subscription receives every
 upstream loss signal. Prove the applicable path or describe continuity as unknown.
 
-## Experiment contract after Windows 11 closeout
+## Experiment contract
 
 1. Use a clean committed source and explicit lab consent. Record OS/build, compiled
    architecture and actual token mode. Use only an owned disposable process corpus.

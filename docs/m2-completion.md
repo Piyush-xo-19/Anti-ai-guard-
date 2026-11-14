@@ -7,9 +7,10 @@ Updated: 2026-11-14 (Asia/Calcutta)
 The [delivery queue](delivery-plan.md) maps remaining work to concrete evidence,
 available agent actions and machine-dependent checks. It preserves this gate.
 
-The maintainer [reordered the handoff on November 14](decisions.md#windows-11-first-for-m3-entry-2026-11-14):
-finish and review the Windows 11 test work before M3.1. Windows 10 remains
-required for full M2 acceptance but will be tested separately when its VM is ready.
+The maintainer authorized bounded M3.1 permission trials while the remaining
+M2 cases stay open. Windows 10 remains required for full M2 acceptance and
+will be tested when its VM is ready.
+[M3.1 decision](decisions.md#m31-permission-trial-2026-11-15)
 
 **M2 is not complete.** The [artifact pilot](artifact-identity.md), schema v2
 reports and passing fixtures cover limited scenarios. The [Windows 11 restart
@@ -45,7 +46,7 @@ launchers/runners and full acceptance rows are not validated by those records.
 | 3. Settle boot-scoped correlation | Reviewed OS-backed boot identity approach, or an explicit maintainer decision about the outstanding requirement | Same-boot stability, restart distinction, denied/unavailable behavior and privacy checks; no clock/uptime estimates represented as trusted identity | Windows 11 same-boot and restart comparisons pass; resume, Fast Startup, restore and Windows 10 evidence pending |
 | 4. Execute the Windows 11 desktop subset | Complete trials on the actual declared build/mode with pinned tools | Required acceptance subcases, before/after no-mutation checks, redacted reports and ground-truth references | Native and real npm/headless snapshot subcases pass; full variant/privacy/failure matrix remains open |
 | 5. Execute the Windows 10 desktop subset | Independent Windows 10 configuration and the same declared required subset | Its own exact build/mode/artifacts and required outcomes | Deferred by maintainer on 2026-11-02; not validated |
-| 6. Review M2.6 and publish the result | Reviewed evidence, working commands, honest support matrix and known limitations | All required gates satisfied for full M2 acceptance; focused PRs, relevant CI and completed CodeRabbit review | Windows 11 closeout is still open and gates M3.1; Windows 10 results follow independently |
+| 6. Review M2.6 and publish the result | Reviewed evidence, working commands, support matrix and known limitations | All required gates satisfied for full M2 acceptance, with focused PRs and completed CI and review | Windows 11 closeout is open. Windows 10 results follow independently. |
 
 These steps complete existing M2 obligations; they are not a new product milestone
 or permission to broaden scanning. Strong identity work must keep process/file
@@ -94,8 +95,8 @@ Prepare/review the artifact manifest and identity predicates, investigate a
 supported boot identity source, and run controlled Windows 11 fixtures. Before
 real-tool trials, arrange pinned artifacts and a consenting disposable lab scope.
 A Windows 10 machine or VM is still required to finish the agreed two-OS gate.
-After the Windows 11 closeout and experiment scope review, bounded Windows 11
-M3.1 experiments may begin while the Windows 10 matrix stays pending.
+The bounded Windows 11 M3.1 permission trials run independently of these
+remaining M2 cases.
 
 ## Fixture evidence available on 2026-11-01
 

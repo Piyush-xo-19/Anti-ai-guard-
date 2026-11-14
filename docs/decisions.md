@@ -159,3 +159,13 @@ experiments after Windows 11 closeout and experiment scope review. Windows 10
 remains a prototype target and is still required for full two-platform M2
 acceptance. Unexecuted cases stay open; the decision grants no support claim
 and does not waive M3 source privacy, privilege or adapter review.
+
+## M3.1 permission trial (2026-11-15)
+
+The maintainer requested starting M3.1 while the remaining M2 cases stay open.
+The first trial uses the Windows 11 standard-user token, filtered WMI queries,
+and a temporary ETW control probe with zero providers. Both WMI process-event
+subscriptions and ETW session creation were denied. Runtime source selection
+remains open pending evidence for an alternative that fits the permission
+model. Retain the M2 acceptance requirements and the M3.3 adapter review.
+[Lab results](test-cases/runs/2026-11-15-m3-1-access.md)
