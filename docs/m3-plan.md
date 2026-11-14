@@ -1,7 +1,7 @@
 # M3 plan: Windows runtime observation
 
-Updated: 2026-11-06 (Asia/Calcutta)
-State: planning only; implementation queued behind incomplete M2 acceptance.
+Updated: 2026-11-14 (Asia/Calcutta)
+State: planning only; M3.1 follows the Windows 11 M2 closeout review.
 
 [Status](../PROJECT_STATUS.md) | [M2 completion](m2-completion.md) | [Architecture](architecture-v1.md) | [Decisions](decisions.md)
 
@@ -28,8 +28,10 @@ review rather than silently changing the plan.
 
 ### Bounded M3.1 experiments
 
-- [ ] Close the [M2 completion checklist](m2-completion.md), with required desktop,
-  trusted identity and boot-correlation outcomes recorded honestly.
+- [ ] Finish the [Windows 11 M2 closeout review](m2-completion.md) with the
+  required desktop, identity and boot outcomes recorded and any outstanding
+  Windows 11 blockers resolved. The deferred Windows 10 VM does not block
+  Windows 11 M3.1 experiments; it still blocks full M2 acceptance.
 - [ ] Review each proposed experiment's documented privileges, requested fields,
   possible system-wide versus session receipt, minimization and privacy boundary
   before enabling it on a real device. Denial is a valid experimental outcome;

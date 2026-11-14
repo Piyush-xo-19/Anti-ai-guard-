@@ -4,6 +4,10 @@ The maintainer authorized M2.6 with M2.4/M2.5, retaining separate commits. The v
 
 ## Repeat the fixture checks
 
+See the [test-case index and dated runs](../test-cases/README.md) to navigate
+the cases and their outcomes. This folder retains earlier validation artifacts
+and lab procedures.
+
 From a normal Windows terminal with the pinned Rust toolchain and fetched lockfile dependencies:
 
 ```powershell
@@ -30,7 +34,7 @@ Follow [acceptance-plan.md](../acceptance-plan.md) and [coverage-matrix.md](../c
 - No Windows 10 desktop lab was available in this session.
 - The normal-access Windows 11 fixture suite passes; restricted sandbox access is a separate historical limitation. Controlled native-image subcases have results, but full desktop acceptance is incomplete.
 - Four exact native artifact pins exist. Other versions and renamed/custom/interpreter-hosted assistants are not validated.
-- Guarded device-local boot metadata exists, but reboot/Fast Startup/restore validation remains pending.
+- The [Windows 11 restart comparison](../test-cases/runs/2026-11-14-windows-11.md) passed. Resume, Fast Startup and restore remain pending.
 - Exact lab/privilege/variant requirements still need review before any support claim.
 
 See [results.md](results.md) for exact available checks and commits. No 95% recall, 2% false-positive or five-second runtime target is claimed. M3 continuous observation has not started. Do not mark M2 complete until the declared baseline's real-tool/OS/privacy/failure gates have recorded outcomes and the unresolved identity/coverage requirements are settled.

@@ -50,7 +50,10 @@ The ignored local tracker is optional maintainer context. All contributor-facing
 
 ## Next work
 
-Run independent diagnostics only with explicit consent and selected roots/session. Resolve trusted identity and boot correlation requirements, approve exact lab/variant scope, then execute the required desktop matrix before promoting support or completing M2. Follow the [M2 completion checklist](docs/m2-completion.md). Only the current Windows 11 machine is available; Windows 10 requires a separate lab. Preserve milestone order; the [eight-chunk M3 plan](docs/m3-plan.md) is public planning only and M3 code has not started.
+Finish the [Windows 11 closeout](docs/m2-completion.md), including the blocked
+benign runner control and remaining desktop coverage. Then review the experiment
+scope for [M3.1](docs/m3-plan.md#entry-gate). The Windows 10 VM is deferred and
+still required for full M2 acceptance. M3 code has not started.
 
 ## Issue maintenance - 2026-10-30
 
@@ -226,3 +229,21 @@ with five intentional ignored labs/helpers. Physical boot transitions and
 remaining Windows 11 desktop cases still require evidence; Windows 10 is deferred.
 M2 remains incomplete and M3 implementation has not started. No boot checkpoint
 was overwritten and no power transition was initiated.
+
+## Windows 11 restart and test-case tracking - 2026-11-14
+
+- [x] Compare the November 3 checkpoint after the maintainer confirmed Windows
+  restarts. The boot identity changed on Windows 11 25H2 build 26200.9974, and
+  the private checkpoint remained unchanged.
+- [x] Run the default locked suite on the updated build: 111 tests/doctests
+  passed, 0 failed, 5 intentionally ignored.
+- [x] Add a [public test-case folder](docs/test-cases/README.md) with the M2
+  index, a maintenance workflow, and the [dated run record](docs/test-cases/runs/2026-11-14-windows-11.md).
+- [x] Rerun the four pinned native/npm tool subcases and owned scope/denial controls.
+- [ ] Obtain a complete scan for the benign Node/npm control; both attempts
+  returned partial coverage on this build.
+- [ ] Record remaining boot and Windows 11 desktop acceptance cases.
+- [ ] Run the deferred Windows 10 desktop matrix.
+
+The maintainer deferred the Windows 10 VM. Windows 11 closeout still comes
+before M3.1; Windows 10 remains required for full M2 acceptance.

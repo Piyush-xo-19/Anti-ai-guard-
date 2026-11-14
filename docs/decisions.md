@@ -1,6 +1,6 @@
 # Project decision log
 
-Updated: 2026-11-06 | Status: accepted choices and open proposals
+Updated: 2026-11-14 | Status: accepted choices and open proposals
 
 [Public status](../PROJECT_STATUS.md) | [Architecture](architecture-v1.md) | [Coverage contract](coverage-matrix.md) | [M2 plan](m2-plan.md)
 
@@ -149,3 +149,13 @@ review passes, bounded M3.1 trials may produce capability evidence and a source
 decision. That evidence and the reviewed API/dependency choice gate M3.3 adapter
 delivery, rather than blocking the experiments that establish them. No runtime
 source is selected by the planning documents.
+
+## Windows 11 first for M3 entry (2026-11-14)
+
+The maintainer asked to finish the Windows 11 tests before starting M3 and to
+defer Windows 10 until a VM is available. This changes the order of work:
+Windows 10 results are not required to begin the bounded Windows 11 M3.1
+experiments after Windows 11 closeout and experiment scope review. Windows 10
+remains a prototype target and is still required for full two-platform M2
+acceptance. Unexecuted cases stay open; the decision grants no support claim
+and does not waive M3 source privacy, privilege or adapter review.

@@ -32,6 +32,7 @@ The implemented reports use [JSON schema v2](docs/report-schema-v2.md), preservi
 - [Combined scans and text/JSON reports](docs/diagnostic-reports.md)
 - [Public JSON schema v2 and compatibility](docs/report-schema-v2.md)
 - [Validation evidence and remaining M2 gates](docs/validation/README.md)
+- [Test cases, current coverage and dated runs](docs/test-cases/README.md)
 - [Competition policy](#competition-policy)
 - [How it is intended to work](#how-it-is-intended-to-work)
 - [Proposed architecture](#proposed-architecture)
@@ -161,7 +162,10 @@ Browser assistance, IDE extension controls, VM/WSL/container coverage, and activ
 
 See [PROJECT_STATUS.md](PROJECT_STATUS.md) for current progress, the [decision log](docs/decisions.md) for agreed choices and pending reviews, and the [M2 plan](docs/m2-plan.md) for the proposed implementation chunks. These are public contributor references; no private maintainer tracker is required.
 
-M2 must pass its [remaining completion gates](docs/m2-completion.md) before M3 code starts. The public [M3 plan](docs/m3-plan.md) proposes eight chunks, M3.1-M3.8; these are implementation steps, not product versions. Only the current Windows 11 machine is available for desktop work, so the Windows 10 gate remains open.
+The [remaining Windows 11 M2 tests](docs/m2-completion.md) and experiment
+scope review come before Windows 11 M3.1. Windows 10 is deferred and remains
+required for full M2 acceptance. The [M3 plan](docs/m3-plan.md) has eight
+implementation chunks, M3.1–M3.8.
 
 Each milestone will be split further into reviewable changes. The status column distinguishes implemented preflight pieces from pending validation and later planned functionality.
 
@@ -170,7 +174,7 @@ Each milestone will be split further into reviewable changes. The status column 
 | **M0 — Public foundation** | README, MIT license, contribution workflow, and architecture draft | Complete |
 | **M1 — Coverage and design** | Windows 10/11 target matrix, proposed privilege scope, evidence rules and acceptance plan | Documents ready for review; tests not run |
 | **M2 — Read-only preflight** | Rust structure, detection interfaces, installation/process inventory, reports, and tests | Collectors, reports and four native identity pins implemented; full boot/desktop acceptance incomplete |
-| **M3 — Runtime observation** | Process-event collectors, reconciliation, health checks, and failure reporting | Eight chunks planned; implementation queued behind M2 completion |
+| **M3 — Runtime observation** | Process-event collectors, reconciliation, health checks, and failure reporting | Eight chunks planned; M3.1 follows the Windows 11 closeout and experiment scope review |
 | **M4 — Session and audit** | Policy transitions, bounded local persistence, notifications, and synchronization contract | Planned |
 | **M5 — Organizer workflow** | Enrollment, heartbeats, evidence review, and participant/organizer interfaces | Proposed scope |
 | **M6 — Controlled validation** | Windows/Linux acceptance results, measured performance, privacy checks, and release documentation | Planned |

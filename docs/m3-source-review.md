@@ -1,7 +1,8 @@
 # M3.1 source research: decision and experiment checklist
 
 Reviewed: 2026-11-06. Planning only; no source selected or subscription run.
-M2's [entry gate](m3-plan.md#entry-gate) remains in force.
+See the [M3 entry gate](m3-plan.md#entry-gate) for Windows 11 closeout and
+experiment scope requirements.
 
 ## Candidates and documented constraints
 
@@ -25,7 +26,7 @@ WMI documents dropped-event and queue-overflow event classes in its
 That is not evidence that a selected temporary process subscription receives every
 upstream loss signal. Prove the applicable path or describe continuity as unknown.
 
-## Experiment contract to implement after M2
+## Experiment contract after Windows 11 closeout
 
 1. Use a clean committed source and explicit lab consent. Record OS/build, compiled
    architecture and actual token mode. Use only an owned disposable process corpus.
