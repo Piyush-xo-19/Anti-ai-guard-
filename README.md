@@ -15,7 +15,8 @@ The design combines a pre-event software inventory, runtime observation of recog
 The reports use [JSON schema v2](docs/report-schema-v2.md), preserving FILETIME
 identity as a decimal string and distinguishing operational gaps from expected
 identity limitations. M3.1 has begun with Windows 11 event source access checks.
-The current standard-user account was denied access to both tested interfaces.
+The current standard-user account was denied the filtered WMI subscriptions
+and provider-free real-time ETW session creation.
 [M3.1 results](docs/test-cases/runs/2026-11-15-m3-1-access.md)
 
 ## Explore the project

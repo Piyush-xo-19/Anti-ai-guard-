@@ -53,15 +53,16 @@ outputs of those experiments, not prerequisites for starting them.
   evidence; review actual privilege, visibility and privacy behavior before
   enabling the product adapter on a real device.
 
-The first access trial leaves both sources unavailable on the tested account.
-Keep a source unavailable when it cannot establish its scope or readiness.
+The tested account was denied access to the filtered WMI process-event
+subscriptions and real-time ETW session creation with zero enabled providers.
+Keep a source unavailable when it cannot establish scope or readiness.
 Snapshots provide point-in-time evidence.
 
 ## Implementation chunks
 
 | Chunk | Outcome | Status |
 | --- | --- | --- |
-| M3.1 | Source capability experiment and selection | Windows 11 access trials recorded. Both sources denied access on the tested token. |
+| M3.1 | Source capability experiment and selection | Windows 11 standard-user trial recorded. Filtered WMI subscriptions and provider-free real-time ETW session creation were denied. |
 | M3.2 | Runtime contracts and fixture-driven health reducer | Not started |
 | M3.3 | Bounded Windows event adapter | Not started |
 | M3.4 | Listener-first baseline reconciliation | Not started |
