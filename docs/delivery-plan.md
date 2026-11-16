@@ -66,7 +66,8 @@ M2 cases remain open. Source experiments use a reviewed privacy and privilege
 scope. Windows 10 desktop validation remains deferred.
 Capability evidence and source/API/dependency selection are M3.1 outputs. They
 must be reviewed before adapter delivery in M3.3; they do not block starting
-the experiments that produce them.
+the experiments that produce them. M3.2 uses synthetic inputs, so it can be
+delivered while the elevated Windows 11 trial awaits a suitable lab.
 
 | Chunk | Concrete deliverable | Minimum acceptance before proceeding |
 | --- | --- | --- |

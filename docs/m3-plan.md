@@ -1,7 +1,9 @@
 # M3 plan: Windows runtime observation
 
-Updated: 2026-11-15 (Asia/Calcutta)
-State: Windows 11 access trial recorded. An elevated ETW lab is built and awaits a disposable Windows 11 guest. Source selection remains open.
+Updated: 2026-11-16 (Asia/Calcutta)
+State: M3.2 runtime contracts and health transitions are implemented with
+synthetic fixtures. The elevated Windows 11 delivery trial is deferred until
+a suitable lab is available. Source selection remains open.
 
 [Status](../PROJECT_STATUS.md) | [M2 completion](m2-completion.md) | [Architecture](architecture-v1.md) | [Decisions](decisions.md)
 
@@ -43,7 +45,8 @@ review rather than silently changing the plan.
 
 These prerequisites permit only the finite, consented capability experiments
 described in M3.1. Capability evidence and the source/API/dependency decision are
-outputs of those experiments, not prerequisites for starting them.
+outputs of those experiments, not prerequisites for starting them. The maintainer
+authorized M3.2 synthetic contract work while the delivery trial is deferred.
 
 ### Gate before adapter delivery (M3.3)
 
@@ -63,7 +66,7 @@ Snapshots provide point-in-time evidence.
 | Chunk | Outcome | Status |
 | --- | --- | --- |
 | M3.1 | Source capability experiment and selection | Windows 11 standard-user access denials recorded. [ETW delivery lab prepared](test-cases/runs/2026-11-15-m3-1-etw-lab.md), pending a disposable guest. |
-| M3.2 | Runtime contracts and fixture-driven health reducer | Not started |
+| M3.2 | Runtime contracts and fixture-driven health reducer | Implemented and exercised with [synthetic fixtures](test-cases/m3-2.md). |
 | M3.3 | Bounded Windows event adapter | Not started |
 | M3.4 | Listener-first baseline reconciliation | Not started |
 | M3.5 | Consented monitor lifecycle and targeted rescans | Not started |

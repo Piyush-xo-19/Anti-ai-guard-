@@ -4,7 +4,8 @@ Start here to see what is being tested, how to reproduce it, and what remains
 open. The [acceptance plan](../acceptance-plan.md#4-acceptance-cases) defines the
 expected behavior and the original case IDs. The [M2 case index](m2.md) maps work
 to those IDs, executable tests, and evidence. The
-[M3.1 lab index](m3-1.md) covers Windows event source access and the disposable ETW delivery lab.
+[M3.1 lab index](m3-1.md) covers Windows source access and the ETW delivery lab.
+The [M3.2 case index](m3-2.md) covers the synthetic runtime contracts.
 
 ## Latest runs
 
