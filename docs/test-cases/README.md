@@ -11,6 +11,7 @@ The [M3.2 case index](m3-2.md) covers the synthetic runtime contracts.
 
 | Date | Run | Outcome |
 | --- | --- | --- |
+| 2026-11-16 | [M3.2 synthetic runtime contracts](runs/2026-11-16-m3-2-runtime-contracts.md) | Nine runtime fixtures PASS; elevated Windows delivery deferred |
 | 2026-11-15 | [M3.1 ETW lab preparation](runs/2026-11-15-m3-1-etw-lab.md) | Strict build and host controls PASS; elevated delivery NOT RUN |
 | 2026-11-15 | [M3.1 Windows 11 permission results](runs/2026-11-15-m3-1-access.md) | WMI start/stop subscriptions and ETW session creation denied |
 | 2026-11-14 | [Windows 11 restart and desktop checks](runs/2026-11-14-windows-11.md) | Restart, default suite and pinned tool subcases PASS; benign Node/npm BLOCKED by partial coverage |
