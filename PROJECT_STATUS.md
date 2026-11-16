@@ -1,6 +1,6 @@
 # Project status and milestone plan
 
-Updated: 2026-11-15 (Asia/Calcutta)
+Updated: 2026-11-16 (Asia/Calcutta)
 
 **M2.4 process candidates and M2.5 integrated reports are implemented. M2.6 validation tooling is implemented; full desktop acceptance and full M2 completion remain INCOMPLETE.**
 
@@ -26,7 +26,7 @@ Four reviewed native artifact pins and guarded device-local boot adapter now exi
 | M0: public foundation | Complete | Maintain documentation |
 | M1: coverage/design | Documents prepared; relevant reviews open | Review exact lab/privilege/variant and strong-identity requirements |
 | M2: read-only preflight | Bounded preflight and four native pins available; NOT complete | Trusted identity/boot requirements and required Windows 10/11 real-tool/privacy/failure lab outcomes |
-| M3: runtime observation | M3.1 Windows 11 access trials completed for the first two sources | Authorized source selection, reconciliation, continuity and health evidence |
+| M3: runtime observation | M3.1 access trial recorded. M3.2 runtime contracts and health reducer exercised with synthetic fixtures. | Elevated delivery evidence, source selection, adapter and real monitoring validation |
 | M4: sessions/audit | Not started | Durable policy transitions, outbox and recovery |
 | M5: organizer workflow | Proposed; not started | Enrollment, leases/heartbeats, review and interfaces |
 | M6: controlled validation | Not started | Broader release/platform/performance evidence |
@@ -49,6 +49,11 @@ Linux remains a later v1 target. Windows 10/11 are prototype targets; hosted Win
 The ignored local tracker is optional maintainer context. All contributor-facing decisions, plans, commands and remaining gates are public. The desktop scenarios are not complete across variants; partial real-artifact subcases are recorded separately from synthetic fixtures. No recall/false-positive/runtime-latency target has been achieved.
 
 ## Next work
+
+The [M3.2 fixture suite](docs/test-cases/m3-2.md) covers readiness, baseline,
+duplicate or reordered receipts, unknown continuity, explicit loss and stop.
+The elevated Windows 11 delivery trial is deferred until a suitable lab is
+available. Delivery evidence and source selection gate the M3.3 adapter.
 
 M3.1 needs an authorized source that fits the Windows permission model. The
 first standard-user trial recorded access denials for WMI process start and

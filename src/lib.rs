@@ -13,6 +13,7 @@ pub mod platform;
 pub mod policy;
 pub mod processes;
 pub mod report;
+pub mod runtime;
 pub mod scan;
 use std::ffi::{OsStr, OsString};
 use std::fmt;

@@ -169,3 +169,12 @@ subscriptions and ETW session creation were denied. Runtime source selection
 remains open pending evidence for an alternative that fits the permission
 model. Retain the M2 acceptance requirements and the M3.3 adapter review.
 [Lab results](test-cases/runs/2026-11-15-m3-1-access.md)
+
+## M3.2 while Windows delivery testing is deferred (2026-11-16)
+
+The maintainer deferred the elevated ETW delivery trial until an authorized,
+isolated Windows 11 lab is available and asked to continue development.
+M3.2 may proceed with synthetic process events and health signals.
+M3.1 source selection, permission evidence and the M3.3 adapter gate remain
+open, as do the outstanding M2 desktop cases.
+[M3 plan](m3-plan.md) | [Synthetic cases](test-cases/m3-2.md)
