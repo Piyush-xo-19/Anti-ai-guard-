@@ -60,15 +60,17 @@ belong to M3; FUT-03/FUT-04 are not M2 completion shortcuts.
 ## M3 sequence: experiments before adapter delivery
 
 Each row is a separate reviewable delivery, followed by relevant checks, public
-status, a commit/PR, completed CI/CodeRabbit and merge before the next delivery.
+status, a commit/PR and completed CI/CodeRabbit before merging. Complete the rows
+in order, with the M3.2 exception below.
 The maintainer started bounded Windows 11 M3.1 permission experiments while
 M2 cases remain open. Source experiments use a reviewed privacy and privilege
 scope. Windows 10 desktop validation remains deferred.
 Capability evidence and source/API/dependency selection are M3.1 outputs. They
 must be reviewed before adapter delivery in M3.3; they do not block starting
-the experiments that produce them.
+the experiments that produce them. M3.2 uses synthetic inputs, so it can be
+delivered while the elevated Windows 11 trial awaits a suitable lab.
 
-| Chunk | Concrete deliverable | Minimum acceptance before proceeding |
+| Chunk | Concrete deliverable | Acceptance for this chunk |
 | --- | --- | --- |
 | M3.1 | Source capability record comparing WMI trace events and ETW; one justified source/API/dependency decision | Actual token/build trials, subscription scope, readiness, stop cleanup and loss visibility; denied configurations explicit |
 | M3.2 | Pure typed runtime observations and health reducer | Starting, Healthy, Degraded, Unavailable and Stopped traces; readiness plus reconciled baseline required for healthy; missing identity never correlates by PID alone |
