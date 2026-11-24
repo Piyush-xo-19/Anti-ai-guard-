@@ -253,5 +253,23 @@ was overwritten and no power transition was initiated.
 - [ ] Record remaining boot and Windows 11 desktop acceptance cases.
 - [ ] Run the deferred Windows 10 desktop matrix.
 
-The maintainer deferred the Windows 10 VM. Windows 11 closeout still comes
-before M3.1; Windows 10 remains required for full M2 acceptance.
+Windows 10 desktop evidence remains required for full M2 acceptance.
+The maintainer authorized bounded M3.1 work while M2 desktop cases remain open.
+
+## Windows 11 permission diagnosis and controlled checks - 2026-11-14
+
+- [x] Isolate the permission gap to a guarded ancestor open in the protected
+  Windows package directory. Keep `AccessDenied` visible in the production
+  session scan.
+- [x] Complete a separate owned-job Node/npm control, with both interpreters
+  alive and no assistant finding. The full-session verdict remains blocked.
+- [x] Check that real CLI output omits a synthetic argument secret and fixture
+  paths, and that cooperative cancellation stops before the next candidate.
+- [x] Confirm sleep and resume preserve boot identity on the updated Windows
+  11 build. See the [resume evidence](docs/test-cases/runs/2026-11-14-windows-11-resume.md).
+- [ ] Record Fast Startup and restore observations and review the remaining
+  desktop acceptance gaps before closing M2.
+
+See the [test record](docs/test-cases/runs/windows-11-owned-control.md) for
+setup and limits. The local suite passed 112 tests/doctests; five opt-in
+helpers/labs were intentionally ignored.
