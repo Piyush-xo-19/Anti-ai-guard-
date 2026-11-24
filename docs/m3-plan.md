@@ -1,9 +1,9 @@
 # M3 plan: Windows runtime observation
 
-Updated: 2026-11-16 (Asia/Calcutta)
-State: M3.2 runtime contracts and health transitions are implemented with
-synthetic fixtures. The elevated Windows 11 delivery trial is deferred until
-a suitable lab is available. Source selection remains open.
+Updated: 2026-11-24 (Asia/Calcutta)
+State: M3.2 is merged. M3.4 buffering and baseline reconciliation are implemented
+with synthetic fixtures. Live source integration, the Windows trial and source
+selection remain pending.
 
 [Status](../PROJECT_STATUS.md) | [M2 completion](m2-completion.md) | [Architecture](architecture-v1.md) | [Decisions](decisions.md)
 
@@ -47,6 +47,8 @@ These prerequisites permit only the finite, consented capability experiments
 described in M3.1. Capability evidence and the source/API/dependency decision are
 outputs of those experiments, not prerequisites for starting them. The maintainer
 authorized M3.2 synthetic contract work while the delivery trial is deferred.
+On November 24 the maintainer requested continued delivery. The source-independent
+M3.4 reconciliation core can proceed while M3.1/M3.3 remain open.
 
 ### Gate before adapter delivery (M3.3)
 
@@ -68,7 +70,7 @@ Snapshots provide point-in-time evidence.
 | M3.1 | Source capability experiment and selection | Windows 11 standard-user access denials recorded. [ETW delivery lab prepared](test-cases/runs/2026-11-15-m3-1-etw-lab.md), pending a disposable guest. |
 | M3.2 | Runtime contracts and fixture-driven health reducer | Implemented and exercised with [synthetic fixtures](test-cases/m3-2.md). |
 | M3.3 | Bounded Windows event adapter | Not started |
-| M3.4 | Listener-first baseline reconciliation | Not started |
+| M3.4 | Listener-first baseline reconciliation | Buffering and evidence reconciliation pass [synthetic cases](test-cases/m3-4.md). Adapter integration pending. |
 | M3.5 | Consented monitor lifecycle and targeted rescans | Not started |
 | M3.6 | Loss detection, bounded recovery and continuity generations | Not started |
 | M3.7 | Minimized runtime reports and CLI integration | Not started |

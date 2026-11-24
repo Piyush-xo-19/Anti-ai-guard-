@@ -6,11 +6,13 @@ expected behavior and the original case IDs. The [M2 case index](m2.md) maps wor
 to those IDs, executable tests, and evidence. The
 [M3.1 lab index](m3-1.md) covers Windows source access and the ETW delivery lab.
 The [M3.2 case index](m3-2.md) covers the synthetic runtime contracts.
+The [M3.4 case index](m3-4.md) covers buffering and baseline reconciliation.
 
 ## Latest runs
 
 | Date | Run | Outcome |
 | --- | --- | --- |
+| 2026-11-24 | [M3.4 synthetic reconciliation](runs/2026-11-24-m3-4-reconciliation.md) | 11 reconciliation cases and 131 total tests PASS; live integration pending |
 | 2026-11-16 | [M3.2 synthetic runtime contracts](runs/2026-11-16-m3-2-runtime-contracts.md) | Nine runtime fixtures PASS; elevated Windows delivery deferred |
 | 2026-11-15 | [M3.1 ETW lab preparation](runs/2026-11-15-m3-1-etw-lab.md) | Strict build and host controls PASS; elevated delivery NOT RUN |
 | 2026-11-15 | [M3.1 Windows 11 permission results](runs/2026-11-15-m3-1-access.md) | WMI start/stop subscriptions and ETW session creation denied |

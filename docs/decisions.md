@@ -178,3 +178,12 @@ M3.2 may proceed with synthetic process events and health signals.
 M3.1 source selection, permission evidence and the M3.3 adapter gate remain
 open, as do the outstanding M2 desktop cases.
 [M3 plan](m3-plan.md) | [Synthetic cases](test-cases/m3-2.md)
+
+## M3.4 reconciliation while desktop testing is deferred (2026-11-24)
+
+The maintainer requested further delivery while VM testing remains unavailable.
+Proceed with the source-independent M3.4 buffering and baseline reconciliation
+core, using synthetic runtime events and snapshots. M3.1 delivery evidence,
+source selection and the M3.3 Windows adapter remain open. Integration with
+the live source still follows its privilege and privacy review.
+[M3.4 cases](test-cases/m3-4.md)

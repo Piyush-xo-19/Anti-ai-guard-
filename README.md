@@ -19,9 +19,10 @@ The current standard-user account was denied the filtered WMI subscriptions
 and provider-free real-time ETW session creation.
 [M3.1 results](docs/test-cases/runs/2026-11-15-m3-1-access.md)
 
-M3.2 adds runtime event types and a health reducer exercised with synthetic
-inputs. The elevated Windows 11 delivery trial is deferred.
-[M3.2 contract cases](docs/test-cases/m3-2.md)
+M3.2 runtime contracts are merged. M3.4 adds bounded event buffering and
+baseline evidence reconciliation exercised with synthetic inputs. The elevated
+Windows 11 delivery trial is deferred.
+[M3.2 cases](docs/test-cases/m3-2.md) | [M3.4 cases](docs/test-cases/m3-4.md)
 
 ## Explore the project
 
@@ -182,7 +183,7 @@ Each milestone will be split further into reviewable changes. The status column 
 | **M0 — Public foundation** | README, MIT license, contribution workflow, and architecture draft | Complete |
 | **M1 — Coverage and design** | Windows 10/11 target matrix, proposed privilege scope, evidence rules and acceptance plan | Documents ready for review; tests not run |
 | **M2 — Read-only preflight** | Rust structure, detection interfaces, installation/process inventory, reports, and tests | Collectors, reports and four native identity pins implemented; full boot/desktop acceptance incomplete |
-| **M3 — Runtime observation** | Process-event collectors, reconciliation, health checks, and failure reporting | M3.2 health reducer tested with synthetic inputs. Runtime source selection is open. |
+| **M3 — Runtime observation** | Process-event collectors, reconciliation, health checks, and failure reporting | M3.2 merged. M3.4 buffering and reconciliation tested with synthetic inputs. Source selection is open. |
 | **M4 — Session and audit** | Policy transitions, bounded local persistence, notifications, and synchronization contract | Planned |
 | **M5 — Organizer workflow** | Enrollment, heartbeats, evidence review, and participant/organizer interfaces | Proposed scope |
 | **M6 — Controlled validation** | Windows/Linux acceptance results, measured performance, privacy checks, and release documentation | Planned |
