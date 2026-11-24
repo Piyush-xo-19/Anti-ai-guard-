@@ -6,6 +6,7 @@ expected behavior and the original case IDs. The [M2 case index](m2.md) maps wor
 to those IDs, executable tests, and evidence. The
 [M3.1 lab index](m3-1.md) covers Windows source access and the ETW delivery lab.
 The [M3.2 case index](m3-2.md) covers the synthetic runtime contracts.
+The [M3.4 case index](m3-4.md) covers buffering and baseline reconciliation.
 
 ## Latest runs
 

@@ -1,6 +1,8 @@
 //! Pure runtime observation and health contracts. The caller supplies minimized
 //! events and elapsed times from a single monotonic clock for the run.
 
+pub mod reconcile;
+
 use crate::model::ProcessInstance;
 use std::collections::BTreeSet;
 use std::num::NonZeroUsize;
@@ -54,6 +56,9 @@ pub enum Loss {
     SourceReported,
     QueueOverflow,
     ReceiptLimit,
+    ReconciliationLimit,
+    InvalidMetadata,
+    BaselineFailed,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
